@@ -198,6 +198,13 @@
   .tok-cmt{color:var(--muted); font-style:italic;}
   .tok-num{color:var(--amber);}
 
+  .cheatsheet{width:100%; border-collapse:collapse; font-size:15px;}
+  .cheatsheet th{text-align:left; color:var(--muted); font-size:12.5px; font-family:'IBM Plex Mono',monospace; padding:8px 10px; border-bottom:1px solid var(--border);}
+  .cheatsheet td{padding:10px; border-bottom:1px solid var(--border); vertical-align:top;}
+  .cheatsheet td:first-child{color:var(--text);}
+  .cheatsheet td:last-child{color:var(--amber); font-family:'IBM Plex Mono',monospace; font-size:13.5px; white-space:nowrap;}
+  .cheatsheet tr:last-child td{border-bottom:none;}
+
   .placeholder{padding-top:80px; max-width:480px;}
   .placeholder .kicker{color:var(--amber); font-family:'IBM Plex Mono',monospace; font-size:13.5px; display:block;}
   .placeholder h1{font-size:27px; margin:10px 0;}
@@ -294,6 +301,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -322,6 +330,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -350,6 +359,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -369,6 +379,14 @@
         <span class="item"><i class="dot teal"></i> match / resolved</span>
         <span class="item"><i class="dot rose"></i> seen / checked</span>
       </div>
+
+      <section class="block" id="concept-2">
+        <h2>Concept: keying by a computed signature</h2>
+        <p class="lead">Day 1's hashing checked "have I seen this exact value?" Day 2 pushes the idea further: instead of hashing the raw value, you hash something you <i>compute</i> from it — a sorted string, a frequency count, a running product — and use that computed key to group, rank, or reconstruct.</p>
+        <p class="lead">This works because a well-chosen key collapses everything that should be treated the same into one bucket. Sort a word's letters and every anagram of it lands on the identical key. Count a word's letters and you get an even cheaper signature. The hash map is still doing O(1) lookup/insert — the new skill is designing the key.</p>
+        <p class="lead">Space/time stays close to O(n·k) for n items of size k (the cost of computing each key), a small constant-factor tax over O(n) for the win of avoiding an O(n²) pairwise comparison.</p>
+        <div class="trick"><b>Reach for a computed key when:</b> the problem asks you to group items that are "equivalent" under some transformation (anagrams, same digit sum, same remainder), or to answer a query in one pass by precomputing running totals to each side (prefix/suffix products, prefix sums). Interviewers will often ask "can you avoid division?" for products-except-self — the answer is prefix/suffix passes, not one division pass.</div>
+      </section>
 
       <section class="block" id="group-anagrams">
         <h2>Group Anagrams</h2>
@@ -392,6 +410,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -420,6 +439,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -448,6 +468,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -467,6 +488,14 @@
         <span class="item"><i class="dot teal"></i> match / resolved</span>
         <span class="item"><i class="dot rose"></i> seen / checked</span>
       </div>
+
+      <section class="block" id="concept-3">
+        <h2>Concept: two pointers closing in</h2>
+        <p class="lead">Hashing trades memory for speed. Two pointers trades a second pass for a smarter single one: when an array is sorted (or can be treated as sorted, like a palindrome read from both ends), the answer often lives at the boundary between "too small" and "too big" — so walk two indices toward each other instead of checking every pair.</p>
+        <p class="lead">Why it's correct, not just fast: at each step you eliminate one index from consideration entirely. If nums[left] + nums[right] is too small, nums[left] paired with anything ≤ nums[right] is still too small — so left can only move up. That's what turns an O(n²) nested loop into a single O(n) sweep, O(1) extra space (aside from the output).</p>
+        <p class="lead">The same shape reappears any time you're comparing "one end" against "the other end" and monotonicity (sortedness) lets you discard a whole side per step.</p>
+        <div class="trick"><b>Reach for two pointers when:</b> the input is sorted (or you sort it first) and you're looking for a pair/triple hitting a target sum, or you're comparing an array/string against its own reverse. Common follow-up: dedupe results (skip over repeated values after a match) and handle the "3Sum" style extension by fixing one pointer and two-pointering the rest.</div>
+      </section>
 
       <section class="block" id="valid-palindrome">
         <h2>Valid Palindrome</h2>
@@ -488,6 +517,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -514,6 +544,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -540,6 +571,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -559,6 +591,14 @@
         <span class="item"><i class="dot teal"></i> match / resolved</span>
         <span class="item"><i class="dot rose"></i> seen / checked</span>
       </div>
+
+      <section class="block" id="concept-4">
+        <h2>Concept: the sliding window</h2>
+        <p class="lead">A sliding window is two pointers that both move forward, never backward, tracing out a contiguous subarray or substring. Instead of recomputing a property (a sum, a set of characters, a max) from scratch for every possible window, you maintain it incrementally: expand the right edge and update, shrink the left edge and update.</p>
+        <p class="lead">The efficiency comes from amortized cost: each index enters the window once (right pointer) and leaves once (left pointer), so total work across the whole scan is O(n) even though you're implicitly considering O(n²) possible windows. The window's size is either fixed (given directly) or variable, growing until it breaks some constraint and then shrinking until it's valid again.</p>
+        <p class="lead">Space is typically O(1) to O(k) for whatever you're tracking inside the window (a running max, a small frequency table over at most 26 letters, etc).</p>
+        <div class="trick"><b>Reach for a sliding window when:</b> you see "contiguous subarray/substring", "longest/shortest ... with at most/exactly k ...", or "maximum ... within a window of size k". A frequent interview trap: forgetting the window can only grow when it's still valid — shrink from the left the moment the constraint is violated, don't reset from scratch.</div>
+      </section>
 
       <section class="block" id="buy-sell-stock">
         <h2>Best Time to Buy and Sell Stock</h2>
@@ -582,6 +622,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -608,6 +649,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -634,6 +676,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -652,6 +695,14 @@
         <span class="item"><i class="dot teal"></i> match / resolved</span>
         <span class="item"><i class="dot rose"></i> seen / checked</span>
       </div>
+
+      <section class="block" id="concept-5">
+        <h2>Concept: LIFO and the monotonic stack</h2>
+        <p class="lead">A stack solves problems whose structure is "the most recent unresolved thing matters most" — last in, first out. Matching brackets is the canonical case: the most recently opened bracket must be the next one closed. Push what's open/unresolved; pop and check when you see something that should close it.</p>
+        <p class="lead">A monotonic stack is the same idea aimed at a different question: "for each element, what's the next element that breaks a trend?" (next greater, next warmer day, next taller building). You keep the stack's values in increasing (or decreasing) order by popping off anything the current element invalidates — and the pop is exactly the answer for whatever you just popped, e.g. "it took (i - j) days to warm up."</p>
+        <p class="lead">Both run in O(n) time: even though there's a nested-looking while loop doing the popping, each element is pushed once and popped at most once, so total pushes+pops across the whole array is O(n).</p>
+        <div class="trick"><b>Reach for a stack when:</b> you need to match/nest pairs (brackets, tags), undo the most recent operation, or you're asked "for each element, find the next one that is greater/smaller/further/warmer" — that phrasing is the monotonic-stack tell. A common follow-up: implement getMin() in O(1) alongside push/pop by keeping a parallel stack of running minimums.</div>
+      </section>
 
       <section class="block" id="valid-parentheses">
         <h2>Valid Parentheses</h2>
@@ -675,6 +726,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -705,6 +757,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -733,6 +786,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -751,6 +805,14 @@
         <span class="item"><i class="dot teal"></i> match / resolved</span>
         <span class="item"><i class="dot rose"></i> seen / checked</span>
       </div>
+
+      <section class="block" id="concept-6">
+        <h2>Concept: halving the search space</h2>
+        <p class="lead">Binary search isn't really about sorted arrays — it's about any question where you can evaluate a midpoint and, from the answer, throw away half the remaining possibilities with certainty. On a sorted array that's trivial: compare the target to the middle element and discard the half that can't contain it.</p>
+        <p class="lead">The pattern generalizes to "rotated" or otherwise partially-ordered structures: at least one half of any split is still properly sorted, so you can always tell which half to search by comparing boundary values, even though the whole array isn't monotonic. It also generalizes past arrays entirely — "binary search on the answer" applies binary search to a range of possible answers, checking feasibility at each midpoint (not covered here, but the same halving logic).</p>
+        <p class="lead">Each halving is O(1) work, and you halve log₂(n) times, giving O(log n) time and O(1) space — a huge win over O(n) linear scanning once n is large.</p>
+        <div class="trick"><b>Reach for binary search when:</b> the input is sorted, or "sorted then rotated," or the problem says "find the minimum x such that..." (search on the answer). A classic pitfall: off-by-one loop bounds — decide up front whether your invariant is lo &lt;= hi or lo &lt; hi and stay consistent, and use lo + (hi - lo) / 2 to avoid overflow in languages where it matters.</div>
+      </section>
 
       <section class="block" id="binary-search">
         <h2>Binary Search</h2>
@@ -772,6 +834,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -798,6 +861,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -824,6 +888,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -842,6 +907,14 @@
         <span class="item"><i class="dot teal"></i> match / resolved</span>
         <span class="item"><i class="dot rose"></i> seen / checked</span>
       </div>
+
+      <section class="block" id="concept-7">
+        <h2>Concept: pointers instead of indices</h2>
+        <p class="lead">A linked list has no random access — you can't jump to index i, only follow .next. Every technique here is about keeping a small, fixed number of pointers (prev/curr/next, or slow/fast) and moving them through the list in lockstep, rewiring .next links as you go instead of building a new structure.</p>
+        <p class="lead">The fast/slow (tortoise-and-hare) pointer pair is the key trick to internalize: advancing slow by 1 and fast by 2 each step means if the list has a cycle, fast eventually laps slow and they meet — impossible without a cycle. The same pair finds the middle of a list in one pass (when fast hits the end, slow is at the midpoint), which is how reordering and palindrome-checking problems get solved without extra memory.</p>
+        <p class="lead">All of these run in O(n) time and O(1) extra space — the entire point is to avoid the O(n) space of copying values into an array first.</p>
+        <div class="trick"><b>Reach for pointer manipulation when:</b> you see "reverse", "find the middle", "detect a cycle", or "merge/reorder" applied to a linked list. Pitfall to watch for: losing the reference to the rest of the list before you've saved it (always grab next before you overwrite .next), and remembering a dummy head node sidesteps annoying "is the list empty / am I at the head" special cases when merging or removing nodes.</div>
+      </section>
 
       <section class="block" id="reverse-list">
         <h2>Reverse Linked List</h2>
@@ -865,6 +938,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -895,6 +969,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -921,6 +996,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -951,6 +1027,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -969,6 +1046,14 @@
         <span class="item"><i class="dot teal"></i> match / resolved</span>
         <span class="item"><i class="dot rose"></i> seen / checked</span>
       </div>
+
+      <section class="block" id="concept-8">
+        <h2>Concept: recursion as delegation</h2>
+        <p class="lead">Tree problems almost always have the same shape: assume the recursive call already correctly solves the subtree, and figure out how to combine its result(s) with the current node. "Invert this tree" becomes "invert my children, then swap them onto myself." You never have to think about the whole tree at once — just one node and what its children promise to hand back.</p>
+        <p class="lead">This is a base-case-plus-combine pattern: define what happens at null (usually a trivial answer — 0, true, None), define what a leaf does, then trust the recursion for everything below the current node. Depth-first recursion naturally explores the full height of the tree before combining, using the call stack as implicit O(h) space, where h is the tree's height (O(log n) balanced, O(n) worst case for a degenerate chain).</p>
+        <p class="lead">Comparing two trees, or searching for a subtree, is the same idea one level up: define "are these two nodes/subtrees equal," then use that as a building block for "does this tree contain that pattern anywhere."</p>
+        <div class="trick"><b>Reach for tree recursion when:</b> the problem is naturally defined in terms of "a node and its subtrees" — depth, symmetry, equality, containment. Interview follow-up to expect: can you do it iteratively with an explicit stack instead of the call stack? (Useful when recursion depth risks a stack overflow on very unbalanced trees.)</div>
+      </section>
 
       <section class="block" id="invert-tree">
         <h2>Invert Binary Tree</h2>
@@ -989,6 +1074,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -1014,6 +1100,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -1042,6 +1129,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -1070,6 +1158,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -1088,6 +1177,14 @@
         <span class="item"><i class="dot teal"></i> match / resolved</span>
         <span class="item"><i class="dot rose"></i> seen / checked</span>
       </div>
+
+      <section class="block" id="concept-9">
+        <h2>Concept: BFS vs DFS, and the trie</h2>
+        <p class="lead">Day 8's recursion was depth-first: go all the way down one branch before backing out. Breadth-first search instead explores level by level, using a queue instead of the call stack — pull a node, push its children, repeat. That's the only way to naturally answer "what's at depth k" or "shortest path in an unweighted structure" questions, because BFS visits everything at distance d before anything at distance d+1.</p>
+        <p class="lead">Validating a BST is DFS with a twist: instead of just combining child results, you thread a valid (low, high) range down through the recursion — every node in a valid BST must fall strictly between the bounds set by its ancestors, not just be greater than its immediate parent.</p>
+        <p class="lead">A trie (prefix tree) is a different data structure for a different question: not "does this tree have a property" but "is this string, or some prefix of it, in my set of strings." Each node is a hashmap of child-character → child-node; walking a word one character at a time is O(k) for a word of length k, independent of how many words are stored — much better than checking a word against every string in a set.</p>
+        <div class="trick"><b>Reach for BFS when:</b> you need shortest-path/level-by-level behavior on a tree or graph. Reach for a bounded DFS when validating a global tree property (like BST-ness) that a naive parent-only check would miss. Reach for a trie when you're doing repeated prefix lookups/autocomplete over a fixed dictionary of words — the classic follow-up is "now support wildcard search," solved with DFS over the trie that branches on '.'.</div>
+      </section>
 
       <section class="block" id="level-order">
         <h2>Binary Tree Level Order Traversal</h2>
@@ -1112,6 +1209,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -1137,6 +1235,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -1162,6 +1261,7 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
@@ -1190,9 +1290,701 @@
           <div class="tabs">
             <button class="tab-btn active" data-lang="python">Python</button>
             <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
             <button class="copy-btn">Copy</button>
           </div>
           <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="day-10" class="day-view" style="display:none;">
+      <div class="day-header">
+        <p class="kicker">Day 10 of 14</p>
+        <h1>Heap / Priority Queue</h1>
+        <p class="intro">A binary heap keeps "the most important element" at the root in O(1) peek time, and restores that property in O(log n) after any push or pop — the structure behind every "kth largest/smallest" and "k closest" problem.</p>
+      </div>
+
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> currently examining / just moved</span>
+        <span class="item"><i class="dot teal"></i> root of the heap</span>
+        <span class="item"><i class="dot rose"></i> seen / checked</span>
+      </div>
+
+      <section class="block" id="concept-10">
+        <h2>Concept: the heap invariant</h2>
+        <p class="lead">A binary heap is a complete binary tree stored flat in an array: for index i, children live at 2i+1 and 2i+2. The heap invariant says every parent has priority over its children (smaller, for a min-heap; larger, for a max-heap) — so the root, index 0, is always the most extreme element, readable in O(1).</p>
+        <p class="lead">Push appends to the end of the array, then "sifts up" — swaps with its parent while it violates the invariant — in O(log n) since the tree has O(log n) levels. Pop removes the root, moves the last element into its place, and "sifts down" — swaps with whichever child has priority — again O(log n).</p>
+        <p class="lead">The classic "top k" trick: to find the k largest elements of n, don't sort all of n (O(n log n)). Keep a min-heap of size k instead — push every element, and pop whenever the heap exceeds size k. The heap always holds the k largest seen so far, and its root is the smallest of those k (i.e. the kth largest overall). Total cost: O(n log k), better than a full sort when k is small.</p>
+        <div class="trick"><b>Reach for a heap when:</b> you see "kth largest/smallest", "k closest/most frequent", or you need repeated access to a running min/max while the underlying set keeps changing (a streaming median, a scheduler, Dijkstra's algorithm). A common follow-up: can you avoid a full sort? — a size-k heap almost always beats sorting everything when k ≪ n.</div>
+      </section>
+
+      <section class="block" id="kth-largest-stream">
+        <h2>Kth Largest Element in a Stream</h2>
+        <p class="lead">Design a class that, given an integer k and an initial stream of numbers, supports add(val) and always returns the kth largest element seen so far.</p>
+        <div class="stage">
+          <p class="row-label">min-heap of the k largest values seen — root is the kth largest (k = 3)</p>
+          <div class="cells" id="klsCells"></div>
+          <div class="tree-svg" id="klsTree"></div>
+          <p class="status-line" id="klsStatus"></p>
+          <div class="controls">
+            <button id="klsReset">⟲ Reset</button>
+            <button id="klsPrev">‹ Prev</button>
+            <button id="klsPlay">▶ Play</button>
+            <button id="klsNext">Next ›</button>
+            <span class="step-count" id="klsCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> keep a min-heap capped at size k. Any value that makes it into the heap and survives is one of the k largest so far; the heap's root — the smallest of those k — is exactly the kth largest. Push, then pop if you're over capacity: O(log k) per add instead of re-sorting everything.</div>
+        <div class="code-panel" data-problem="kls">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="last-stone-weight">
+        <h2>Last Stone Weight</h2>
+        <p class="lead">Stones have weights. Repeatedly smash the two heaviest together: if equal, both vanish; otherwise the lighter's weight is subtracted from the heavier, and the remainder goes back in. Return the weight of the last stone left (0 if none).</p>
+        <div class="stage">
+          <p class="row-label">max-heap of stone weights</p>
+          <div class="cells" id="lswCells"></div>
+          <div class="tree-svg" id="lswTree"></div>
+          <p class="status-line" id="lswStatus"></p>
+          <div class="controls">
+            <button id="lswReset">⟲ Reset</button>
+            <button id="lswPrev">‹ Prev</button>
+            <button id="lswPlay">▶ Play</button>
+            <button id="lswNext">Next ›</button>
+            <span class="step-count" id="lswCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> "repeatedly grab the two largest" is exactly what a max-heap is for — pop twice, push the difference if any, repeat until at most one stone remains. Every operation is O(log n), for O(n log n) total instead of re-scanning for the max pair each round.</div>
+        <div class="code-panel" data-problem="lsw">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="k-closest-points">
+        <h2>K Closest Points to Origin</h2>
+        <p class="lead">Given a list of points on the plane and an integer k, return the k points closest to the origin (0, 0).</p>
+        <div class="stage">
+          <p class="row-label">max-heap of squared distances, capped at k = 2 — cells show distance, not the point</p>
+          <div class="cells" id="kcpCells"></div>
+          <div class="tree-svg" id="kcpTree"></div>
+          <p class="status-line" id="kcpStatus"></p>
+          <div class="controls">
+            <button id="kcpReset">⟲ Reset</button>
+            <button id="kcpPrev">‹ Prev</button>
+            <button id="kcpPlay">▶ Play</button>
+            <button id="kcpNext">Next ›</button>
+            <span class="step-count" id="kcpCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> same size-k-heap pattern as Kth Largest in a Stream, just keyed by squared distance instead of the value itself (no need for an actual square root — it doesn't change the ordering). Keep a max-heap of size k; anything that survives being pushed is among the k closest.</div>
+        <div class="code-panel" data-problem="kcp">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="kth-largest-array">
+        <h2>Kth Largest Element in an Array</h2>
+        <p class="lead">Given an unsorted array and an integer k, return the kth largest element — not the kth distinct one.</p>
+        <div class="stage">
+          <p class="row-label">min-heap capped at size k = 2 — root ends up the answer</p>
+          <div class="cells" id="klaCells"></div>
+          <div class="tree-svg" id="klaTree"></div>
+          <p class="status-line" id="klaStatus"></p>
+          <div class="controls">
+            <button id="klaReset">⟲ Reset</button>
+            <button id="klaPrev">‹ Prev</button>
+            <button id="klaPlay">▶ Play</button>
+            <button id="klaNext">Next ›</button>
+            <span class="step-count" id="klaCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> identical shape to the streaming version, just fed the whole array at once instead of one value at a time — O(n log k). (A quickselect partition averages O(n) time but is trickier to get right under pressure; the heap approach is the safer default to reach for first.)</div>
+        <div class="code-panel" data-problem="kla">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="day-11" class="day-view" style="display:none;">
+      <div class="day-header">
+        <p class="kicker">Day 11 of 14</p>
+        <h1>Backtracking</h1>
+        <p class="intro">Explore a decision tree depth-first: choose, recurse, and — critically — undo the choice on the way back out so the next branch starts clean.</p>
+      </div>
+
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> currently chosen / visiting</span>
+        <span class="item"><i class="dot teal"></i> recorded result</span>
+        <span class="item"><i class="dot rose"></i> visited on this path</span>
+      </div>
+
+      <section class="block" id="concept-11">
+        <h2>Concept: choose, explore, un-choose</h2>
+        <p class="lead">Backtracking is DFS over a tree of decisions rather than a tree of nodes. At each step you pick one option, recurse as if that pick were permanent, and when the recursion returns — whether it found something or hit a dead end — you undo the pick before trying the next option. That undo step is the entire trick: without it, state from one branch would leak into a sibling branch that never should have seen it.</p>
+        <p class="lead">The three-beat rhythm — choose / explore / un-choose — appears identically whether you're building subsets, combinations, permutations, or a path through a grid. What changes between problems is only: what counts as a valid choice at this point, what marks a complete answer, and what state needs undoing (a used[] flag, a running sum, a visited cell).</p>
+        <p class="lead">Complexity is inherently exponential — you're enumerating a search space, not shortcutting it — so the goal is to prune early (stop recursing the moment a partial path can't possibly succeed) rather than to avoid the exponential shape entirely.</p>
+        <div class="trick"><b>Reach for backtracking when:</b> the problem says "all possible ...", "every combination/permutation/arrangement", or asks you to find a path/placement satisfying constraints (word search, N-Queens, Sudoku). Interview follow-up to expect: "how would you prune?" — sorting input to fail fast, or an early bound check (remaining sum, remaining cells) before recursing.</div>
+      </section>
+
+      <section class="block" id="subsets">
+        <h2>Subsets</h2>
+        <p class="lead">Given an array of unique integers, return all possible subsets (the power set).</p>
+        <div class="stage">
+          <p class="row-label">current path (nums = [1, 2, 3])</p>
+          <div class="chips" id="subsPath"></div>
+          <p class="row-label">subsets recorded so far</p>
+          <div class="chips" id="subsFound"></div>
+          <p class="status-line" id="subsStatus"></p>
+          <div class="controls">
+            <button id="subsReset">⟲ Reset</button>
+            <button id="subsPrev">‹ Prev</button>
+            <button id="subsPlay">▶ Play</button>
+            <button id="subsNext">Next ›</button>
+            <span class="step-count" id="subsCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> every prefix of the recursion is itself a valid subset — record the path at every node of the decision tree, not just at the leaves. Each element is either in the path or not, so recursing "from index i onward" (never revisiting earlier indices) naturally generates each subset exactly once, in 2ⁿ total leaves.</div>
+        <div class="code-panel" data-problem="subs">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="combination-sum">
+        <h2>Combination Sum</h2>
+        <p class="lead">Given distinct candidates and a target, return every combination that sums to target. The same number may be reused as many times as needed.</p>
+        <div class="stage">
+          <p class="row-label">current path (candidates = [2, 3, 6, 7], target = 7)</p>
+          <div class="chips" id="csumPath"></div>
+          <p class="row-label">combinations recorded so far</p>
+          <div class="chips" id="csumFound"></div>
+          <p class="status-line" id="csumStatus"></p>
+          <div class="controls">
+            <button id="csumReset">⟲ Reset</button>
+            <button id="csumPrev">‹ Prev</button>
+            <button id="csumPlay">▶ Play</button>
+            <button id="csumNext">Next ›</button>
+            <span class="step-count" id="csumCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> allowing reuse just means the recursive call starts from the same index again instead of index+1. Track the remaining target as you go so a leaf is reached exactly when remaining hits 0 — and prune immediately (skip, don't even recurse) the moment a candidate would overshoot.</div>
+        <div class="code-panel" data-problem="csum">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="permutations">
+        <h2>Permutations</h2>
+        <p class="lead">Given an array of distinct integers, return all possible permutations (every ordering).</p>
+        <div class="stage">
+          <p class="row-label">current path (nums = [1, 2, 3])</p>
+          <div class="chips" id="permPath"></div>
+          <p class="row-label">permutations recorded so far</p>
+          <div class="chips" id="permFound"></div>
+          <p class="status-line" id="permStatus"></p>
+          <div class="controls">
+            <button id="permReset">⟲ Reset</button>
+            <button id="permPrev">‹ Prev</button>
+            <button id="permPlay">▶ Play</button>
+            <button id="permNext">Next ›</button>
+            <span class="step-count" id="permCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> unlike subsets, order matters and every element must appear exactly once — so instead of an index cursor, track a used[] flag per element and try every not-yet-used element at each position. A leaf is reached when the path's length equals the input length.</div>
+        <div class="code-panel" data-problem="perm">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="word-search">
+        <h2>Word Search</h2>
+        <p class="lead">Given a 2D board of letters and a word, return true if the word can be traced through adjacent (up/down/left/right) cells, each used at most once.</p>
+        <div class="stage">
+          <p class="row-label">board — searching for "ABCCED"</p>
+          <div id="wsGrid"></div>
+          <p class="status-line" id="wsStatus"></p>
+          <div class="controls">
+            <button id="wsReset">⟲ Reset</button>
+            <button id="wsPrev">‹ Prev</button>
+            <button id="wsPlay">▶ Play</button>
+            <button id="wsNext">Next ›</button>
+            <span class="step-count" id="wsCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> DFS from every starting cell, matching the word one character at a time; mark a cell visited before recursing into its neighbors, and un-mark it on the way back out so a later, different path can reuse that cell. The moment a neighbor's letter doesn't match the next required character, prune — don't recurse at all.</div>
+        <div class="code-panel" data-problem="ws">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="day-12" class="day-view" style="display:none;">
+      <div class="day-header">
+        <p class="kicker">Day 12 of 14</p>
+        <h1>Graphs</h1>
+        <p class="intro">Grids, adjacency lists, and directed edges are all the same object underneath: nodes and connections. DFS/BFS traversal, with a visited set to avoid infinite loops, solves almost everything here.</p>
+      </div>
+
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> currently visiting</span>
+        <span class="item"><i class="dot teal"></i> resolved / in the answer</span>
+        <span class="item"><i class="dot rose"></i> visited on this pass</span>
+      </div>
+
+      <section class="block" id="concept-12">
+        <h2>Concept: traversal with a visited set</h2>
+        <p class="lead">A graph is just nodes plus edges — a 2D grid is a graph where each cell is a node connected to its (up to 4) neighbors; an adjacency list is the same idea written explicitly. Every algorithm here is a traversal (DFS or BFS) that never revisits a node, tracked with a visited set/array, so the walk always terminates even when the graph has cycles.</p>
+        <p class="lead">DFS (recursive, or an explicit stack) is the natural fit for "explore everything connected to this node" — flood fill, connected components, cycle detection. BFS (a queue) is the natural fit for "shortest path / fewest steps" in an unweighted graph, and for "process everything reachable, level by level."</p>
+        <p class="lead">Cycle detection needs one more idea beyond plain visited/unvisited: a third state, "currently being explored" (in progress, still on the call stack). If a DFS reaches a node that's already in progress, that's a back-edge — a cycle. A node that's fully finished and popped off the stack is safe to revisit from anywhere else without re-exploring it.</p>
+        <div class="trick"><b>Reach for graph traversal when:</b> the problem involves a grid (flood fill: islands, water flow, regions), explicit nodes/edges (clone a graph, detect a cycle, topological order), or "is X reachable from Y". Interview follow-up to expect: "what if the graph is very large / very deep?" — BFS avoids recursion-depth issues that a naive recursive DFS can hit on a long chain.</div>
+      </section>
+
+      <section class="block" id="num-islands">
+        <h2>Number of Islands</h2>
+        <p class="lead">Given a 2D grid of '1' (land) and '0' (water), return the number of islands — connected groups of land, horizontally/vertically adjacent.</p>
+        <div class="stage">
+          <p class="row-label">grid</p>
+          <div id="niGrid"></div>
+          <p class="status-line" id="niStatus"></p>
+          <div class="controls">
+            <button id="niReset">⟲ Reset</button>
+            <button id="niPrev">‹ Prev</button>
+            <button id="niPlay">▶ Play</button>
+            <button id="niNext">Next ›</button>
+            <span class="step-count" id="niCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> scan the grid; the moment you find unvisited land, that's a brand-new island — flood-fill (DFS/BFS) outward from it marking every connected land cell visited, so the outer scan never counts it again. Total work is O(rows·cols): every cell is visited at most once.</div>
+        <div class="code-panel" data-problem="ni">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="clone-graph">
+        <h2>Clone Graph</h2>
+        <p class="lead">Given a reference node in a connected undirected graph, return a deep copy (clone) of the graph.</p>
+        <div class="stage">
+          <p class="row-label">graph — node : neighbors — 1:[2,4]  2:[1,3]  3:[2,4]  4:[1,3]</p>
+          <p class="row-label">clone map — original node → cloned?</p>
+          <div class="kv-table" id="cgKV"></div>
+          <p class="status-line" id="cgStatus"></p>
+          <div class="controls">
+            <button id="cgReset">⟲ Reset</button>
+            <button id="cgPrev">‹ Prev</button>
+            <button id="cgPlay">▶ Play</button>
+            <button id="cgNext">Next ›</button>
+            <span class="step-count" id="cgCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> DFS (or BFS) from the given node, keeping a hashmap from original node → its clone. Before recursing into a neighbor, check the map — if it's already cloned, just wire up the edge to the existing clone instead of recursing again, which is exactly what stops infinite loops on a cyclic graph.</div>
+        <div class="code-panel" data-problem="cg">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="course-schedule">
+        <h2>Course Schedule</h2>
+        <p class="lead">Given numCourses and a list of prerequisite pairs [course, prereq], return true if it's possible to finish all courses (i.e. the prerequisite graph has no cycle).</p>
+        <div class="stage">
+          <p class="row-label">course states — 0=unvisited, 1=visiting, 2=done (prereqs: 0→1, 0→2, 1→3, 2→3)</p>
+          <div class="kv-table" id="csKV"></div>
+          <p class="row-label">DFS recursion stack</p>
+          <div class="chips" id="csStack"></div>
+          <p class="status-line" id="csStatus"></p>
+          <div class="controls">
+            <button id="csReset">⟲ Reset</button>
+            <button id="csPrev">‹ Prev</button>
+            <button id="csPlay">▶ Play</button>
+            <button id="csNext">Next ›</button>
+            <span class="step-count" id="csCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> this is cycle detection on a directed graph. DFS with three states per node — unvisited, visiting (on the current call stack), done. Hitting a "visiting" node again means you've looped back onto your own path: a cycle, so the courses can't all be finished. Hitting a "done" node is fine — that subgraph was already proven safe.</div>
+        <div class="code-panel" data-problem="cs">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="pacific-atlantic">
+        <h2>Pacific Atlantic Water Flow</h2>
+        <p class="lead">Given a grid of heights, with the Pacific bordering the top/left edges and the Atlantic bordering the bottom/right edges, return every cell from which water can flow to both oceans (flowing to equal-or-lower neighboring cells).</p>
+        <div class="stage">
+          <p class="row-label">heights — flood-filling in reverse from each ocean's border</p>
+          <div id="paGrid"></div>
+          <p class="status-line" id="paStatus"></p>
+          <div class="controls">
+            <button id="paReset">⟲ Reset</button>
+            <button id="paPrev">‹ Prev</button>
+            <button id="paPlay">▶ Play</button>
+            <button id="paNext">Next ›</button>
+            <span class="step-count" id="paCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> don't simulate water flowing from every cell (that's O((rows·cols)²)). Flip the direction: flood-fill inward from each ocean's border, moving to a neighbor only if its height is ≥ the current cell's (i.e. water there could have flowed down to here). Run it once per ocean, then intersect the two reachable sets — O(rows·cols) total.</div>
+        <div class="code-panel" data-problem="pa">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="day-13" class="day-view" style="display:none;">
+      <div class="day-header">
+        <p class="kicker">Day 13 of 14</p>
+        <h1>1-D Dynamic Programming</h1>
+        <p class="intro">Break a problem into overlapping subproblems, solve the small ones first, and build the answer up from a table of results you never have to recompute.</p>
+      </div>
+
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> cell being computed</span>
+        <span class="item"><i class="dot teal"></i> earlier value it depends on</span>
+        <span class="item"><i class="dot rose"></i> seen / checked</span>
+      </div>
+
+      <section class="block" id="concept-13">
+        <h2>Concept: memoize the overlapping subproblems</h2>
+        <p class="lead">Dynamic programming applies when a problem has two properties: an optimal solution is built from optimal solutions to smaller versions of itself (optimal substructure), and those smaller versions repeat across different branches of a naive recursion (overlapping subproblems). Climbing n stairs reduces to climbing n-1 and n-2 stairs; without caching, a naive recursive solution recomputes the same smaller cases exponentially many times.</p>
+        <p class="lead">1-D DP means the subproblems are indexed by a single integer — usually "the answer considering only the first i elements/steps/dollars." You fill a table dp[0..n] left to right, where dp[i] is computed purely from a handful of earlier entries (often just dp[i-1] and dp[i-2], or a min/max over several prior entries). Once the recurrence is right, the code is often just a single loop.</p>
+        <p class="lead">Time drops from exponential (naive recursion) to O(n) or O(n·k) (one pass through the table, k = choices considered per cell); space is O(n) for the full table, though many of these can be optimized to O(1) by keeping only the last couple of values — since dp[i] only ever looks a fixed, small distance backward.</p>
+        <div class="trick"><b>Reach for 1-D DP when:</b> the problem asks for a count, a min/max, or a yes/no over "the first i" something, and you can express dp[i] in terms of dp[i-1], dp[i-2], etc. A frequent follow-up: "can you reduce the space?" — if dp[i] only depends on a constant number of previous entries, keep just those instead of the whole array.</div>
+      </section>
+
+      <section class="block" id="climbing-stairs">
+        <h2>Climbing Stairs</h2>
+        <p class="lead">You can climb 1 or 2 steps at a time. Given n stairs, how many distinct ways can you reach the top? (n = 5)</p>
+        <div class="stage">
+          <p class="row-label">dp[i] = number of ways to reach step i</p>
+          <div class="cells" id="climbCells"></div>
+          <p class="status-line" id="climbStatus"></p>
+          <div class="controls">
+            <button id="climbReset">⟲ Reset</button>
+            <button id="climbPrev">‹ Prev</button>
+            <button id="climbPlay">▶ Play</button>
+            <button id="climbNext">Next ›</button>
+            <span class="step-count" id="climbCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> reaching step i means your last move was either a 1-step from i-1 or a 2-step from i-2, so dp[i] = dp[i-1] + dp[i-2] — this is just Fibonacci wearing a different hat. Recognizing that "n choices for the last move" shape is most of the work in DP problems.</div>
+        <div class="code-panel" data-problem="climb">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="house-robber">
+        <h2>House Robber</h2>
+        <p class="lead">Given nums = [2, 7, 9, 3, 1], the money at each house, find the max you can rob without robbing two adjacent houses.</p>
+        <div class="stage">
+          <p class="row-label">dp[i] = max money robbable from houses 0..i</p>
+          <div class="cells" id="hrobCells"></div>
+          <p class="status-line" id="hrobStatus"></p>
+          <div class="controls">
+            <button id="hrobReset">⟲ Reset</button>
+            <button id="hrobPrev">‹ Prev</button>
+            <button id="hrobPlay">▶ Play</button>
+            <button id="hrobNext">Next ›</button>
+            <span class="step-count" id="hrobCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> at house i you have exactly two options — skip it (carry forward dp[i-1]) or rob it (dp[i-2] + nums[i], since the previous house is now off-limits). dp[i] is just the better of those two, so dp[i] = max(dp[i-1], dp[i-2] + nums[i]).</div>
+        <div class="code-panel" data-problem="hr">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="coin-change">
+        <h2>Coin Change</h2>
+        <p class="lead">Given coins = [1, 2, 5] and amount = 11, return the fewest coins needed to make that amount (or -1 if impossible).</p>
+        <div class="stage">
+          <p class="row-label">dp[i] = fewest coins to make amount i (∞ = not yet reachable)</p>
+          <div class="cells" id="coincCells"></div>
+          <p class="status-line" id="coincStatus"></p>
+          <div class="controls">
+            <button id="coincReset">⟲ Reset</button>
+            <button id="coincPrev">‹ Prev</button>
+            <button id="coincPlay">▶ Play</button>
+            <button id="coincNext">Next ›</button>
+            <span class="step-count" id="coincCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> dp[0] = 0 (zero coins for zero amount). For every amount i and every coin c ≤ i, dp[i] can be reached by using one more coin than dp[i-c] needed — take the best coin: dp[i] = min over coins c of (dp[i-c] + 1). This is unbounded-knapsack shaped: each coin can be reused any number of times.</div>
+        <div class="code-panel" data-problem="cc">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="lis">
+        <h2>Longest Increasing Subsequence</h2>
+        <p class="lead">Given nums = [10, 9, 2, 5, 3, 7, 101, 18], return the length of the longest strictly increasing subsequence (not necessarily contiguous).</p>
+        <div class="stage">
+          <p class="row-label">dp[i] = length of the longest increasing subsequence ending at index i</p>
+          <div class="cells" id="lisCells"></div>
+          <p class="status-line" id="lisStatus"></p>
+          <div class="controls">
+            <button id="lisReset">⟲ Reset</button>
+            <button id="lisPrev">‹ Prev</button>
+            <button id="lisPlay">▶ Play</button>
+            <button id="lisNext">Next ›</button>
+            <span class="step-count" id="lisCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> for each index i, look back at every earlier index j; if nums[j] &lt; nums[i], index i could extend that subsequence, giving a candidate length dp[j] + 1. dp[i] is the best candidate over all valid j (or 1, if none extend it). O(n²) here; a patience-sorting + binary search variant gets this down to O(n log n).</div>
+        <div class="code-panel" data-problem="lis">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="day-14" class="day-view" style="display:none;">
+      <div class="day-header">
+        <p class="kicker">Day 14 of 14</p>
+        <h1>Intervals + Greedy + Review</h1>
+        <p class="intro">Sort first, then make the locally obvious choice at each step and never look back — that's greedy, and intervals are its home turf. We close with a cheat sheet across all 14 days.</p>
+      </div>
+
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> currently examining</span>
+        <span class="item"><i class="dot teal"></i> kept / merged / best-so-far</span>
+        <span class="item"><i class="dot rose"></i> discarded / seen</span>
+      </div>
+
+      <section class="block" id="concept-14">
+        <h2>Concept: sort, then decide greedily</h2>
+        <p class="lead">A greedy algorithm makes the choice that looks best right now and never revisits it — no backtracking, no exploring alternatives. That only produces a correct (not just plausible) answer when the problem has the right structure: usually, that sorting the input by some key turns the decision at each step into an obviously-correct local one.</p>
+        <p class="lead">Interval problems are the canonical case: sort by start time and overlapping intervals become adjacent, so merging is a single linear scan. Sort by end time and "keep the interval that frees up the earliest" becomes provably optimal for minimizing removals — because an interval ending earlier can never make future choices worse than one ending later.</p>
+        <p class="lead">Kadane's algorithm for maximum subarray is greedy in a different way: it never explores "what if I'd started the subarray somewhere else" — it just tracks a running sum, and resets to 0 the instant that running sum goes negative (a negative prefix can never help a future subarray, so it's always correct to drop it).</p>
+        <div class="trick"><b>Reach for greedy when:</b> the problem is about intervals (merge, insert, remove for non-overlap, meeting rooms), or you can argue "the locally best choice never hurts the globally best answer" — and you can usually verify greedy is safe by trying to construct a counterexample; if you can't, it's a strong signal greedy works. Interview follow-up: "prove your greedy choice is safe" — be ready to argue it, not just claim it.</div>
+      </section>
+
+      <section class="block" id="insert-interval">
+        <h2>Insert Interval</h2>
+        <p class="lead">Given a sorted, non-overlapping list of intervals and a new interval, insert it, merging as needed. intervals = [[1,3],[6,9]], newInterval = [2,5].</p>
+        <div class="stage">
+          <p class="row-label">result so far</p>
+          <div class="chips" id="iiResult"></div>
+          <p class="status-line" id="iiStatus"></p>
+          <div class="controls">
+            <button id="iiReset">⟲ Reset</button>
+            <button id="iiPrev">‹ Prev</button>
+            <button id="iiPlay">▶ Play</button>
+            <button id="iiNext">Next ›</button>
+            <span class="step-count" id="iiCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> three simple passes over the sorted input — copy every interval that ends before the new one starts untouched; while an interval overlaps the (possibly already-growing) new interval, absorb it by widening the new interval's bounds; then copy the rest untouched. One linear scan, no re-sorting needed.</div>
+        <div class="code-panel" data-problem="ii">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="merge-intervals">
+        <h2>Merge Intervals</h2>
+        <p class="lead">Given a list of intervals, merge all overlapping ones. intervals = [[1,3],[2,6],[8,10],[15,18]].</p>
+        <div class="stage">
+          <p class="row-label">merged result so far</p>
+          <div class="chips" id="miResult"></div>
+          <p class="status-line" id="miStatus"></p>
+          <div class="controls">
+            <button id="miReset">⟲ Reset</button>
+            <button id="miPrev">‹ Prev</button>
+            <button id="miPlay">▶ Play</button>
+            <button id="miNext">Next ›</button>
+            <span class="step-count" id="miCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> sort by start time — now any two intervals that overlap must be adjacent in the sorted list. Walk once: if the next interval starts before (or exactly when) the last merged one ends, extend the last merged interval's end; otherwise it starts a fresh, disjoint group.</div>
+        <div class="code-panel" data-problem="mi">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="non-overlapping-intervals">
+        <h2>Non-overlapping Intervals</h2>
+        <p class="lead">Given a list of intervals, return the minimum number to remove so the rest don't overlap. intervals = [[1,2],[2,3],[3,4],[1,3]].</p>
+        <div class="stage">
+          <p class="row-label">intervals, in the order examined (sorted by end time)</p>
+          <div class="chips" id="noiChips"></div>
+          <p class="status-line" id="noiStatus"></p>
+          <div class="controls">
+            <button id="noiReset">⟲ Reset</button>
+            <button id="noiPrev">‹ Prev</button>
+            <button id="noiPlay">▶ Play</button>
+            <button id="noiNext">Next ›</button>
+            <span class="step-count" id="noiCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> sort by end time, not start time — greedily keep whichever interval ends earliest, since that leaves the most room for everything after it. Any interval that starts before the last kept interval's end must be removed; count those removals instead of trying to choose which to keep first.</div>
+        <div class="code-panel" data-problem="noi">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="max-subarray">
+        <h2>Maximum Subarray (Kadane's)</h2>
+        <p class="lead">Given nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4], find the contiguous subarray with the largest sum, and return that sum.</p>
+        <div class="stage">
+          <p class="row-label">nums</p>
+          <div class="cells" id="maxsubCells"></div>
+          <p class="row-label">running sum vs best sum seen</p>
+          <div class="kv-table" id="maxsubKV"></div>
+          <p class="status-line" id="maxsubStatus"></p>
+          <div class="controls">
+            <button id="maxsubReset">⟲ Reset</button>
+            <button id="maxsubPrev">‹ Prev</button>
+            <button id="maxsubPlay">▶ Play</button>
+            <button id="maxsubNext">Next ›</button>
+            <span class="step-count" id="maxsubCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick (Kadane's algorithm):</b> keep a running sum as you scan; the instant it goes negative, it can only drag down any subarray that includes it, so reset it to 0 and start fresh from the next element. Track the best running sum seen at any point — that's the answer. One pass, O(1) space.</div>
+        <div class="code-panel" data-problem="maxsub">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="tab-btn" data-lang="go">Go</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="review">
+        <h2>Review: pattern cheat sheet</h2>
+        <p class="lead">Fourteen days of patterns, one table. When a problem statement gives you one of these signals, this is what it's usually pointing at.</p>
+        <div class="stage">
+          <table class="cheatsheet">
+            <thead><tr><th>If you see…</th><th>Reach for…</th></tr></thead>
+            <tbody>
+              <tr><td>"have I seen this?", count occurrences, group by a computed key</td><td>Hash map / set — Day 1–2</td></tr>
+              <tr><td>Sorted array, pair/triple summing to a target, comparing ends</td><td>Two pointers — Day 3</td></tr>
+              <tr><td>"longest/shortest contiguous subarray/substring with…"</td><td>Sliding window — Day 4</td></tr>
+              <tr><td>Matching/nesting pairs, "next greater/warmer element"</td><td>Stack / monotonic stack — Day 5</td></tr>
+              <tr><td>Sorted (or rotated-sorted) input, "find minimum x such that…"</td><td>Binary search — Day 6</td></tr>
+              <tr><td>"reverse", "find the middle", "detect a cycle" on a linked list</td><td>Fast/slow pointers — Day 7</td></tr>
+              <tr><td>A property defined in terms of a node and its subtrees</td><td>Tree recursion (DFS) — Day 8</td></tr>
+              <tr><td>Level-by-level order, shortest path in a tree; prefix lookups</td><td>BFS / trie — Day 9</td></tr>
+              <tr><td>"kth largest/smallest", "k closest/most frequent"</td><td>Heap (size-k) — Day 10</td></tr>
+              <tr><td>"all possible combinations/permutations/arrangements"</td><td>Backtracking — Day 11</td></tr>
+              <tr><td>Grid regions, "is X reachable from Y", cycle in a directed graph</td><td>Graph DFS/BFS — Day 12</td></tr>
+              <tr><td>Count/min/max over "the first i…", answer built from smaller answers</td><td>1-D dynamic programming — Day 13</td></tr>
+              <tr><td>Overlapping/merging intervals, "minimum removals", max-sum subarray</td><td>Sort + greedy — Day 14</td></tr>
+              <tr><td>Need every value in O(1), but original values are too sparse/large to index</td><td>Hash map as a substitute for direct indexing — any day</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
     </section>
@@ -1211,7 +2003,7 @@ const dayTitles = [
   "Binary Search","Linked List","Trees I","Trees II + Tries","Heap / Priority Queue",
   "Backtracking","Graphs","1-D Dynamic Programming","Intervals + Greedy + Review"
 ];
-const builtDays = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const builtDays = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 const daySubs = {
   1: [
     {id:"concept", label:"Concept: Hashing"},
@@ -1220,47 +2012,91 @@ const daySubs = {
     {id:"two-sum", label:"Two Sum"}
   ],
   2: [
+    {id:"concept-2", label:"Concept: Keying by a computed signature"},
     {id:"group-anagrams", label:"Group Anagrams"},
     {id:"top-k-frequent", label:"Top K Frequent Elements"},
     {id:"product-except-self", label:"Product of Array Except Self"}
   ],
   3: [
+    {id:"concept-3", label:"Concept: Two pointers closing in"},
     {id:"valid-palindrome", label:"Valid Palindrome"},
     {id:"two-sum-ii", label:"Two Sum II"},
     {id:"three-sum", label:"3Sum"}
   ],
   4: [
+    {id:"concept-4", label:"Concept: The sliding window"},
     {id:"buy-sell-stock", label:"Best Time to Buy/Sell Stock"},
     {id:"longest-substring", label:"Longest Substring Without Repeating"},
     {id:"char-replacement", label:"Longest Repeating Char Replacement"}
   ],
   5: [
+    {id:"concept-5", label:"Concept: LIFO and the monotonic stack"},
     {id:"valid-parentheses", label:"Valid Parentheses"},
     {id:"min-stack", label:"Min Stack"},
     {id:"daily-temperatures", label:"Daily Temperatures"}
   ],
   6: [
+    {id:"concept-6", label:"Concept: Halving the search space"},
     {id:"binary-search", label:"Binary Search"},
     {id:"search-rotated", label:"Search in Rotated Sorted Array"},
     {id:"find-min-rotated", label:"Find Minimum in Rotated Sorted Array"}
   ],
   7: [
+    {id:"concept-7", label:"Concept: Pointers instead of indices"},
     {id:"reverse-list", label:"Reverse Linked List"},
     {id:"merge-lists", label:"Merge Two Sorted Lists"},
     {id:"cycle-detect", label:"Linked List Cycle"},
     {id:"reorder-list", label:"Reorder List"}
   ],
   8: [
+    {id:"concept-8", label:"Concept: Recursion as delegation"},
     {id:"invert-tree", label:"Invert Binary Tree"},
     {id:"max-depth", label:"Maximum Depth of Binary Tree"},
     {id:"same-tree", label:"Same Tree"},
     {id:"subtree", label:"Subtree of Another Tree"}
   ],
   9: [
+    {id:"concept-9", label:"Concept: BFS vs DFS, and the trie"},
     {id:"level-order", label:"Level Order Traversal"},
     {id:"validate-bst", label:"Validate Binary Search Tree"},
     {id:"lca-bst", label:"Lowest Common Ancestor of a BST"},
     {id:"implement-trie", label:"Implement Trie"}
+  ],
+  10: [
+    {id:"concept-10", label:"Concept: The heap invariant"},
+    {id:"kth-largest-stream", label:"Kth Largest Element in a Stream"},
+    {id:"last-stone-weight", label:"Last Stone Weight"},
+    {id:"k-closest-points", label:"K Closest Points to Origin"},
+    {id:"kth-largest-array", label:"Kth Largest Element in an Array"}
+  ],
+  11: [
+    {id:"concept-11", label:"Concept: Choose, explore, un-choose"},
+    {id:"subsets", label:"Subsets"},
+    {id:"combination-sum", label:"Combination Sum"},
+    {id:"permutations", label:"Permutations"},
+    {id:"word-search", label:"Word Search"}
+  ],
+  12: [
+    {id:"concept-12", label:"Concept: Traversal with a visited set"},
+    {id:"num-islands", label:"Number of Islands"},
+    {id:"clone-graph", label:"Clone Graph"},
+    {id:"course-schedule", label:"Course Schedule"},
+    {id:"pacific-atlantic", label:"Pacific Atlantic Water Flow"}
+  ],
+  13: [
+    {id:"concept-13", label:"Concept: Memoize the overlapping subproblems"},
+    {id:"climbing-stairs", label:"Climbing Stairs"},
+    {id:"house-robber", label:"House Robber"},
+    {id:"coin-change", label:"Coin Change"},
+    {id:"lis", label:"Longest Increasing Subsequence"}
+  ],
+  14: [
+    {id:"concept-14", label:"Concept: Sort, then decide greedily"},
+    {id:"insert-interval", label:"Insert Interval"},
+    {id:"merge-intervals", label:"Merge Intervals"},
+    {id:"non-overlapping-intervals", label:"Non-overlapping Intervals"},
+    {id:"max-subarray", label:"Maximum Subarray (Kadane's)"},
+    {id:"review", label:"Review: Pattern Cheat Sheet"}
   ]
 };
 
@@ -2036,6 +2872,1578 @@ public:
 };`
   }
 });
+
+/* ---- Go solutions for Days 1-9 ---- */
+Object.assign(code.cd, {go: `func containsDuplicate(nums []int) bool {
+	seen := make(map[int]struct{})
+	for _, n := range nums {
+		if _, ok := seen[n]; ok {
+			return true
+		}
+		seen[n] = struct{}{}
+	}
+	return false
+}`});
+Object.assign(code.va, {go: `func isAnagram(s string, t string) bool {
+	if len(s) != len(t) {
+		return false
+	}
+	count := make(map[rune]int)
+	for _, c := range s {
+		count[c]++
+	}
+	for _, c := range t {
+		count[c]--
+		if count[c] < 0 {
+			return false
+		}
+	}
+	return true
+}`});
+Object.assign(code.ts, {go: `func twoSum(nums []int, target int) []int {
+	seen := make(map[int]int)
+	for i, n := range nums {
+		complement := target - n
+		if j, ok := seen[complement]; ok {
+			return []int{j, i}
+		}
+		seen[n] = i
+	}
+	return nil
+}`});
+Object.assign(code.ga, {go: `func groupAnagrams(strs []string) [][]string {
+	groups := make(map[string][]string)
+	for _, s := range strs {
+		b := []byte(s)
+		sort.Slice(b, func(i, j int) bool { return b[i] < b[j] })
+		key := string(b)
+		groups[key] = append(groups[key], s)
+	}
+	result := make([][]string, 0, len(groups))
+	for _, v := range groups {
+		result = append(result, v)
+	}
+	return result
+}`});
+Object.assign(code.tk, {go: `func topKFrequent(nums []int, k int) []int {
+	count := make(map[int]int)
+	for _, n := range nums {
+		count[n]++
+	}
+	type pair struct{ val, freq int }
+	pairs := make([]pair, 0, len(count))
+	for v, f := range count {
+		pairs = append(pairs, pair{v, f})
+	}
+	sort.Slice(pairs, func(i, j int) bool { return pairs[i].freq > pairs[j].freq })
+	result := make([]int, k)
+	for i := 0; i < k; i++ {
+		result[i] = pairs[i].val
+	}
+	return result
+}`});
+Object.assign(code.pe, {go: `func productExceptSelf(nums []int) []int {
+	n := len(nums)
+	result := make([]int, n)
+	left := 1
+	for i := 0; i < n; i++ {
+		result[i] = left
+		left *= nums[i]
+	}
+	right := 1
+	for i := n - 1; i >= 0; i-- {
+		result[i] *= right
+		right *= nums[i]
+	}
+	return result
+}`});
+Object.assign(code.vp, {go: `func isPalindrome(s string) bool {
+	left, right := 0, len(s)-1
+	isAlnum := func(b byte) bool {
+		return (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z') || (b >= '0' && b <= '9')
+	}
+	for left < right {
+		if !isAlnum(s[left]) {
+			left++
+		} else if !isAlnum(s[right]) {
+			right--
+		} else if unicode.ToLower(rune(s[left])) != unicode.ToLower(rune(s[right])) {
+			return false
+		} else {
+			left++
+			right--
+		}
+	}
+	return true
+}`});
+Object.assign(code.tsii, {go: `func twoSum(numbers []int, target int) []int {
+	left, right := 0, len(numbers)-1
+	for left < right {
+		total := numbers[left] + numbers[right]
+		if total == target {
+			return []int{left + 1, right + 1}
+		} else if total < target {
+			left++
+		} else {
+			right--
+		}
+	}
+	return nil
+}`});
+Object.assign(code.tsum, {go: `func threeSum(nums []int) [][]int {
+	sort.Ints(nums)
+	var result [][]int
+	for i := 0; i < len(nums)-2; i++ {
+		if i > 0 && nums[i] == nums[i-1] {
+			continue
+		}
+		left, right := i+1, len(nums)-1
+		for left < right {
+			total := nums[i] + nums[left] + nums[right]
+			if total == 0 {
+				result = append(result, []int{nums[i], nums[left], nums[right]})
+				left++
+				right--
+				for left < right && nums[left] == nums[left-1] {
+					left++
+				}
+				for left < right && nums[right] == nums[right+1] {
+					right--
+				}
+			} else if total < 0 {
+				left++
+			} else {
+				right--
+			}
+		}
+	}
+	return result
+}`});
+Object.assign(code.bs, {go: `func maxProfit(prices []int) int {
+	minPrice := math.MaxInt32
+	maxProfit := 0
+	for _, price := range prices {
+		if price < minPrice {
+			minPrice = price
+		}
+		if price-minPrice > maxProfit {
+			maxProfit = price - minPrice
+		}
+	}
+	return maxProfit
+}`});
+Object.assign(code.ls, {go: `func lengthOfLongestSubstring(s string) int {
+	lastSeen := make(map[byte]int)
+	left, maxLen := 0, 0
+	for right := 0; right < len(s); right++ {
+		ch := s[right]
+		if idx, ok := lastSeen[ch]; ok && idx >= left {
+			left = idx + 1
+		}
+		lastSeen[ch] = right
+		if right-left+1 > maxLen {
+			maxLen = right - left + 1
+		}
+	}
+	return maxLen
+}`});
+Object.assign(code.cr, {go: `func characterReplacement(s string, k int) int {
+	counts := make(map[byte]int)
+	left, maxCount, maxLen := 0, 0, 0
+	for right := 0; right < len(s); right++ {
+		counts[s[right]]++
+		if counts[s[right]] > maxCount {
+			maxCount = counts[s[right]]
+		}
+		for (right-left+1)-maxCount > k {
+			counts[s[left]]--
+			left++
+		}
+		if right-left+1 > maxLen {
+			maxLen = right - left + 1
+		}
+	}
+	return maxLen
+}`});
+Object.assign(code.vpar, {go: `func isValid(s string) bool {
+	stack := []byte{}
+	pairs := map[byte]byte{')': '(', ']': '[', '}': '{'}
+	for i := 0; i < len(s); i++ {
+		ch := s[i]
+		if ch == '(' || ch == '[' || ch == '{' {
+			stack = append(stack, ch)
+		} else {
+			if len(stack) == 0 || stack[len(stack)-1] != pairs[ch] {
+				return false
+			}
+			stack = stack[:len(stack)-1]
+		}
+	}
+	return len(stack) == 0
+}`});
+Object.assign(code.ms, {go: `type MinStack struct {
+	stack, minStack []int
+}
+
+func Constructor() MinStack {
+	return MinStack{}
+}
+
+func (s *MinStack) Push(val int) {
+	s.stack = append(s.stack, val)
+	if len(s.minStack) == 0 || val <= s.minStack[len(s.minStack)-1] {
+		s.minStack = append(s.minStack, val)
+	}
+}
+
+func (s *MinStack) Pop() {
+	val := s.stack[len(s.stack)-1]
+	s.stack = s.stack[:len(s.stack)-1]
+	if val == s.minStack[len(s.minStack)-1] {
+		s.minStack = s.minStack[:len(s.minStack)-1]
+	}
+}
+
+func (s *MinStack) Top() int    { return s.stack[len(s.stack)-1] }
+func (s *MinStack) GetMin() int { return s.minStack[len(s.minStack)-1] }`});
+Object.assign(code.dt, {go: `func dailyTemperatures(temps []int) []int {
+	result := make([]int, len(temps))
+	stack := []int{}
+	for i, t := range temps {
+		for len(stack) > 0 && temps[stack[len(stack)-1]] < t {
+			j := stack[len(stack)-1]
+			stack = stack[:len(stack)-1]
+			result[j] = i - j
+		}
+		stack = append(stack, i)
+	}
+	return result
+}`});
+Object.assign(code.bsrc, {go: `func search(nums []int, target int) int {
+	lo, hi := 0, len(nums)-1
+	for lo <= hi {
+		mid := lo + (hi-lo)/2
+		if nums[mid] == target {
+			return mid
+		} else if nums[mid] < target {
+			lo = mid + 1
+		} else {
+			hi = mid - 1
+		}
+	}
+	return -1
+}`});
+Object.assign(code.sr, {go: `func search(nums []int, target int) int {
+	lo, hi := 0, len(nums)-1
+	for lo <= hi {
+		mid := lo + (hi-lo)/2
+		if nums[mid] == target {
+			return mid
+		}
+		if nums[lo] <= nums[mid] {
+			if nums[lo] <= target && target < nums[mid] {
+				hi = mid - 1
+			} else {
+				lo = mid + 1
+			}
+		} else {
+			if nums[mid] < target && target <= nums[hi] {
+				lo = mid + 1
+			} else {
+				hi = mid - 1
+			}
+		}
+	}
+	return -1
+}`});
+Object.assign(code.fm, {go: `func findMin(nums []int) int {
+	lo, hi := 0, len(nums)-1
+	for lo < hi {
+		mid := lo + (hi-lo)/2
+		if nums[mid] > nums[hi] {
+			lo = mid + 1
+		} else {
+			hi = mid
+		}
+	}
+	return nums[lo]
+}`});
+Object.assign(code.rl, {go: `func reverseList(head *ListNode) *ListNode {
+	var prev *ListNode
+	curr := head
+	for curr != nil {
+		next := curr.Next
+		curr.Next = prev
+		prev = curr
+		curr = next
+	}
+	return prev
+}`});
+Object.assign(code.ml, {go: `func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+	dummy := &ListNode{}
+	tail := dummy
+	for l1 != nil && l2 != nil {
+		if l1.Val <= l2.Val {
+			tail.Next = l1
+			l1 = l1.Next
+		} else {
+			tail.Next = l2
+			l2 = l2.Next
+		}
+		tail = tail.Next
+	}
+	if l1 != nil {
+		tail.Next = l1
+	} else {
+		tail.Next = l2
+	}
+	return dummy.Next
+}`});
+Object.assign(code.cl, {go: `func hasCycle(head *ListNode) bool {
+	slow, fast := head, head
+	for fast != nil && fast.Next != nil {
+		slow = slow.Next
+		fast = fast.Next.Next
+		if slow == fast {
+			return true
+		}
+	}
+	return false
+}`});
+Object.assign(code.ro, {go: `func reorderList(head *ListNode) {
+	slow, fast := head, head
+	for fast != nil && fast.Next != nil {
+		slow = slow.Next
+		fast = fast.Next.Next
+	}
+	second := slow.Next
+	slow.Next = nil
+	var prev *ListNode
+	for second != nil {
+		next := second.Next
+		second.Next = prev
+		prev = second
+		second = next
+	}
+	first, second := head, prev
+	for second != nil {
+		tmp1 := first.Next
+		first.Next = second
+		first = tmp1
+		tmp2 := second.Next
+		second.Next = first
+		second = tmp2
+	}
+}`});
+Object.assign(code.it, {go: `func invertTree(root *TreeNode) *TreeNode {
+	if root == nil {
+		return nil
+	}
+	root.Left, root.Right = invertTree(root.Right), invertTree(root.Left)
+	return root
+}`});
+Object.assign(code.md, {go: `func maxDepth(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	l, r := maxDepth(root.Left), maxDepth(root.Right)
+	if l > r {
+		return 1 + l
+	}
+	return 1 + r
+}`});
+Object.assign(code.st, {go: `func isSameTree(p *TreeNode, q *TreeNode) bool {
+	if p == nil && q == nil {
+		return true
+	}
+	if p == nil || q == nil || p.Val != q.Val {
+		return false
+	}
+	return isSameTree(p.Left, q.Left) && isSameTree(p.Right, q.Right)
+}`});
+Object.assign(code.sub, {go: `func isSameTree(p *TreeNode, q *TreeNode) bool {
+	if p == nil && q == nil {
+		return true
+	}
+	if p == nil || q == nil || p.Val != q.Val {
+		return false
+	}
+	return isSameTree(p.Left, q.Left) && isSameTree(p.Right, q.Right)
+}
+
+func isSubtree(root *TreeNode, subRoot *TreeNode) bool {
+	if root == nil {
+		return false
+	}
+	if isSameTree(root, subRoot) {
+		return true
+	}
+	return isSubtree(root.Left, subRoot) || isSubtree(root.Right, subRoot)
+}`});
+Object.assign(code.lo, {go: `func levelOrder(root *TreeNode) [][]int {
+	var result [][]int
+	if root == nil {
+		return result
+	}
+	queue := []*TreeNode{root}
+	for len(queue) > 0 {
+		var level []int
+		size := len(queue)
+		for i := 0; i < size; i++ {
+			node := queue[0]
+			queue = queue[1:]
+			level = append(level, node.Val)
+			if node.Left != nil {
+				queue = append(queue, node.Left)
+			}
+			if node.Right != nil {
+				queue = append(queue, node.Right)
+			}
+		}
+		result = append(result, level)
+	}
+	return result
+}`});
+Object.assign(code.vb, {go: `func isValidBST(root *TreeNode) bool {
+	var validate func(node *TreeNode, low, high *int) bool
+	validate = func(node *TreeNode, low, high *int) bool {
+		if node == nil {
+			return true
+		}
+		if (low != nil && node.Val <= *low) || (high != nil && node.Val >= *high) {
+			return false
+		}
+		return validate(node.Left, low, &node.Val) && validate(node.Right, &node.Val, high)
+	}
+	return validate(root, nil, nil)
+}`});
+Object.assign(code.lca, {go: `func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	curr := root
+	for curr != nil {
+		if p.Val < curr.Val && q.Val < curr.Val {
+			curr = curr.Left
+		} else if p.Val > curr.Val && q.Val > curr.Val {
+			curr = curr.Right
+		} else {
+			return curr
+		}
+	}
+	return nil
+}`});
+Object.assign(code.trie, {go: `type Trie struct {
+	children map[byte]*Trie
+	end      bool
+}
+
+func Constructor() Trie {
+	return Trie{children: make(map[byte]*Trie)}
+}
+
+func (t *Trie) Insert(word string) {
+	node := t
+	for i := 0; i < len(word); i++ {
+		ch := word[i]
+		if node.children[ch] == nil {
+			child := Constructor()
+			node.children[ch] = &child
+		}
+		node = node.children[ch]
+	}
+	node.end = true
+}
+
+func (t *Trie) Search(word string) bool {
+	node := t
+	for i := 0; i < len(word); i++ {
+		ch := word[i]
+		if node.children[ch] == nil {
+			return false
+		}
+		node = node.children[ch]
+	}
+	return node.end
+}
+
+func (t *Trie) StartsWith(prefix string) bool {
+	node := t
+	for i := 0; i < len(prefix); i++ {
+		ch := prefix[i]
+		if node.children[ch] == nil {
+			return false
+		}
+		node = node.children[ch]
+	}
+	return true
+}`});
+
+
+Object.assign(code, {
+  kls: {
+    python: `import heapq
+
+class KthLargest:
+    def __init__(self, k: int, nums: list[int]):
+        self.k = k
+        self.heap = nums
+        heapq.heapify(self.heap)
+        while len(self.heap) > k:
+            heapq.heappop(self.heap)
+
+    def add(self, val: int) -> int:
+        heapq.heappush(self.heap, val)
+        if len(self.heap) > self.k:
+            heapq.heappop(self.heap)
+        return self.heap[0]`,
+    cpp: `class KthLargest {
+    priority_queue<int, vector<int>, greater<int>> heap;
+    int k;
+public:
+    KthLargest(int k, vector<int>& nums) : k(k) {
+        for (int n : nums) add(n);
+    }
+    int add(int val) {
+        heap.push(val);
+        if ((int)heap.size() > k) heap.pop();
+        return heap.top();
+    }
+};`,
+    go: `type KthLargest struct {
+	k    int
+	heap *IntMinHeap
+}
+
+func Constructor(k int, nums []int) KthLargest {
+	h := &IntMinHeap{}
+	heap.Init(h)
+	kl := KthLargest{k: k, heap: h}
+	for _, n := range nums {
+		kl.Add(n)
+	}
+	return kl
+}
+
+func (kl *KthLargest) Add(val int) int {
+	heap.Push(kl.heap, val)
+	if kl.heap.Len() > kl.k {
+		heap.Pop(kl.heap)
+	}
+	return (*kl.heap)[0]
+}
+
+// IntMinHeap implements container/heap.Interface over []int.
+type IntMinHeap []int
+
+func (h IntMinHeap) Len() int            { return len(h) }
+func (h IntMinHeap) Less(i, j int) bool  { return h[i] < h[j] }
+func (h IntMinHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *IntMinHeap) Push(x interface{}) { *h = append(*h, x.(int)) }
+func (h *IntMinHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[:n-1]
+	return x
+}`
+  },
+  lsw: {
+    python: `import heapq
+
+def lastStoneWeight(stones: list[int]) -> int:
+    heap = [-s for s in stones]
+    heapq.heapify(heap)
+    while len(heap) > 1:
+        y = -heapq.heappop(heap)
+        x = -heapq.heappop(heap)
+        if y != x:
+            heapq.heappush(heap, -(y - x))
+    return -heap[0] if heap else 0`,
+    cpp: `int lastStoneWeight(vector<int>& stones) {
+    priority_queue<int> heap(stones.begin(), stones.end());
+    while (heap.size() > 1) {
+        int y = heap.top(); heap.pop();
+        int x = heap.top(); heap.pop();
+        if (y != x) heap.push(y - x);
+    }
+    return heap.empty() ? 0 : heap.top();
+}`,
+    go: `func lastStoneWeight(stones []int) int {
+	h := &IntMaxHeap{}
+	*h = append(*h, stones...)
+	heap.Init(h)
+	for h.Len() > 1 {
+		y := heap.Pop(h).(int)
+		x := heap.Pop(h).(int)
+		if y != x {
+			heap.Push(h, y-x)
+		}
+	}
+	if h.Len() == 0 {
+		return 0
+	}
+	return (*h)[0]
+}
+
+// IntMaxHeap implements container/heap.Interface over []int, largest first.
+type IntMaxHeap []int
+
+func (h IntMaxHeap) Len() int            { return len(h) }
+func (h IntMaxHeap) Less(i, j int) bool  { return h[i] > h[j] }
+func (h IntMaxHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *IntMaxHeap) Push(x interface{}) { *h = append(*h, x.(int)) }
+func (h *IntMaxHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[:n-1]
+	return x
+}`
+  },
+  kcp: {
+    python: `import heapq
+
+def kClosest(points: list[list[int]], k: int) -> list[list[int]]:
+    heap = []
+    for x, y in points:
+        dist = x * x + y * y
+        heapq.heappush(heap, (-dist, x, y))
+        if len(heap) > k:
+            heapq.heappop(heap)
+    return [[x, y] for _, x, y in heap]`,
+    cpp: `vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+    priority_queue<pair<int, vector<int>>> heap; // max-heap by squared distance
+    for (auto& p : points) {
+        int dist = p[0]*p[0] + p[1]*p[1];
+        heap.push({dist, p});
+        if ((int)heap.size() > k) heap.pop();
+    }
+    vector<vector<int>> result;
+    while (!heap.empty()) { result.push_back(heap.top().second); heap.pop(); }
+    return result;
+}`,
+    go: `type point struct{ dist, x, y int }
+type PointMaxHeap []point
+
+func (h PointMaxHeap) Len() int            { return len(h) }
+func (h PointMaxHeap) Less(i, j int) bool  { return h[i].dist > h[j].dist }
+func (h PointMaxHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *PointMaxHeap) Push(x interface{}) { *h = append(*h, x.(point)) }
+func (h *PointMaxHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[:n-1]
+	return x
+}
+
+func kClosest(points [][]int, k int) [][]int {
+	h := &PointMaxHeap{}
+	heap.Init(h)
+	for _, p := range points {
+		d := p[0]*p[0] + p[1]*p[1]
+		heap.Push(h, point{d, p[0], p[1]})
+		if h.Len() > k {
+			heap.Pop(h)
+		}
+	}
+	result := make([][]int, 0, k)
+	for _, p := range *h {
+		result = append(result, []int{p.x, p.y})
+	}
+	return result
+}`
+  },
+  kla: {
+    python: `import heapq
+
+def findKthLargest(nums: list[int], k: int) -> int:
+    heap = []
+    for n in nums:
+        heapq.heappush(heap, n)
+        if len(heap) > k:
+            heapq.heappop(heap)
+    return heap[0]`,
+    cpp: `int findKthLargest(vector<int>& nums, int k) {
+    priority_queue<int, vector<int>, greater<int>> heap;
+    for (int n : nums) {
+        heap.push(n);
+        if ((int)heap.size() > k) heap.pop();
+    }
+    return heap.top();
+}`,
+    go: `func findKthLargest(nums []int, k int) int {
+	h := &IntMinHeap{}
+	heap.Init(h)
+	for _, n := range nums {
+		heap.Push(h, n)
+		if h.Len() > k {
+			heap.Pop(h)
+		}
+	}
+	return (*h)[0]
+}`
+  }
+});
+
+
+Object.assign(code, {
+  subs: {
+    python: `def subsets(nums: list[int]) -> list[list[int]]:
+    result = []
+    path = []
+
+    def backtrack(start: int):
+        result.append(path[:])
+        for i in range(start, len(nums)):
+            path.append(nums[i])
+            backtrack(i + 1)
+            path.pop()
+
+    backtrack(0)
+    return result`,
+    cpp: `void backtrack(vector<int>& nums, int start, vector<int>& path, vector<vector<int>>& result) {
+    result.push_back(path);
+    for (int i = start; i < (int)nums.size(); i++) {
+        path.push_back(nums[i]);
+        backtrack(nums, i + 1, path, result);
+        path.pop_back();
+    }
+}
+
+vector<vector<int>> subsets(vector<int>& nums) {
+    vector<vector<int>> result;
+    vector<int> path;
+    backtrack(nums, 0, path, result);
+    return result;
+}`,
+    go: `func subsets(nums []int) [][]int {
+	var result [][]int
+	var path []int
+	var backtrack func(start int)
+	backtrack = func(start int) {
+		record := make([]int, len(path))
+		copy(record, path)
+		result = append(result, record)
+		for i := start; i < len(nums); i++ {
+			path = append(path, nums[i])
+			backtrack(i + 1)
+			path = path[:len(path)-1]
+		}
+	}
+	backtrack(0)
+	return result
+}`
+  },
+  csum: {
+    python: `def combinationSum(candidates: list[int], target: int) -> list[list[int]]:
+    result = []
+    path = []
+
+    def backtrack(start: int, remain: int):
+        if remain == 0:
+            result.append(path[:])
+            return
+        for i in range(start, len(candidates)):
+            if candidates[i] > remain:
+                continue
+            path.append(candidates[i])
+            backtrack(i, remain - candidates[i])
+            path.pop()
+
+    backtrack(0, target)
+    return result`,
+    cpp: `void backtrack(vector<int>& cands, int start, int remain, vector<int>& path, vector<vector<int>>& result) {
+    if (remain == 0) { result.push_back(path); return; }
+    for (int i = start; i < (int)cands.size(); i++) {
+        if (cands[i] > remain) continue;
+        path.push_back(cands[i]);
+        backtrack(cands, i, remain - cands[i], path, result);
+        path.pop_back();
+    }
+}
+
+vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+    vector<vector<int>> result;
+    vector<int> path;
+    backtrack(candidates, 0, target, path, result);
+    return result;
+}`,
+    go: `func combinationSum(candidates []int, target int) [][]int {
+	var result [][]int
+	var path []int
+	var backtrack func(start, remain int)
+	backtrack = func(start, remain int) {
+		if remain == 0 {
+			record := make([]int, len(path))
+			copy(record, path)
+			result = append(result, record)
+			return
+		}
+		for i := start; i < len(candidates); i++ {
+			if candidates[i] > remain {
+				continue
+			}
+			path = append(path, candidates[i])
+			backtrack(i, remain-candidates[i])
+			path = path[:len(path)-1]
+		}
+	}
+	backtrack(0, target)
+	return result
+}`
+  },
+  perm: {
+    python: `def permute(nums: list[int]) -> list[list[int]]:
+    result = []
+    path = []
+    used = [False] * len(nums)
+
+    def backtrack():
+        if len(path) == len(nums):
+            result.append(path[:])
+            return
+        for i in range(len(nums)):
+            if used[i]:
+                continue
+            used[i] = True
+            path.append(nums[i])
+            backtrack()
+            path.pop()
+            used[i] = False
+
+    backtrack()
+    return result`,
+    cpp: `void backtrack(vector<int>& nums, vector<int>& path, vector<bool>& used, vector<vector<int>>& result) {
+    if (path.size() == nums.size()) { result.push_back(path); return; }
+    for (int i = 0; i < (int)nums.size(); i++) {
+        if (used[i]) continue;
+        used[i] = true;
+        path.push_back(nums[i]);
+        backtrack(nums, path, used, result);
+        path.pop_back();
+        used[i] = false;
+    }
+}
+
+vector<vector<int>> permute(vector<int>& nums) {
+    vector<vector<int>> result;
+    vector<int> path;
+    vector<bool> used(nums.size(), false);
+    backtrack(nums, path, used, result);
+    return result;
+}`,
+    go: `func permute(nums []int) [][]int {
+	var result [][]int
+	var path []int
+	used := make([]bool, len(nums))
+	var backtrack func()
+	backtrack = func() {
+		if len(path) == len(nums) {
+			record := make([]int, len(path))
+			copy(record, path)
+			result = append(result, record)
+			return
+		}
+		for i := 0; i < len(nums); i++ {
+			if used[i] {
+				continue
+			}
+			used[i] = true
+			path = append(path, nums[i])
+			backtrack()
+			path = path[:len(path)-1]
+			used[i] = false
+		}
+	}
+	backtrack()
+	return result
+}`
+  },
+  ws: {
+    python: `def exist(board: list[list[str]], word: str) -> bool:
+    rows, cols = len(board), len(board[0])
+
+    def dfs(r: int, c: int, i: int) -> bool:
+        if i == len(word):
+            return True
+        if r < 0 or r >= rows or c < 0 or c >= cols or board[r][c] != word[i]:
+            return False
+        temp, board[r][c] = board[r][c], '#'
+        found = (dfs(r+1, c, i+1) or dfs(r-1, c, i+1) or
+                 dfs(r, c+1, i+1) or dfs(r, c-1, i+1))
+        board[r][c] = temp
+        return found
+
+    for r in range(rows):
+        for c in range(cols):
+            if dfs(r, c, 0):
+                return True
+    return False`,
+    cpp: `bool dfs(vector<vector<char>>& board, string& word, int r, int c, int i) {
+    if (i == (int)word.size()) return true;
+    if (r < 0 || r >= (int)board.size() || c < 0 || c >= (int)board[0].size() || board[r][c] != word[i])
+        return false;
+    char temp = board[r][c];
+    board[r][c] = '#';
+    bool found = dfs(board, word, r+1, c, i+1) || dfs(board, word, r-1, c, i+1) ||
+                 dfs(board, word, r, c+1, i+1) || dfs(board, word, r, c-1, i+1);
+    board[r][c] = temp;
+    return found;
+}
+
+bool exist(vector<vector<char>>& board, string word) {
+    for (int r = 0; r < (int)board.size(); r++)
+        for (int c = 0; c < (int)board[0].size(); c++)
+            if (dfs(board, word, r, c, 0)) return true;
+    return false;
+}`,
+    go: `func exist(board [][]byte, word string) bool {
+	rows, cols := len(board), len(board[0])
+	var dfs func(r, c, i int) bool
+	dfs = func(r, c, i int) bool {
+		if i == len(word) {
+			return true
+		}
+		if r < 0 || r >= rows || c < 0 || c >= cols || board[r][c] != word[i] {
+			return false
+		}
+		temp := board[r][c]
+		board[r][c] = '#'
+		found := dfs(r+1, c, i+1) || dfs(r-1, c, i+1) ||
+			dfs(r, c+1, i+1) || dfs(r, c-1, i+1)
+		board[r][c] = temp
+		return found
+	}
+	for r := 0; r < rows; r++ {
+		for c := 0; c < cols; c++ {
+			if dfs(r, c, 0) {
+				return true
+			}
+		}
+	}
+	return false
+}`
+  }
+});
+
+
+Object.assign(code, {
+  ni: {
+    python: `def numIslands(grid: list[list[str]]) -> int:
+    rows, cols = len(grid), len(grid[0])
+    visited = set()
+
+    def dfs(r: int, c: int):
+        if (r < 0 or r >= rows or c < 0 or c >= cols or
+                (r, c) in visited or grid[r][c] == '0'):
+            return
+        visited.add((r, c))
+        dfs(r+1, c); dfs(r-1, c); dfs(r, c+1); dfs(r, c-1)
+
+    count = 0
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == '1' and (r, c) not in visited:
+                count += 1
+                dfs(r, c)
+    return count`,
+    cpp: `void dfs(vector<vector<char>>& grid, vector<vector<bool>>& visited, int r, int c) {
+    int rows = grid.size(), cols = grid[0].size();
+    if (r < 0 || r >= rows || c < 0 || c >= cols || visited[r][c] || grid[r][c] == '0') return;
+    visited[r][c] = true;
+    dfs(grid, visited, r+1, c); dfs(grid, visited, r-1, c);
+    dfs(grid, visited, r, c+1); dfs(grid, visited, r, c-1);
+}
+
+int numIslands(vector<vector<char>>& grid) {
+    int rows = grid.size(), cols = grid[0].size();
+    vector<vector<bool>> visited(rows, vector<bool>(cols, false));
+    int count = 0;
+    for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
+            if (grid[r][c] == '1' && !visited[r][c]) {
+                count++;
+                dfs(grid, visited, r, c);
+            }
+        }
+    }
+    return count;
+}`,
+    go: `func numIslands(grid [][]byte) int {
+	rows, cols := len(grid), len(grid[0])
+	visited := make([][]bool, rows)
+	for i := range visited {
+		visited[i] = make([]bool, cols)
+	}
+	var dfs func(r, c int)
+	dfs = func(r, c int) {
+		if r < 0 || r >= rows || c < 0 || c >= cols || visited[r][c] || grid[r][c] == '0' {
+			return
+		}
+		visited[r][c] = true
+		dfs(r+1, c)
+		dfs(r-1, c)
+		dfs(r, c+1)
+		dfs(r, c-1)
+	}
+	count := 0
+	for r := 0; r < rows; r++ {
+		for c := 0; c < cols; c++ {
+			if grid[r][c] == '1' && !visited[r][c] {
+				count++
+				dfs(r, c)
+			}
+		}
+	}
+	return count
+}`
+  },
+  cg: {
+    python: `class Node:
+    def __init__(self, val=0, neighbors=None):
+        self.val = val
+        self.neighbors = neighbors or []
+
+def cloneGraph(node):
+    if not node:
+        return None
+    cloned = {}
+
+    def dfs(n):
+        if n in cloned:
+            return cloned[n]
+        copy = Node(n.val)
+        cloned[n] = copy
+        for nb in n.neighbors:
+            copy.neighbors.append(dfs(nb))
+        return copy
+
+    return dfs(node)`,
+    cpp: `class Node {
+public:
+    int val;
+    vector<Node*> neighbors;
+    Node(int _val) : val(_val) {}
+};
+
+Node* dfs(Node* n, unordered_map<Node*, Node*>& cloned) {
+    if (cloned.count(n)) return cloned[n];
+    Node* copy = new Node(n->val);
+    cloned[n] = copy;
+    for (Node* nb : n->neighbors) copy->neighbors.push_back(dfs(nb, cloned));
+    return copy;
+}
+
+Node* cloneGraph(Node* node) {
+    if (!node) return nullptr;
+    unordered_map<Node*, Node*> cloned;
+    return dfs(node, cloned);
+}`,
+    go: `type Node struct {
+	Val       int
+	Neighbors []*Node
+}
+
+func cloneGraph(node *Node) *Node {
+	if node == nil {
+		return nil
+	}
+	cloned := make(map[*Node]*Node)
+	var dfs func(n *Node) *Node
+	dfs = func(n *Node) *Node {
+		if c, ok := cloned[n]; ok {
+			return c
+		}
+		copy := &Node{Val: n.Val}
+		cloned[n] = copy
+		for _, nb := range n.Neighbors {
+			copy.Neighbors = append(copy.Neighbors, dfs(nb))
+		}
+		return copy
+	}
+	return dfs(node)
+}`
+  },
+  cs: {
+    python: `def canFinish(numCourses: int, prerequisites: list[list[int]]) -> bool:
+    adj = [[] for _ in range(numCourses)]
+    for course, prereq in prerequisites:
+        adj[prereq].append(course)
+    state = [0] * numCourses  # 0 unvisited, 1 visiting, 2 done
+
+    def dfs(node: int) -> bool:
+        if state[node] == 1:
+            return False  # cycle
+        if state[node] == 2:
+            return True
+        state[node] = 1
+        for nb in adj[node]:
+            if not dfs(nb):
+                return False
+        state[node] = 2
+        return True
+
+    for i in range(numCourses):
+        if state[i] == 0 and not dfs(i):
+            return False
+    return True`,
+    cpp: `bool dfs(int node, vector<vector<int>>& adj, vector<int>& state) {
+    if (state[node] == 1) return false;
+    if (state[node] == 2) return true;
+    state[node] = 1;
+    for (int nb : adj[node]) {
+        if (!dfs(nb, adj, state)) return false;
+    }
+    state[node] = 2;
+    return true;
+}
+
+bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+    vector<vector<int>> adj(numCourses);
+    for (auto& p : prerequisites) adj[p[1]].push_back(p[0]);
+    vector<int> state(numCourses, 0);
+    for (int i = 0; i < numCourses; i++) {
+        if (state[i] == 0 && !dfs(i, adj, state)) return false;
+    }
+    return true;
+}`,
+    go: `func canFinish(numCourses int, prerequisites [][]int) bool {
+	adj := make([][]int, numCourses)
+	for _, p := range prerequisites {
+		adj[p[1]] = append(adj[p[1]], p[0])
+	}
+	state := make([]int, numCourses) // 0 unvisited, 1 visiting, 2 done
+	var dfs func(node int) bool
+	dfs = func(node int) bool {
+		if state[node] == 1 {
+			return false
+		}
+		if state[node] == 2 {
+			return true
+		}
+		state[node] = 1
+		for _, nb := range adj[node] {
+			if !dfs(nb) {
+				return false
+			}
+		}
+		state[node] = 2
+		return true
+	}
+	for i := 0; i < numCourses; i++ {
+		if state[i] == 0 && !dfs(i) {
+			return false
+		}
+	}
+	return true
+}`
+  },
+  pa: {
+    python: `def pacificAtlantic(heights: list[list[int]]) -> list[list[int]]:
+    rows, cols = len(heights), len(heights[0])
+    pacific, atlantic = set(), set()
+
+    def dfs(r: int, c: int, visited: set, prevHeight: int):
+        if (r < 0 or r >= rows or c < 0 or c >= cols or
+                (r, c) in visited or heights[r][c] < prevHeight):
+            return
+        visited.add((r, c))
+        for dr, dc in ((1,0), (-1,0), (0,1), (0,-1)):
+            dfs(r+dr, c+dc, visited, heights[r][c])
+
+    for c in range(cols):
+        dfs(0, c, pacific, heights[0][c])
+        dfs(rows-1, c, atlantic, heights[rows-1][c])
+    for r in range(rows):
+        dfs(r, 0, pacific, heights[r][0])
+        dfs(r, cols-1, atlantic, heights[r][cols-1])
+
+    return [[r, c] for r in range(rows) for c in range(cols) if (r, c) in pacific and (r, c) in atlantic]`,
+    cpp: `void dfs(vector<vector<int>>& heights, vector<vector<bool>>& visited, int r, int c, int prevHeight) {
+    int rows = heights.size(), cols = heights[0].size();
+    if (r < 0 || r >= rows || c < 0 || c >= cols || visited[r][c] || heights[r][c] < prevHeight) return;
+    visited[r][c] = true;
+    int dr[] = {1,-1,0,0}, dc[] = {0,0,1,-1};
+    for (int i = 0; i < 4; i++) dfs(heights, visited, r+dr[i], c+dc[i], heights[r][c]);
+}
+
+vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+    int rows = heights.size(), cols = heights[0].size();
+    vector<vector<bool>> pac(rows, vector<bool>(cols, false)), atl(rows, vector<bool>(cols, false));
+    for (int c = 0; c < cols; c++) {
+        dfs(heights, pac, 0, c, heights[0][c]);
+        dfs(heights, atl, rows-1, c, heights[rows-1][c]);
+    }
+    for (int r = 0; r < rows; r++) {
+        dfs(heights, pac, r, 0, heights[r][0]);
+        dfs(heights, atl, r, cols-1, heights[r][cols-1]);
+    }
+    vector<vector<int>> result;
+    for (int r = 0; r < rows; r++)
+        for (int c = 0; c < cols; c++)
+            if (pac[r][c] && atl[r][c]) result.push_back({r, c});
+    return result;
+}`,
+    go: `func pacificAtlantic(heights [][]int) [][]int {
+	rows, cols := len(heights), len(heights[0])
+	pac := make([][]bool, rows)
+	atl := make([][]bool, rows)
+	for i := range pac {
+		pac[i] = make([]bool, cols)
+		atl[i] = make([]bool, cols)
+	}
+	var dfs func(matrix [][]bool, r, c, prevHeight int)
+	dfs = func(matrix [][]bool, r, c, prevHeight int) {
+		if r < 0 || r >= rows || c < 0 || c >= cols || matrix[r][c] || heights[r][c] < prevHeight {
+			return
+		}
+		matrix[r][c] = true
+		dirs := [][2]int{{1,0},{-1,0},{0,1},{0,-1}}
+		for _, d := range dirs {
+			dfs(matrix, r+d[0], c+d[1], heights[r][c])
+		}
+	}
+	for c := 0; c < cols; c++ {
+		dfs(pac, 0, c, heights[0][c])
+		dfs(atl, rows-1, c, heights[rows-1][c])
+	}
+	for r := 0; r < rows; r++ {
+		dfs(pac, r, 0, heights[r][0])
+		dfs(atl, r, cols-1, heights[r][cols-1])
+	}
+	var result [][]int
+	for r := 0; r < rows; r++ {
+		for c := 0; c < cols; c++ {
+			if pac[r][c] && atl[r][c] {
+				result = append(result, []int{r, c})
+			}
+		}
+	}
+	return result
+}`
+  }
+});
+
+
+Object.assign(code, {
+  climb: {
+    python: `def climbStairs(n: int) -> int:
+    if n <= 1:
+        return 1
+    dp = [0] * (n + 1)
+    dp[0], dp[1] = 1, 1
+    for i in range(2, n + 1):
+        dp[i] = dp[i - 1] + dp[i - 2]
+    return dp[n]`,
+    cpp: `int climbStairs(int n) {
+    if (n <= 1) return 1;
+    vector<int> dp(n + 1);
+    dp[0] = dp[1] = 1;
+    for (int i = 2; i <= n; i++) dp[i] = dp[i - 1] + dp[i - 2];
+    return dp[n];
+}`,
+    go: `func climbStairs(n int) int {
+	if n <= 1 {
+		return 1
+	}
+	dp := make([]int, n+1)
+	dp[0], dp[1] = 1, 1
+	for i := 2; i <= n; i++ {
+		dp[i] = dp[i-1] + dp[i-2]
+	}
+	return dp[n]
+}`
+  },
+  hr: {
+    python: `def rob(nums: list[int]) -> int:
+    if len(nums) == 1:
+        return nums[0]
+    dp = [0] * len(nums)
+    dp[0], dp[1] = nums[0], max(nums[0], nums[1])
+    for i in range(2, len(nums)):
+        dp[i] = max(dp[i - 1], dp[i - 2] + nums[i])
+    return dp[-1]`,
+    cpp: `int rob(vector<int>& nums) {
+    if (nums.size() == 1) return nums[0];
+    vector<int> dp(nums.size());
+    dp[0] = nums[0];
+    dp[1] = max(nums[0], nums[1]);
+    for (int i = 2; i < (int)nums.size(); i++) {
+        dp[i] = max(dp[i - 1], dp[i - 2] + nums[i]);
+    }
+    return dp.back();
+}`,
+    go: `func rob(nums []int) int {
+	if len(nums) == 1 {
+		return nums[0]
+	}
+	dp := make([]int, len(nums))
+	dp[0] = nums[0]
+	if nums[1] > nums[0] {
+		dp[1] = nums[1]
+	} else {
+		dp[1] = nums[0]
+	}
+	for i := 2; i < len(nums); i++ {
+		rob := dp[i-2] + nums[i]
+		skip := dp[i-1]
+		if rob > skip {
+			dp[i] = rob
+		} else {
+			dp[i] = skip
+		}
+	}
+	return dp[len(dp)-1]
+}`
+  },
+  cc: {
+    python: `def coinChange(coins: list[int], amount: int) -> int:
+    dp = [float('inf')] * (amount + 1)
+    dp[0] = 0
+    for i in range(1, amount + 1):
+        for c in coins:
+            if c <= i:
+                dp[i] = min(dp[i], dp[i - c] + 1)
+    return dp[amount] if dp[amount] != float('inf') else -1`,
+    cpp: `int coinChange(vector<int>& coins, int amount) {
+    vector<int> dp(amount + 1, INT_MAX);
+    dp[0] = 0;
+    for (int i = 1; i <= amount; i++) {
+        for (int c : coins) {
+            if (c <= i && dp[i - c] != INT_MAX) {
+                dp[i] = min(dp[i], dp[i - c] + 1);
+            }
+        }
+    }
+    return dp[amount] == INT_MAX ? -1 : dp[amount];
+}`,
+    go: `func coinChange(coins []int, amount int) int {
+	dp := make([]int, amount+1)
+	for i := 1; i <= amount; i++ {
+		dp[i] = math.MaxInt32
+	}
+	for i := 1; i <= amount; i++ {
+		for _, c := range coins {
+			if c <= i && dp[i-c] != math.MaxInt32 && dp[i-c]+1 < dp[i] {
+				dp[i] = dp[i-c] + 1
+			}
+		}
+	}
+	if dp[amount] == math.MaxInt32 {
+		return -1
+	}
+	return dp[amount]
+}`
+  },
+  lis: {
+    python: `def lengthOfLIS(nums: list[int]) -> int:
+    dp = [1] * len(nums)
+    for i in range(1, len(nums)):
+        for j in range(i):
+            if nums[j] < nums[i]:
+                dp[i] = max(dp[i], dp[j] + 1)
+    return max(dp)`,
+    cpp: `int lengthOfLIS(vector<int>& nums) {
+    vector<int> dp(nums.size(), 1);
+    for (int i = 1; i < (int)nums.size(); i++) {
+        for (int j = 0; j < i; j++) {
+            if (nums[j] < nums[i]) dp[i] = max(dp[i], dp[j] + 1);
+        }
+    }
+    return *max_element(dp.begin(), dp.end());
+}`,
+    go: `func lengthOfLIS(nums []int) int {
+	dp := make([]int, len(nums))
+	best := 0
+	for i := range dp {
+		dp[i] = 1
+	}
+	for i := 1; i < len(nums); i++ {
+		for j := 0; j < i; j++ {
+			if nums[j] < nums[i] && dp[j]+1 > dp[i] {
+				dp[i] = dp[j] + 1
+			}
+		}
+	}
+	for _, v := range dp {
+		if v > best {
+			best = v
+		}
+	}
+	return best
+}`
+  }
+});
+
+
+Object.assign(code, {
+  ii: {
+    python: `def insert(intervals: list[list[int]], newInterval: list[int]) -> list[list[int]]:
+    result = []
+    i = 0
+    n = len(intervals)
+
+    while i < n and intervals[i][1] < newInterval[0]:
+        result.append(intervals[i])
+        i += 1
+
+    while i < n and intervals[i][0] <= newInterval[1]:
+        newInterval = [min(newInterval[0], intervals[i][0]), max(newInterval[1], intervals[i][1])]
+        i += 1
+    result.append(newInterval)
+
+    while i < n:
+        result.append(intervals[i])
+        i += 1
+
+    return result`,
+    cpp: `vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int> newInterval) {
+    vector<vector<int>> result;
+    int i = 0, n = intervals.size();
+
+    while (i < n && intervals[i][1] < newInterval[0]) result.push_back(intervals[i++]);
+
+    while (i < n && intervals[i][0] <= newInterval[1]) {
+        newInterval[0] = min(newInterval[0], intervals[i][0]);
+        newInterval[1] = max(newInterval[1], intervals[i][1]);
+        i++;
+    }
+    result.push_back(newInterval);
+
+    while (i < n) result.push_back(intervals[i++]);
+    return result;
+}`,
+    go: `func insert(intervals [][]int, newInterval []int) [][]int {
+	var result [][]int
+	i, n := 0, len(intervals)
+
+	for i < n && intervals[i][1] < newInterval[0] {
+		result = append(result, intervals[i])
+		i++
+	}
+
+	for i < n && intervals[i][0] <= newInterval[1] {
+		newInterval[0] = min(newInterval[0], intervals[i][0])
+		newInterval[1] = max(newInterval[1], intervals[i][1])
+		i++
+	}
+	result = append(result, newInterval)
+
+	for i < n {
+		result = append(result, intervals[i])
+		i++
+	}
+	return result
+}
+
+func min(a, b int) int { if a < b { return a }; return b }
+func max(a, b int) int { if a > b { return a }; return b }`
+  },
+  mi: {
+    python: `def merge(intervals: list[list[int]]) -> list[list[int]]:
+    intervals.sort(key=lambda iv: iv[0])
+    merged = []
+    for start, end in intervals:
+        if not merged or merged[-1][1] < start:
+            merged.append([start, end])
+        else:
+            merged[-1][1] = max(merged[-1][1], end)
+    return merged`,
+    cpp: `vector<vector<int>> merge(vector<vector<int>>& intervals) {
+    sort(intervals.begin(), intervals.end());
+    vector<vector<int>> merged;
+    for (auto& iv : intervals) {
+        if (merged.empty() || merged.back()[1] < iv[0]) {
+            merged.push_back(iv);
+        } else {
+            merged.back()[1] = max(merged.back()[1], iv[1]);
+        }
+    }
+    return merged;
+}`,
+    go: `func merge(intervals [][]int) [][]int {
+	sort.Slice(intervals, func(i, j int) bool { return intervals[i][0] < intervals[j][0] })
+	var merged [][]int
+	for _, iv := range intervals {
+		n := len(merged)
+		if n == 0 || merged[n-1][1] < iv[0] {
+			merged = append(merged, iv)
+		} else if iv[1] > merged[n-1][1] {
+			merged[n-1][1] = iv[1]
+		}
+	}
+	return merged
+}`
+  },
+  noi: {
+    python: `def eraseOverlapIntervals(intervals: list[list[int]]) -> int:
+    intervals.sort(key=lambda iv: iv[1])
+    count = 0
+    prev_end = float('-inf')
+    for start, end in intervals:
+        if start >= prev_end:
+            prev_end = end
+        else:
+            count += 1
+    return count`,
+    cpp: `int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+    sort(intervals.begin(), intervals.end(), [](auto& a, auto& b) { return a[1] < b[1]; });
+    int count = 0;
+    long prevEnd = LONG_MIN;
+    for (auto& iv : intervals) {
+        if (iv[0] >= prevEnd) prevEnd = iv[1];
+        else count++;
+    }
+    return count;
+}`,
+    go: `func eraseOverlapIntervals(intervals [][]int) int {
+	sort.Slice(intervals, func(i, j int) bool { return intervals[i][1] < intervals[j][1] })
+	count := 0
+	prevEnd := math.MinInt64
+	for _, iv := range intervals {
+		if iv[0] >= prevEnd {
+			prevEnd = iv[1]
+		} else {
+			count++
+		}
+	}
+	return count
+}`
+  },
+  maxsub: {
+    python: `def maxSubArray(nums: list[int]) -> int:
+    cur_sum = 0
+    max_sum = float('-inf')
+    for n in nums:
+        if cur_sum < 0:
+            cur_sum = 0
+        cur_sum += n
+        max_sum = max(max_sum, cur_sum)
+    return max_sum`,
+    cpp: `int maxSubArray(vector<int>& nums) {
+    int curSum = 0, maxSum = INT_MIN;
+    for (int n : nums) {
+        if (curSum < 0) curSum = 0;
+        curSum += n;
+        maxSum = max(maxSum, curSum);
+    }
+    return maxSum;
+}`,
+    go: `func maxSubArray(nums []int) int {
+	curSum, maxSum := 0, math.MinInt32
+	for _, n := range nums {
+		if curSum < 0 {
+			curSum = 0
+		}
+		curSum += n
+		if curSum > maxSum {
+			maxSum = curSum
+		}
+	}
+	return maxSum
+}`
+  }
+});
+
 function el(tag, cls, html){
   const e = document.createElement(tag);
   if (cls) e.className = cls;
@@ -2099,13 +4507,100 @@ function svgTreeString(layout, stateForVal){
   return svg;
 }
 
+function heapTreeSVG(arr, hiIndex){
+  if (arr.length === 0) return '<svg viewBox="0 0 100 40" width="100%"></svg>';
+  const spacingY = 56, offsetY = 26;
+  const depth = Math.floor(Math.log2(arr.length)) + 1;
+  const width = Math.pow(2, depth-1) * 60 + 40;
+  const height = depth * spacingY + 20;
+  let svg = `<svg viewBox="0 0 ${width} ${height}" width="100%" style="max-width:${width}px">`;
+  function pos(i){
+    const d = Math.floor(Math.log2(i+1));
+    const posInLevel = i + 1 - Math.pow(2, d);
+    const levelWidth = Math.pow(2, d);
+    const x = (posInLevel + 0.5) * (width / levelWidth);
+    const y = d * spacingY + offsetY;
+    return {x, y};
+  }
+  for (let i = 0; i < arr.length; i++){
+    if (i === 0) continue;
+    const p = Math.floor((i-1)/2);
+    const a = pos(i), b = pos(p);
+    svg += `<line x1="${b.x}" y1="${b.y}" x2="${a.x}" y2="${a.y}" style="stroke:var(--border);stroke-width:2"/>`;
+  }
+  for (let i = 0; i < arr.length; i++){
+    const {x,y} = pos(i);
+    let fill = 'var(--panel-2)', stroke = 'var(--border)';
+    if (i === hiIndex){ fill = 'var(--amber-tint)'; stroke = 'var(--amber)'; }
+    else if (i === 0){ fill = 'var(--teal-tint)'; stroke = 'var(--teal)'; }
+    svg += `<circle cx="${x}" cy="${y}" r="17" style="fill:${fill};stroke:${stroke};stroke-width:2"/>`;
+    svg += `<text x="${x}" y="${y+5}" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-size:12px;fill:var(--text)">${arr[i]}</text>`;
+  }
+  svg += `</svg>`;
+  return svg;
+}
+/* cmp(a,b) => true if a has higher priority than b (should sit closer to the root).
+   Default is a min-heap: smaller values have priority. */
+function heapPushSteps(heap, val, steps, cmp){
+  cmp = cmp || ((a,b) => a < b);
+  heap.push(val);
+  steps.push({heap:[...heap], note:`push ${val} onto the heap (append at the end)`, hi:heap.length-1});
+  let i = heap.length - 1;
+  while (i > 0){
+    const p = Math.floor((i-1)/2);
+    if (cmp(heap[i], heap[p])){
+      [heap[p], heap[i]] = [heap[i], heap[p]];
+      steps.push({heap:[...heap], note:`sift-up: swap into index ${p}`, hi:p});
+      i = p;
+    } else break;
+  }
+  return heap[i];
+}
+function heapPopSteps(heap, steps, cmp){
+  cmp = cmp || ((a,b) => a < b);
+  const top = heap[0];
+  const last = heap.pop();
+  if (heap.length > 0){
+    heap[0] = last;
+    steps.push({heap:[...heap], note:`pop ${top} — move last element (${last}) to the root`, hi:0});
+    let i = 0;
+    while (true){
+      const l = 2*i+1, r = 2*i+2;
+      let best = i;
+      if (l < heap.length && cmp(heap[l], heap[best])) best = l;
+      if (r < heap.length && cmp(heap[r], heap[best])) best = r;
+      if (best !== i){
+        [heap[i], heap[best]] = [heap[best], heap[i]];
+        steps.push({heap:[...heap], note:`sift-down: swap index ${i} and ${best}`, hi:best});
+        i = best;
+      } else break;
+    }
+  } else {
+    steps.push({heap:[...heap], note:`pop ${top} — heap now empty`, hi:-1});
+  }
+  return top;
+}
+
+function renderHeapStage(cellsWrap, treeWrap, statusEl, step, displayFn){
+  cellsWrap.innerHTML = '';
+  step.heap.forEach((v,i) => {
+    const c = el('div','cell', `<span class="idx">${i}</span>${displayFn ? displayFn(v) : v}`);
+    if (i === step.hi) c.classList.add(i === 0 ? 'match' : 'active');
+    cellsWrap.appendChild(c);
+  });
+  treeWrap.innerHTML = heapTreeSVG(step.heap.map(v => displayFn ? displayFn(v) : v), step.hi);
+  statusEl.textContent = step.note;
+}
+
 function highlight(codeStr, lang){
   const escaped = codeStr.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const kw = lang === 'cpp'
     ? 'int|bool|void|string|vector|unordered_map|unordered_set|char|for|while|if|else|return|class|struct|public|private|const|auto|true|false|break|continue|size_t'
+    : lang === 'go'
+    ? 'func|var|const|type|struct|map|for|range|if|else|return|package|import|break|continue|switch|case|default|true|false|nil|make|len|append|interface|defer|go|chan|select'
     : 'def|return|if|elif|else|for|while|in|not|and|or|class|import|from|as|True|False|None|break|continue|pass';
-  const commentSrc = lang === 'cpp' ? '//.*' : '#.*';
-  const stringSrc = lang === 'cpp' ? '"[^"]*"' : "'[^']*'|\"[^\"]*\"";
+  const commentSrc = (lang === 'cpp' || lang === 'go') ? '//.*' : '#.*';
+  const stringSrc = (lang === 'cpp' || lang === 'go') ? '"[^"]*"' : "'[^']*'|\"[^\"]*\"";
   const master = new RegExp(`(${commentSrc})|(${stringSrc})|\\b(${kw})\\b|\\b(\\d+)\\b`, 'g');
   return escaped.replace(master, (m, cmt, str, kwd, num) => {
     if (cmt) return `<span class="tok-cmt">${cmt}</span>`;
@@ -3623,6 +6118,813 @@ syncThemeIcon();
       prev: document.getElementById('triePrev'),
       reset: document.getElementById('trieReset'),
       count: document.getElementById('trieCount')
+    }
+  });
+})();
+
+
+/* Kth Largest Element in a Stream */
+(function(){
+  const k = 3;
+  const nums = [4,5,8,2];
+  const stream = [3,5,10,9,4];
+  const heap = [];
+  const steps = [];
+  function addVal(v, label){
+    heapPushSteps(heap, v, steps);
+    if (heap.length > k) heapPopSteps(heap, steps);
+    steps.push({heap:[...heap], note:`${label}(${v}) → kth largest so far = ${heap[0]}`, hi:0});
+  }
+  nums.forEach(v => addVal(v, 'build/add'));
+  stream.forEach(v => addVal(v, 'add'));
+
+  const cellsWrap = document.getElementById('klsCells');
+  const treeWrap = document.getElementById('klsTree');
+  new StepPlayer({
+    steps,
+    render: (step) => renderHeapStage(cellsWrap, treeWrap, document.getElementById('klsStatus'), step),
+    els: {
+      play: document.getElementById('klsPlay'), next: document.getElementById('klsNext'),
+      prev: document.getElementById('klsPrev'), reset: document.getElementById('klsReset'),
+      count: document.getElementById('klsCount')
+    }
+  });
+})();
+
+/* Last Stone Weight */
+(function(){
+  const stones = [2,7,4,1,8,1];
+  const heap = [];
+  const steps = [];
+  const maxCmp = (a,b) => a > b;
+  stones.forEach(s => heapPushSteps(heap, s, steps, maxCmp));
+  while (heap.length > 1){
+    const y = heapPopSteps(heap, steps, maxCmp);
+    const x = heapPopSteps(heap, steps, maxCmp);
+    if (y !== x){
+      heapPushSteps(heap, y - x, steps, maxCmp);
+      steps.push({heap:[...heap], note:`smashed ${y} and ${x} → ${y-x} goes back in`, hi:-1});
+    } else {
+      steps.push({heap:[...heap], note:`smashed ${y} and ${x} → equal, both destroyed`, hi:-1});
+    }
+  }
+  steps.push({heap:[...heap], note:`done — last stone weight = ${heap.length ? heap[0] : 0}`, hi:heap.length?0:-1});
+
+  const cellsWrap = document.getElementById('lswCells');
+  const treeWrap = document.getElementById('lswTree');
+  new StepPlayer({
+    steps,
+    render: (step) => renderHeapStage(cellsWrap, treeWrap, document.getElementById('lswStatus'), step),
+    els: {
+      play: document.getElementById('lswPlay'), next: document.getElementById('lswNext'),
+      prev: document.getElementById('lswPrev'), reset: document.getElementById('lswReset'),
+      count: document.getElementById('lswCount')
+    }
+  });
+})();
+
+/* K Closest Points to Origin */
+(function(){
+  const points = [[1,3],[-2,2],[5,8],[0,1]];
+  const k = 2;
+  const distTo = {};
+  points.forEach(([x,y]) => { distTo[x*x+y*y] = `(${x}, ${y})`; });
+  const heap = [];
+  const steps = [];
+  const maxCmp = (a,b) => a > b;
+  points.forEach(([x,y]) => {
+    const d = x*x + y*y;
+    heapPushSteps(heap, d, steps, maxCmp);
+    if (heap.length > k) heapPopSteps(heap, steps, maxCmp);
+    steps.push({heap:[...heap], note:`point ${distTo[d]} → dist²=${d}. heap now holds the ${heap.length} closest seen`, hi:0});
+  });
+  steps.push({heap:[...heap], note:`k closest: ${heap.map(d=>distTo[d]).join(', ')}`, hi:-1});
+
+  const cellsWrap = document.getElementById('kcpCells');
+  const treeWrap = document.getElementById('kcpTree');
+  new StepPlayer({
+    steps,
+    render: (step) => renderHeapStage(cellsWrap, treeWrap, document.getElementById('kcpStatus'), step),
+    els: {
+      play: document.getElementById('kcpPlay'), next: document.getElementById('kcpNext'),
+      prev: document.getElementById('kcpPrev'), reset: document.getElementById('kcpReset'),
+      count: document.getElementById('kcpCount')
+    }
+  });
+})();
+
+/* Kth Largest Element in an Array */
+(function(){
+  const nums = [3,2,1,5,6,4];
+  const k = 2;
+  const heap = [];
+  const steps = [];
+  nums.forEach(v => {
+    heapPushSteps(heap, v, steps);
+    if (heap.length > k) heapPopSteps(heap, steps);
+    steps.push({heap:[...heap], note:`processed ${v} — heap holds the ${heap.length} largest so far`, hi:0});
+  });
+  steps.push({heap:[...heap], note:`kth (k=${k}) largest = ${heap[0]}`, hi:0});
+
+  const cellsWrap = document.getElementById('klaCells');
+  const treeWrap = document.getElementById('klaTree');
+  new StepPlayer({
+    steps,
+    render: (step) => renderHeapStage(cellsWrap, treeWrap, document.getElementById('klaStatus'), step),
+    els: {
+      play: document.getElementById('klaPlay'), next: document.getElementById('klaNext'),
+      prev: document.getElementById('klaPrev'), reset: document.getElementById('klaReset'),
+      count: document.getElementById('klaCount')
+    }
+  });
+})();
+
+
+function renderPathStage(pathWrap, foundWrap, statusEl, step, fmt){
+  pathWrap.innerHTML = '';
+  if (!step.path.length) pathWrap.appendChild(el('span','chip','(empty)'));
+  step.path.forEach(v => pathWrap.appendChild(el('span','chip on', v)));
+  foundWrap.innerHTML = '';
+  if (!step.foundSoFar.length) foundWrap.appendChild(el('span','chip','(none yet)'));
+  step.foundSoFar.forEach(s => foundWrap.appendChild(el('span','chip on', fmt ? fmt(s) : (s.length ? '['+s.join(',')+']' : '[]'))));
+  statusEl.textContent = step.note;
+}
+
+/* Subsets */
+(function(){
+  const nums = [1,2,3];
+  const steps = [];
+  const found = [];
+  function backtrack(start, path){
+    found.push([...path]);
+    steps.push({path:[...path], foundSoFar:found.map(s=>[...s]), event:'record',
+      note: `record subset [${path.join(', ')}]`});
+    for (let i = start; i < nums.length; i++){
+      path.push(nums[i]);
+      steps.push({path:[...path], foundSoFar:found.map(s=>[...s]), event:'choose', note:`choose ${nums[i]}`});
+      backtrack(i+1, path);
+      path.pop();
+      steps.push({path:[...path], foundSoFar:found.map(s=>[...s]), event:'unchoose', note:`backtrack — remove ${nums[i]}, try the next option`});
+    }
+  }
+  backtrack(0, []);
+
+  const pathWrap = document.getElementById('subsPath');
+  const foundWrap = document.getElementById('subsFound');
+  new StepPlayer({
+    steps,
+    render: (step) => renderPathStage(pathWrap, foundWrap, document.getElementById('subsStatus'), step),
+    els: {
+      play: document.getElementById('subsPlay'), next: document.getElementById('subsNext'),
+      prev: document.getElementById('subsPrev'), reset: document.getElementById('subsReset'),
+      count: document.getElementById('subsCount')
+    }
+  });
+})();
+
+/* Combination Sum */
+(function(){
+  const candidates = [2,3,6,7];
+  const target = 7;
+  const steps = [];
+  const found = [];
+  function backtrack(start, path, remain){
+    if (remain === 0){
+      found.push([...path]);
+      steps.push({path:[...path], foundSoFar:found.map(s=>[...s]), event:'record', note:`remaining hits 0 → record combination [${path.join(', ')}]`});
+      return;
+    }
+    for (let i = start; i < candidates.length; i++){
+      if (candidates[i] > remain) continue;
+      path.push(candidates[i]);
+      steps.push({path:[...path], foundSoFar:found.map(s=>[...s]), event:'choose', note:`choose ${candidates[i]} — remaining target now ${remain-candidates[i]}`});
+      backtrack(i, path, remain - candidates[i]);
+      path.pop();
+      steps.push({path:[...path], foundSoFar:found.map(s=>[...s]), event:'unchoose', note:`backtrack — remove ${candidates[i]}`});
+    }
+  }
+  backtrack(0, [], target);
+
+  const pathWrap = document.getElementById('csumPath');
+  const foundWrap = document.getElementById('csumFound');
+  new StepPlayer({
+    steps,
+    render: (step) => renderPathStage(pathWrap, foundWrap, document.getElementById('csumStatus'), step),
+    els: {
+      play: document.getElementById('csumPlay'), next: document.getElementById('csumNext'),
+      prev: document.getElementById('csumPrev'), reset: document.getElementById('csumReset'),
+      count: document.getElementById('csumCount')
+    }
+  });
+})();
+
+/* Permutations */
+(function(){
+  const nums = [1,2,3];
+  const steps = [];
+  const found = [];
+  const used = nums.map(() => false);
+  function backtrack(path){
+    if (path.length === nums.length){
+      found.push([...path]);
+      steps.push({path:[...path], foundSoFar:found.map(s=>[...s]), event:'record', note:`path is full → record permutation [${path.join(', ')}]`});
+      return;
+    }
+    for (let i = 0; i < nums.length; i++){
+      if (used[i]) continue;
+      used[i] = true;
+      path.push(nums[i]);
+      steps.push({path:[...path], foundSoFar:found.map(s=>[...s]), event:'choose', note:`choose ${nums[i]} (not yet used)`});
+      backtrack(path);
+      path.pop();
+      used[i] = false;
+      steps.push({path:[...path], foundSoFar:found.map(s=>[...s]), event:'unchoose', note:`backtrack — free up ${nums[i]}`});
+    }
+  }
+  backtrack([]);
+
+  const pathWrap = document.getElementById('permPath');
+  const foundWrap = document.getElementById('permFound');
+  new StepPlayer({
+    steps,
+    render: (step) => renderPathStage(pathWrap, foundWrap, document.getElementById('permStatus'), step),
+    els: {
+      play: document.getElementById('permPlay'), next: document.getElementById('permNext'),
+      prev: document.getElementById('permPrev'), reset: document.getElementById('permReset'),
+      count: document.getElementById('permCount')
+    }
+  });
+})();
+
+/* Word Search */
+(function(){
+  const board = [
+    ['A','B','C','E'],
+    ['S','F','C','S'],
+    ['A','D','E','E']
+  ];
+  const word = "ABCCED";
+  const rows = board.length, cols = board[0].length;
+  const visited = Array.from({length:rows}, () => Array(cols).fill(false));
+  const steps = [];
+  function snapshot(cur, note, done){
+    steps.push({vis: visited.map(r => [...r]), cur, note, done: !!done});
+  }
+  function dfs(r, c, i){
+    if (r < 0 || r >= rows || c < 0 || c >= cols || visited[r][c] || board[r][c] !== word[i]) return false;
+    visited[r][c] = true;
+    snapshot([r,c], `(${r},${c}) = '${board[r][c]}' matches '${word[i]}' — mark visited (${i+1}/${word.length})`);
+    if (i === word.length - 1){
+      snapshot([r,c], `matched the full word "${word}" — found!`, true);
+      return true;
+    }
+    const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+    for (const [dr,dc] of dirs){
+      if (dfs(r+dr, c+dc, i+1)) return true;
+    }
+    visited[r][c] = false;
+    snapshot([r,c], `no neighbor continues '${word}' from (${r},${c}) — backtrack, unmark`);
+    return false;
+  }
+  let found = false;
+  outer:
+  for (let r = 0; r < rows && !found; r++){
+    for (let c = 0; c < cols && !found; c++){
+      if (dfs(r, c, 0)) { found = true; break outer; }
+    }
+  }
+
+  const gridWrap = document.getElementById('wsGrid');
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      gridWrap.innerHTML = '';
+      for (let r = 0; r < rows; r++){
+        const rowDiv = el('div','cells');
+        for (let c = 0; c < cols; c++){
+          const cell = el('div','cell', board[r][c]);
+          if (step.cur && step.cur[0] === r && step.cur[1] === c) cell.classList.add(step.done ? 'match' : 'active');
+          else if (step.vis[r][c]) cell.classList.add('seen');
+          rowDiv.appendChild(cell);
+        }
+        gridWrap.appendChild(rowDiv);
+      }
+      document.getElementById('wsStatus').textContent = step.note;
+    },
+    els: {
+      play: document.getElementById('wsPlay'), next: document.getElementById('wsNext'),
+      prev: document.getElementById('wsPrev'), reset: document.getElementById('wsReset'),
+      count: document.getElementById('wsCount')
+    }
+  });
+})();
+
+
+/* Number of Islands */
+(function(){
+  const grid = [
+    ['1','1','0','0'],
+    ['1','1','0','0'],
+    ['0','0','1','0'],
+    ['0','0','0','1']
+  ];
+  const rows = grid.length, cols = grid[0].length;
+  const visited = Array.from({length:rows}, () => Array(cols).fill(false));
+  const steps = [];
+  let islandCount = 0;
+  function snap(cur, note){ steps.push({vis: visited.map(r=>[...r]), cur, note, count: islandCount}); }
+  function dfs(r, c){
+    if (r < 0 || r >= rows || c < 0 || c >= cols || visited[r][c] || grid[r][c] === '0') return;
+    visited[r][c] = true;
+    snap([r,c], `flood-fill (${r},${c}) — part of island #${islandCount}`);
+    dfs(r+1,c); dfs(r-1,c); dfs(r,c+1); dfs(r,c-1);
+  }
+  for (let r = 0; r < rows; r++){
+    for (let c = 0; c < cols; c++){
+      if (grid[r][c] === '1' && !visited[r][c]){
+        islandCount++;
+        snap([r,c], `unvisited land at (${r},${c}) → start island #${islandCount}`);
+        dfs(r, c);
+      }
+    }
+  }
+  steps.push({vis: visited.map(r=>[...r]), cur:null, note:`done — total islands = ${islandCount}`, count:islandCount});
+
+  const gridWrap = document.getElementById('niGrid');
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      gridWrap.innerHTML = '';
+      for (let r = 0; r < rows; r++){
+        const rowDiv = el('div','cells');
+        for (let c = 0; c < cols; c++){
+          const cell = el('div','cell', grid[r][c]);
+          if (step.cur && step.cur[0]===r && step.cur[1]===c) cell.classList.add('active');
+          else if (step.vis[r][c]) cell.classList.add('seen');
+          rowDiv.appendChild(cell);
+        }
+        gridWrap.appendChild(rowDiv);
+      }
+      document.getElementById('niStatus').textContent = step.note;
+    },
+    els: {
+      play: document.getElementById('niPlay'), next: document.getElementById('niNext'),
+      prev: document.getElementById('niPrev'), reset: document.getElementById('niReset'),
+      count: document.getElementById('niCount')
+    }
+  });
+})();
+
+/* Clone Graph */
+(function(){
+  const adj = {1:[2,4], 2:[1,3], 3:[2,4], 4:[1,3]};
+  const cloneMap = {};
+  const steps = [];
+  function snap(cur, note){ steps.push({cloneMap:{...cloneMap}, cur, note}); }
+  function dfs(node){
+    if (cloneMap[node]) return;
+    cloneMap[node] = true;
+    snap(node, `clone node ${node} (copy its value, neighbors wired next)`);
+    for (const nb of adj[node]){
+      snap(node, `node ${node}: wire edge to neighbor ${nb}${cloneMap[nb] ? ' — already cloned, reuse it' : ' — clone it first'}`);
+      dfs(nb);
+    }
+  }
+  dfs(1);
+  steps.push({cloneMap:{...cloneMap}, cur:null, note:`done — all ${Object.keys(cloneMap).length} nodes cloned with matching edges`});
+
+  const kvWrap = document.getElementById('cgKV');
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      kvWrap.innerHTML = '';
+      Object.keys(adj).forEach(node => {
+        const cloned = !!step.cloneMap[node];
+        const kv = el('div', 'kv' + (cloned ? ' match' : '') + (String(step.cur)===node ? ' hot' : ''),
+          `<div class="k">node ${node}</div><div class="v">${cloned ? 'cloned' : '—'}</div>`);
+        kvWrap.appendChild(kv);
+      });
+      document.getElementById('cgStatus').textContent = step.note;
+    },
+    els: {
+      play: document.getElementById('cgPlay'), next: document.getElementById('cgNext'),
+      prev: document.getElementById('cgPrev'), reset: document.getElementById('cgReset'),
+      count: document.getElementById('cgCount')
+    }
+  });
+})();
+
+/* Course Schedule */
+(function(){
+  const numCourses = 4;
+  const edges = [[1,0],[2,0],[3,1],[3,2]]; // [course, prereq]
+  const adj = Array.from({length:numCourses}, () => []);
+  edges.forEach(([c,p]) => adj[p].push(c));
+  const state = Array(numCourses).fill(0); // 0 unvisited, 1 visiting, 2 done
+  const stack = [];
+  const steps = [];
+  function snap(note){ steps.push({state:[...state], stack:[...stack], note}); }
+  let hasCycle = false;
+  function dfs(node){
+    state[node] = 1; stack.push(node);
+    snap(`visit course ${node} — mark VISITING, push to recursion stack`);
+    for (const nb of adj[node]){
+      if (state[nb] === 1){ hasCycle = true; snap(`course ${nb} is already VISITING → cycle detected!`); return; }
+      if (state[nb] === 0){ dfs(nb); if (hasCycle) return; }
+    }
+    state[node] = 2; stack.pop();
+    snap(`course ${node} fully explored — mark DONE, pop from stack`);
+  }
+  for (let i = 0; i < numCourses && !hasCycle; i++){
+    if (state[i] === 0) dfs(i);
+  }
+  steps.push({state:[...state], stack:[...stack], note: hasCycle ? 'cycle found → cannot finish all courses (false)' : 'no cycle found → can finish all courses (true)'});
+
+  const kvWrap = document.getElementById('csKV');
+  const stackWrap = document.getElementById('csStack');
+  const labels = ['unvisited','visiting','done'];
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      kvWrap.innerHTML = '';
+      step.state.forEach((s,i) => {
+        const kv = el('div', 'kv' + (s===1?' hot':'') + (s===2?' match':''),
+          `<div class="k">course ${i}</div><div class="v">${labels[s]}</div>`);
+        kvWrap.appendChild(kv);
+      });
+      stackWrap.innerHTML = '';
+      if (!step.stack.length) stackWrap.appendChild(el('span','chip','(empty)'));
+      step.stack.forEach(n => stackWrap.appendChild(el('span','chip on', n)));
+      document.getElementById('csStatus').textContent = step.note;
+    },
+    els: {
+      play: document.getElementById('csPlay'), next: document.getElementById('csNext'),
+      prev: document.getElementById('csPrev'), reset: document.getElementById('csReset'),
+      count: document.getElementById('csCount')
+    }
+  });
+})();
+
+/* Pacific Atlantic Water Flow */
+(function(){
+  const heights = [
+    [1,2,2,3,5],
+    [3,2,3,4,4],
+    [2,4,5,3,1],
+    [6,7,1,4,5],
+    [5,1,1,2,4]
+  ];
+  const rows = heights.length, cols = heights[0].length;
+  const pac = Array.from({length:rows}, () => Array(cols).fill(false));
+  const atl = Array.from({length:rows}, () => Array(cols).fill(false));
+  const steps = [];
+  function snap(cur, note, phase){
+    steps.push({pac: pac.map(r=>[...r]), atl: atl.map(r=>[...r]), cur, note, phase});
+  }
+  function dfs(matrix, r, c, phase){
+    if (matrix[r][c]) return;
+    matrix[r][c] = true;
+    snap([r,c], `(${r},${c}) h=${heights[r][c]} can drain to the ${phase} — mark reachable`, phase);
+    const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+    for (const [dr,dc] of dirs){
+      const nr = r+dr, nc = c+dc;
+      if (nr<0||nr>=rows||nc<0||nc>=cols||matrix[nr][nc]) continue;
+      if (heights[nr][nc] < heights[r][c]) continue;
+      dfs(matrix, nr, nc, phase);
+    }
+  }
+  for (let c = 0; c < cols; c++) dfs(pac, 0, c, 'Pacific');
+  for (let r = 0; r < rows; r++) dfs(pac, r, 0, 'Pacific');
+  for (let c = 0; c < cols; c++) dfs(atl, rows-1, c, 'Atlantic');
+  for (let r = 0; r < rows; r++) dfs(atl, r, cols-1, 'Atlantic');
+
+  const result = [];
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) if (pac[r][c] && atl[r][c]) result.push(`(${r},${c})`);
+  steps.push({pac: pac.map(r=>[...r]), atl: atl.map(r=>[...r]), cur:null,
+    note:`done — cells reaching both oceans: ${result.join(', ')}`, phase:'both'});
+
+  const gridWrap = document.getElementById('paGrid');
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      gridWrap.innerHTML = '';
+      for (let r = 0; r < rows; r++){
+        const rowDiv = el('div','cells');
+        for (let c = 0; c < cols; c++){
+          const cell = el('div','cell', heights[r][c]);
+          const both = step.pac[r][c] && step.atl[r][c];
+          if (step.cur && step.cur[0]===r && step.cur[1]===c) cell.classList.add('active');
+          else if (both) cell.classList.add('match');
+          else if (step.pac[r][c] || step.atl[r][c]) cell.classList.add('seen');
+          rowDiv.appendChild(cell);
+        }
+        gridWrap.appendChild(rowDiv);
+      }
+      document.getElementById('paStatus').textContent = step.note;
+    },
+    els: {
+      play: document.getElementById('paPlay'), next: document.getElementById('paNext'),
+      prev: document.getElementById('paPrev'), reset: document.getElementById('paReset'),
+      count: document.getElementById('paCount')
+    }
+  });
+})();
+
+
+function renderDPStage(cellsWrap, statusEl, step){
+  cellsWrap.innerHTML = '';
+  step.dp.forEach((v,i) => {
+    const c = el('div','cell', `<span class="idx">${i}</span>${v === undefined ? '' : v}`);
+    if (i === step.cur) c.classList.add('active');
+    else if (step.refs && step.refs.includes(i)) c.classList.add('match');
+    cellsWrap.appendChild(c);
+  });
+  statusEl.textContent = step.note;
+}
+
+/* Climbing Stairs */
+(function(){
+  const n = 5;
+  const dp = [1, 1];
+  const steps = [];
+  steps.push({dp:[...dp], cur:1, refs:[0], note:`base cases: dp[0] = 1 way (do nothing), dp[1] = 1 way (a single 1-step)`});
+  for (let i = 2; i <= n; i++){
+    dp[i] = dp[i-1] + dp[i-2];
+    steps.push({dp:[...dp], cur:i, refs:[i-1, i-2], note:`dp[${i}] = dp[${i-1}] + dp[${i-2}] = ${dp[i-1]} + ${dp[i-2]} = ${dp[i]}`});
+  }
+  steps.push({dp:[...dp], cur:n, refs:[], note:`done — ${dp[n]} distinct ways to climb ${n} stairs`});
+
+  const cellsWrap = document.getElementById('climbCells');
+  new StepPlayer({
+    steps,
+    render: (step) => renderDPStage(cellsWrap, document.getElementById('climbStatus'), step),
+    els: {
+      play: document.getElementById('climbPlay'), next: document.getElementById('climbNext'),
+      prev: document.getElementById('climbPrev'), reset: document.getElementById('climbReset'),
+      count: document.getElementById('climbCount')
+    }
+  });
+})();
+
+/* House Robber */
+(function(){
+  const nums = [2,7,9,3,1];
+  const dp = [];
+  const steps = [];
+  dp[0] = nums[0];
+  steps.push({dp:[...dp], cur:0, refs:[], note:`dp[0] = nums[0] = ${nums[0]} — only house 0 is available`});
+  dp[1] = Math.max(nums[0], nums[1]);
+  steps.push({dp:[...dp], cur:1, refs:[0], note:`dp[1] = max(nums[0], nums[1]) = max(${nums[0]}, ${nums[1]}) = ${dp[1]}`});
+  for (let i = 2; i < nums.length; i++){
+    const rob = dp[i-2] + nums[i];
+    const skip = dp[i-1];
+    dp[i] = Math.max(rob, skip);
+    steps.push({dp:[...dp], cur:i, refs:[i-1, i-2],
+      note:`dp[${i}] = max(skip: dp[${i-1}]=${skip}, rob: dp[${i-2}]+nums[${i}]=${dp[i-2]}+${nums[i]}=${rob}) = ${dp[i]}`});
+  }
+  steps.push({dp:[...dp], cur:nums.length-1, refs:[], note:`done — max money robbed = ${dp[dp.length-1]}`});
+
+  const cellsWrap = document.getElementById('hrobCells');
+  new StepPlayer({
+    steps,
+    render: (step) => renderDPStage(cellsWrap, document.getElementById('hrobStatus'), step),
+    els: {
+      play: document.getElementById('hrobPlay'), next: document.getElementById('hrobNext'),
+      prev: document.getElementById('hrobPrev'), reset: document.getElementById('hrobReset'),
+      count: document.getElementById('hrobCount')
+    }
+  });
+})();
+
+/* Coin Change */
+(function(){
+  const coins = [1,2,5], amount = 11;
+  const dp = new Array(amount+1).fill(Infinity);
+  dp[0] = 0;
+  const steps = [];
+  const fmt = arr => arr.map(v => v === Infinity ? '∞' : v);
+  steps.push({dp: fmt(dp), cur:0, refs:[], note:'base case: dp[0] = 0 coins needed for amount 0'});
+  for (let i = 1; i <= amount; i++){
+    let bestCoin = null;
+    for (const c of coins){
+      if (c <= i && dp[i-c] + 1 < dp[i]){
+        dp[i] = dp[i-c] + 1;
+        bestCoin = c;
+      }
+    }
+    steps.push({dp: fmt(dp), cur:i, refs: bestCoin !== null ? [i-bestCoin] : [],
+      note: bestCoin !== null
+        ? `dp[${i}] = dp[${i-bestCoin}] + 1 = ${dp[i]} (best: use a coin of value ${bestCoin})`
+        : `dp[${i}] stays ∞ — no coin combination reaches ${i}`});
+  }
+  steps.push({dp: fmt(dp), cur:amount, refs:[], note:`done — minimum coins for amount ${amount} = ${dp[amount]}`});
+
+  const cellsWrap = document.getElementById('coincCells');
+  new StepPlayer({
+    steps,
+    render: (step) => renderDPStage(cellsWrap, document.getElementById('coincStatus'), step),
+    els: {
+      play: document.getElementById('coincPlay'), next: document.getElementById('coincNext'),
+      prev: document.getElementById('coincPrev'), reset: document.getElementById('coincReset'),
+      count: document.getElementById('coincCount')
+    }
+  });
+})();
+
+/* Longest Increasing Subsequence */
+(function(){
+  const nums = [10,9,2,5,3,7,101,18];
+  const dp = new Array(nums.length).fill(1);
+  const steps = [];
+  steps.push({dp:[...dp], cur:0, refs:[], note:`dp[0] = 1 — a single element is always a subsequence of length 1`});
+  for (let i = 1; i < nums.length; i++){
+    let bestJ = null;
+    for (let j = 0; j < i; j++){
+      if (nums[j] < nums[i] && dp[j] + 1 > dp[i]){ dp[i] = dp[j] + 1; bestJ = j; }
+    }
+    steps.push({dp:[...dp], cur:i, refs: bestJ !== null ? [bestJ] : [],
+      note: bestJ !== null
+        ? `dp[${i}] = dp[${bestJ}] + 1 = ${dp[i]} (nums[${bestJ}]=${nums[bestJ]} < nums[${i}]=${nums[i]})`
+        : `dp[${i}] stays 1 — no earlier, smaller value can extend it`});
+  }
+  const best = Math.max(...dp);
+  steps.push({dp:[...dp], cur:-1, refs:[], note:`done — longest increasing subsequence length = ${best}`});
+
+  const cellsWrap = document.getElementById('lisCells');
+  new StepPlayer({
+    steps,
+    render: (step) => renderDPStage(cellsWrap, document.getElementById('lisStatus'), step),
+    els: {
+      play: document.getElementById('lisPlay'), next: document.getElementById('lisNext'),
+      prev: document.getElementById('lisPrev'), reset: document.getElementById('lisReset'),
+      count: document.getElementById('lisCount')
+    }
+  });
+})();
+
+
+function fmtInterval(iv){ return `[${iv[0]}, ${iv[1]}]`; }
+function renderIntervalChips(wrap, list, hotLast){
+  wrap.innerHTML = '';
+  if (!list.length){ wrap.appendChild(el('span','chip','(empty)')); return; }
+  list.forEach((iv,idx) => {
+    const chip = el('span','chip on', fmtInterval(iv));
+    if (hotLast && idx === list.length-1) chip.style.borderColor = 'var(--amber)';
+    wrap.appendChild(chip);
+  });
+}
+
+/* Insert Interval */
+(function(){
+  const intervals = [[1,3],[6,9]];
+  let newInterval = [2,5];
+  const result = [];
+  const steps = [];
+  function snap(note){ steps.push({result: result.map(iv=>[...iv]), note}); }
+  let i = 0;
+  while (i < intervals.length && intervals[i][1] < newInterval[0]){
+    result.push(intervals[i]);
+    snap(`${fmtInterval(intervals[i])} ends before the new interval starts → keep as-is`);
+    i++;
+  }
+  while (i < intervals.length && intervals[i][0] <= newInterval[1]){
+    newInterval = [Math.min(newInterval[0], intervals[i][0]), Math.max(newInterval[1], intervals[i][1])];
+    snap(`${fmtInterval(intervals[i])} overlaps the growing new interval → merge into ${fmtInterval(newInterval)}`);
+    i++;
+  }
+  result.push(newInterval);
+  snap(`insert the merged interval ${fmtInterval(newInterval)}`);
+  while (i < intervals.length){
+    result.push(intervals[i]);
+    snap(`${fmtInterval(intervals[i])} starts after the new interval ends → keep as-is`);
+    i++;
+  }
+
+  const resultWrap = document.getElementById('iiResult');
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      renderIntervalChips(resultWrap, step.result, true);
+      document.getElementById('iiStatus').textContent = step.note;
+    },
+    els: {
+      play: document.getElementById('iiPlay'), next: document.getElementById('iiNext'),
+      prev: document.getElementById('iiPrev'), reset: document.getElementById('iiReset'),
+      count: document.getElementById('iiCount')
+    }
+  });
+})();
+
+/* Merge Intervals */
+(function(){
+  const intervals = [[1,3],[2,6],[8,10],[15,18]].slice().sort((a,b) => a[0]-b[0]);
+  const merged = [];
+  const steps = [];
+  steps.push({merged: merged.map(iv=>[...iv]), note:`sorted by start time: ${intervals.map(fmtInterval).join(', ')}`});
+  for (const iv of intervals){
+    if (!merged.length || merged[merged.length-1][1] < iv[0]){
+      merged.push([...iv]);
+      steps.push({merged: merged.map(x=>[...x]), note:`${fmtInterval(iv)} starts after the last merged interval ends → add as a new group`});
+    } else {
+      const last = merged[merged.length-1];
+      last[1] = Math.max(last[1], iv[1]);
+      steps.push({merged: merged.map(x=>[...x]), note:`${fmtInterval(iv)} overlaps the last merged interval → extend it to ${fmtInterval(last)}`});
+    }
+  }
+
+  const resultWrap = document.getElementById('miResult');
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      renderIntervalChips(resultWrap, step.merged, true);
+      document.getElementById('miStatus').textContent = step.note;
+    },
+    els: {
+      play: document.getElementById('miPlay'), next: document.getElementById('miNext'),
+      prev: document.getElementById('miPrev'), reset: document.getElementById('miReset'),
+      count: document.getElementById('miCount')
+    }
+  });
+})();
+
+/* Non-overlapping Intervals */
+(function(){
+  const intervals = [[1,2],[2,3],[3,4],[1,3]].slice().sort((a,b) => a[1]-b[1]);
+  let count = 0, prevEnd = -Infinity;
+  const steps = [];
+  const kept = new Array(intervals.length).fill(null); // null = not yet decided, true kept, false removed
+  function snap(idx, note){ steps.push({idx, kept:[...kept], removed:count, note}); }
+  snap(-1, `sorted by end time: ${intervals.map(fmtInterval).join(', ')}`);
+  intervals.forEach((iv, idx) => {
+    if (iv[0] >= prevEnd){
+      prevEnd = iv[1];
+      kept[idx] = true;
+      snap(idx, `${fmtInterval(iv)} starts at/after the last kept interval's end → keep it (end now ${prevEnd})`);
+    } else {
+      count++;
+      kept[idx] = false;
+      snap(idx, `${fmtInterval(iv)} starts before the last kept interval ends (${prevEnd}) → remove it`);
+    }
+  });
+  steps.push({idx:-1, kept:[...kept], removed:count, note:`done — minimum removals = ${count}`});
+
+  const chipsWrap = document.getElementById('noiChips');
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      chipsWrap.innerHTML = '';
+      intervals.forEach((iv, idx) => {
+        const chip = el('span', 'chip', fmtInterval(iv));
+        if (idx === step.idx) chip.classList.add('on');
+        if (step.kept[idx] === true) { chip.classList.add('on'); chip.style.borderColor = 'var(--teal)'; }
+        if (step.kept[idx] === false) { chip.style.borderColor = 'var(--rose)'; chip.style.color = 'var(--rose)'; chip.style.textDecoration = 'line-through'; }
+        chipsWrap.appendChild(chip);
+      });
+      document.getElementById('noiStatus').textContent = step.note;
+    },
+    els: {
+      play: document.getElementById('noiPlay'), next: document.getElementById('noiNext'),
+      prev: document.getElementById('noiPrev'), reset: document.getElementById('noiReset'),
+      count: document.getElementById('noiCount')
+    }
+  });
+})();
+
+/* Maximum Subarray (Kadane's) */
+(function(){
+  const nums = [-2,1,-3,4,-1,2,1,-5,4];
+  let curSum = 0, maxSum = -Infinity;
+  const steps = [];
+  for (let i = 0; i < nums.length; i++){
+    let resetMsg = '';
+    if (curSum < 0){ curSum = 0; resetMsg = 'running sum was negative → reset to 0, then '; }
+    curSum += nums[i];
+    const improved = curSum > maxSum;
+    if (improved) maxSum = curSum;
+    steps.push({idx:i, curSum, maxSum,
+      note: `${resetMsg}add nums[${i}]=${nums[i]} → running sum=${curSum}${improved ? ' — new best!' : ''} (best so far=${maxSum})`});
+  }
+
+  const cellsWrap = document.getElementById('maxsubCells');
+  const kvWrap = document.getElementById('maxsubKV');
+  nums.forEach((v,i) => cellsWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(cellsWrap.children).forEach((c,i) => {
+        c.classList.remove('active','seen');
+        if (i === step.idx) c.classList.add('active');
+        else if (i < step.idx) c.classList.add('seen');
+      });
+      kvWrap.innerHTML = '';
+      kvWrap.appendChild(el('div','kv hot', `<div class="k">running sum</div><div class="v">${step.curSum}</div>`));
+      kvWrap.appendChild(el('div','kv match', `<div class="k">best sum</div><div class="v">${step.maxSum}</div>`));
+      document.getElementById('maxsubStatus').textContent = step.note;
+    },
+    els: {
+      play: document.getElementById('maxsubPlay'), next: document.getElementById('maxsubNext'),
+      prev: document.getElementById('maxsubPrev'), reset: document.getElementById('maxsubReset'),
+      count: document.getElementById('maxsubCount')
     }
   });
 })();
