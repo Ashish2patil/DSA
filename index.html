@@ -1,0 +1,3633 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Prep — Arrays &amp; Hashing</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --bg:#0F1115;
+    --panel:#171A21;
+    --panel-2:#1D212A;
+    --border:#262B35;
+    --text:#E8E6E1;
+    --muted:#8B92A1;
+    --amber:#E8A33D;
+    --teal:#5FBFAE;
+    --rose:#C1666B;
+    --amber-tint:rgba(232,163,61,0.14);
+    --teal-tint:rgba(95,191,174,0.15);
+    --rose-tint:rgba(193,102,107,0.12);
+    --grid-line:rgba(255,255,255,0.025);
+    --tok-kw:#7FB0E8;
+    --shadow:rgba(0,0,0,0.5);
+  }
+  html[data-theme="light"]{
+    --bg:#F6F4EF;
+    --panel:#FFFFFF;
+    --panel-2:#EFECE4;
+    --border:#DDD8CD;
+    --text:#1B1D22;
+    --muted:#6B7280;
+    --amber:#B96F17;
+    --teal:#227D70;
+    --rose:#A8434D;
+    --amber-tint:rgba(185,111,23,0.13);
+    --teal-tint:rgba(34,125,112,0.13);
+    --rose-tint:rgba(168,67,77,0.12);
+    --grid-line:rgba(0,0,0,0.04);
+    --tok-kw:#2A5CA6;
+    --shadow:rgba(0,0,0,0.12);
+  }
+  html{transition:background-color .2s;}
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height:1.5;
+  }
+  code, pre, .mono{font-family:'IBM Plex Mono', ui-monospace, monospace;}
+  a{color:inherit;}
+  button{font-family:inherit; cursor:pointer;}
+  h1,h2,p{margin:0;}
+
+  .app{display:flex; min-height:100vh;}
+
+  .sidebar{
+    width:260px; flex-shrink:0;
+    background:var(--panel);
+    border-right:1px solid var(--border);
+    padding:20px 0;
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+  }
+  .brand{padding:0 20px 16px 20px; border-bottom:1px solid var(--border); margin-bottom:12px;}
+  .brand-top{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .brand h1{font-size:18px; margin:0 0 4px 0; font-weight:600;}
+  .brand p{font-size:13.5px; color:var(--muted);}
+  .theme-toggle{
+    width:30px; height:30px; flex-shrink:0; border-radius:7px; border:1px solid var(--border);
+    background:var(--panel-2); color:var(--text); font-size:16px; display:flex; align-items:center; justify-content:center;
+  }
+  .theme-toggle:hover{border-color:var(--muted);}
+  .day-list{list-style:none; margin:0; padding:0;}
+  .day-item > button.day-toggle{
+    width:100%; text-align:left; background:none; border:none; color:var(--muted);
+    padding:9px 20px; font-size:15px; display:flex; gap:10px; align-items:baseline;
+    border-left:2px solid transparent;
+  }
+  .day-item.active > button.day-toggle{
+    background:var(--panel-2); border-left-color:var(--amber); color:var(--text);
+  }
+  .day-item button.day-toggle .num{color:var(--muted); font-family:'IBM Plex Mono',monospace; font-size:12.5px; min-width:22px;}
+  .sub-list{list-style:none; margin:2px 0 8px 0; padding:0 0 0 40px; display:none;}
+  .day-item.active .sub-list{display:block;}
+  .sub-list li a{display:block; padding:5px 0; font-size:14px; color:var(--muted); text-decoration:none;}
+  .sub-list li a:hover{color:var(--text);}
+
+  .content{flex:1; padding:36px 44px 90px 44px; max-width:900px;}
+  .day-header{margin-bottom:6px;}
+  .day-header .kicker{font-family:'IBM Plex Mono',monospace; font-size:13.5px; color:var(--amber); margin:0 0 6px 0;}
+  .day-header h1{font-size:32px; margin:0 0 10px 0;}
+  .day-header .intro{color:var(--muted); font-size:17px; max-width:640px; display:block;}
+
+  .legend{
+    display:flex; gap:18px; flex-wrap:wrap; margin:20px 0 32px 0;
+    padding:12px 16px; background:var(--panel); border:1px solid var(--border); border-radius:6px;
+    font-size:14px; color:var(--muted);
+  }
+  .legend .item{display:flex; align-items:center; gap:7px;}
+  .dot{width:9px; height:9px; border-radius:50%; display:inline-block;}
+  .dot.amber{background:var(--amber);}
+  .dot.teal{background:var(--teal);}
+  .dot.rose{background:var(--rose);}
+
+  section.block{margin-bottom:56px;}
+  section.block h2{font-size:23px; margin:0 0 12px 0;}
+  section.block .lead{color:var(--muted); font-size:16.5px; max-width:640px; margin-bottom:18px; display:block;}
+
+  .stage{
+    background:var(--panel); border:1px solid var(--border); border-radius:8px;
+    padding:22px 24px; margin-bottom:14px;
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .row-label{font-size:12.5px; color:var(--muted); font-family:'IBM Plex Mono',monospace; margin-bottom:8px; display:block;}
+  .tree-svg{width:100%; overflow-x:auto; margin-bottom:8px;}
+  .tree-svg svg{display:block; margin:0 auto;}
+  .tree-pair{display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start;}
+  .tree-pair .tree-col{flex:1; min-width:220px;}
+
+  .arrow{color:var(--muted); font-size:16px; align-self:center; padding:0 2px;}
+  .chain-label{font-size:11px; color:var(--muted); font-family:'IBM Plex Mono',monospace; margin:4px 0 6px 0; display:block;}
+
+  .cells{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; align-items:center;}
+  .cell{
+    width:54px; height:54px; border:1.5px solid var(--border); border-radius:6px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',monospace; font-size:17px; position:relative;
+    background:var(--panel-2); transition:border-color .25s, background .25s, transform .25s;
+  }
+  .cell .idx{position:absolute; top:-18px; font-size:11px; color:var(--muted);}
+  .cell.active{border-color:var(--amber); background:var(--amber-tint); transform:translateY(-2px);}
+  .cell.match{border-color:var(--teal); background:var(--teal-tint);}
+  .cell.seen{border-color:var(--rose); background:var(--rose-tint);}
+
+  .chips{display:flex; gap:8px; flex-wrap:wrap; min-height:34px;}
+  .chip{
+    padding:5px 10px; border-radius:20px; border:1px solid var(--border); background:var(--panel-2);
+    font-family:'IBM Plex Mono',monospace; font-size:14.5px; color:var(--muted); transition:all .25s;
+  }
+  .chip.on{border-color:var(--teal); color:var(--text); background:var(--teal-tint);}
+
+  .cell.wide{width:auto; min-width:54px; padding:0 12px;}
+
+  .group-box{
+    border:1px solid var(--border); border-radius:6px; padding:9px 12px; background:var(--panel-2);
+    margin-bottom:8px; transition:border-color .25s;
+  }
+  .group-box .gkey{font-size:11px; color:var(--muted); font-family:'IBM Plex Mono',monospace; margin-bottom:6px; display:block;}
+  .group-box.hot{border-color:var(--amber);}
+  .group-box.match{border-color:var(--teal);}
+
+  .kv-table{display:flex; gap:8px; flex-wrap:wrap;}
+  .kv{
+    border:1px solid var(--border); border-radius:6px; padding:7px 11px; background:var(--panel-2);
+    font-family:'IBM Plex Mono',monospace; font-size:14.5px; text-align:center; min-width:48px; transition:all .25s;
+  }
+  .kv .k{color:var(--muted); font-size:12.5px;}
+  .kv .v{font-size:17px;}
+  .kv.hot{border-color:var(--amber);}
+  .kv.match{border-color:var(--teal); color:var(--teal);}
+  .kv.zero{border-color:var(--teal); color:var(--teal);}
+
+  .status-line{
+    font-size:15px; color:var(--text); background:var(--panel-2); border-left:3px solid var(--amber);
+    padding:9px 12px; border-radius:4px; margin-top:6px; min-height:18px; display:block;
+  }
+
+  .controls{display:flex; align-items:center; gap:8px; margin-top:14px;}
+  .controls button{
+    background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+    padding:7px 13px; border-radius:6px; font-size:14.5px;
+  }
+  .controls button:hover{border-color:var(--muted);}
+  .controls .step-count{margin-left:auto; font-size:13.5px; color:var(--muted); font-family:'IBM Plex Mono',monospace;}
+
+  .compare{display:flex; gap:20px; flex-wrap:wrap;}
+  .lane{flex:1; min-width:260px;}
+
+  .trick{
+    border-left:3px solid var(--amber); background:var(--panel); padding:12px 16px; border-radius:0 6px 6px 0;
+    font-size:16px; color:var(--text); margin:18px 0;
+  }
+  .trick b{color:var(--amber); font-weight:600;}
+
+  .code-panel{border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+  .tabs{display:flex; align-items:center; background:var(--panel); border-bottom:1px solid var(--border);}
+  .tab-btn{background:none; border:none; color:var(--muted); padding:10px 18px; font-size:14.5px; border-bottom:2px solid transparent;}
+  .tab-btn.active{color:var(--text); border-bottom-color:var(--amber);}
+  .copy-btn{margin-left:auto; margin-right:10px; background:none; border:none; color:var(--muted); font-size:13.5px;}
+  .copy-btn:hover{color:var(--text);}
+  pre{margin:0; padding:18px 20px; overflow-x:auto; background:var(--panel-2); font-size:14.5px; line-height:1.6;}
+  .tok-kw{color:var(--tok-kw);}
+  .tok-str{color:var(--teal);}
+  .tok-cmt{color:var(--muted); font-style:italic;}
+  .tok-num{color:var(--amber);}
+
+  .placeholder{padding-top:80px; max-width:480px;}
+  .placeholder .kicker{color:var(--amber); font-family:'IBM Plex Mono',monospace; font-size:13.5px; display:block;}
+  .placeholder h1{font-size:27px; margin:10px 0;}
+  .placeholder p{color:var(--muted); font-size:16.5px;}
+
+  .menu-btn{
+    display:none; position:fixed; top:14px; left:14px; z-index:30;
+    background:var(--panel); border:1px solid var(--border); color:var(--text);
+    width:38px; height:38px; border-radius:6px; align-items:center; justify-content:center; font-size:18px;
+  }
+  @media (max-width: 820px){
+    .sidebar{position:fixed; left:-280px; z-index:20; transition:left .2s; box-shadow:0 0 40px var(--shadow);}
+    .sidebar.open{left:0;}
+    .menu-btn{display:flex;}
+    .content{padding:70px 20px 90px 20px;}
+  }
+  @media (prefers-reduced-motion: reduce){ *{transition-duration:0.01ms !important;} }
+  :focus-visible{outline:2px solid var(--amber); outline-offset:2px;}
+</style>
+</head>
+<body>
+<button class="menu-btn" id="menuBtn" aria-label="Toggle navigation">☰</button>
+<div class="app">
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-top">
+        <h1>DSA Prep</h1>
+        <button id="themeToggle" class="theme-toggle" aria-label="Switch between light and dark theme">☀</button>
+      </div>
+      <p>NeetCode150 · 14-day roadmap</p>
+    </div>
+    <ul class="day-list" id="dayList"></ul>
+  </nav>
+
+  <main class="content">
+    <section id="day-1" class="day-view">
+      <div class="day-header">
+        <p class="kicker">Day 1 of 14</p>
+        <h1>Arrays &amp; Hashing</h1>
+        <p class="intro">A hash map trades memory for speed: instant lookups instead of scanning. Everything below runs on real input, one step at a time.</p>
+      </div>
+
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> currently examining</span>
+        <span class="item"><i class="dot teal"></i> match / resolved</span>
+        <span class="item"><i class="dot rose"></i> seen / checked</span>
+      </div>
+
+      <section class="block" id="concept">
+        <h2>Why hashing beats scanning</h2>
+        <p class="lead">A hash map turns "is this value in here?" from an O(n) walk into an O(1) jump. Watch both approaches search for the value 42.</p>
+        <div class="stage">
+          <div class="compare">
+            <div class="lane">
+              <p class="row-label">array — check one by one</p>
+              <div class="cells" id="conceptArray"></div>
+            </div>
+            <div class="lane">
+              <p class="row-label">hash map — jump straight there</p>
+              <div class="cells" id="conceptHash"></div>
+            </div>
+          </div>
+          <p class="status-line" id="conceptStatus"></p>
+          <div class="controls">
+            <button id="conceptReset">⟲ Reset</button>
+            <button id="conceptPrev">‹ Prev</button>
+            <button id="conceptPlay">▶ Play</button>
+            <button id="conceptNext">Next ›</button>
+            <span class="step-count" id="conceptCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>Reach for a hash map/set when:</b> you need to check "have I seen this?", count how often something occurs, group items by a computed key, or find a pair that satisfies some condition — anywhere your instinct is "loop through everything again to check."</div>
+      </section>
+
+      <section class="block" id="contains-duplicate">
+        <h2>Contains Duplicate</h2>
+        <p class="lead">Given an array, return true if any value appears at least twice.</p>
+        <div class="stage">
+          <p class="row-label">nums</p>
+          <div class="cells" id="cdArray"></div>
+          <p class="row-label">seen set</p>
+          <div class="chips" id="cdSeen"></div>
+          <p class="status-line" id="cdStatus"></p>
+          <div class="controls">
+            <button id="cdReset">⟲ Reset</button>
+            <button id="cdPrev">‹ Prev</button>
+            <button id="cdPlay">▶ Play</button>
+            <button id="cdNext">Next ›</button>
+            <span class="step-count" id="cdCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> walk the array once, remembering what you've seen. If the current element is already in your set, you've found the duplicate — no second pass needed.</div>
+        <div class="code-panel" data-problem="cd">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="valid-anagram">
+        <h2>Valid Anagram</h2>
+        <p class="lead">Given two strings, return true if one is an anagram of the other.</p>
+        <div class="stage">
+          <p class="row-label" id="vaPhaseLabel"></p>
+          <div class="cells" id="vaChars"></div>
+          <p class="row-label">character counts</p>
+          <div class="kv-table" id="vaCounts"></div>
+          <p class="status-line" id="vaStatus"></p>
+          <div class="controls">
+            <button id="vaReset">⟲ Reset</button>
+            <button id="vaPrev">‹ Prev</button>
+            <button id="vaPlay">▶ Play</button>
+            <button id="vaNext">Next ›</button>
+            <span class="step-count" id="vaCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> two strings are anagrams iff their character frequencies match exactly. Build the count from one string, then subtract while scanning the other — if anything goes negative or fails to hit zero, they don't match.</div>
+        <div class="code-panel" data-problem="va">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="two-sum">
+        <h2>Two Sum</h2>
+        <p class="lead">Given an array and a target, return the indices of the two numbers that add up to target.</p>
+        <div class="stage">
+          <p class="row-label">nums (target = 9)</p>
+          <div class="cells" id="tsArray"></div>
+          <p class="row-label">seen — value → index</p>
+          <div class="kv-table" id="tsSeen"></div>
+          <p class="status-line" id="tsStatus"></p>
+          <div class="controls">
+            <button id="tsReset">⟲ Reset</button>
+            <button id="tsPrev">‹ Prev</button>
+            <button id="tsPlay">▶ Play</button>
+            <button id="tsNext">Next ›</button>
+            <span class="step-count" id="tsCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> instead of checking every pair (O(n²)), walk once. At each number, compute the complement it needs and check if you've already seen it — check before you insert, or you'll match a number with itself.</div>
+        <div class="code-panel" data-problem="ts">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="day-2" class="day-view" style="display:none;">
+      <div class="day-header">
+        <p class="kicker">Day 2 of 14</p>
+        <h1>Arrays &amp; Hashing II</h1>
+        <p class="intro">More of the same core idea — a hashmap keyed by something you compute, not just the raw value.</p>
+      </div>
+
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> currently examining</span>
+        <span class="item"><i class="dot teal"></i> match / resolved</span>
+        <span class="item"><i class="dot rose"></i> seen / checked</span>
+      </div>
+
+      <section class="block" id="group-anagrams">
+        <h2>Group Anagrams</h2>
+        <p class="lead">Given an array of strings, group the anagrams together.</p>
+        <div class="stage">
+          <p class="row-label">strs</p>
+          <div class="cells" id="gaWords"></div>
+          <p class="row-label">groups — keyed by sorted letters</p>
+          <div id="gaGroups"></div>
+          <p class="status-line" id="gaStatus"></p>
+          <div class="controls">
+            <button id="gaReset">⟲ Reset</button>
+            <button id="gaPrev">‹ Prev</button>
+            <button id="gaPlay">▶ Play</button>
+            <button id="gaNext">Next ›</button>
+            <span class="step-count" id="gaCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> anagrams share the same letters, so sorting a word's letters gives every anagram of it the same key. Group by that key in one pass — O(n·k log k) for words of length k.</div>
+        <div class="code-panel" data-problem="ga">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="top-k-frequent">
+        <h2>Top K Frequent Elements</h2>
+        <p class="lead">Given an array and an integer k, return the k most frequent elements.</p>
+        <div class="stage">
+          <p class="row-label" id="tkPhaseLabel">counting frequencies</p>
+          <div class="cells" id="tkArray"></div>
+          <p class="row-label">counts, ranked by frequency</p>
+          <div class="kv-table" id="tkCounts"></div>
+          <p class="status-line" id="tkStatus"></p>
+          <div class="controls">
+            <button id="tkReset">⟲ Reset</button>
+            <button id="tkPrev">‹ Prev</button>
+            <button id="tkPlay">▶ Play</button>
+            <button id="tkNext">Next ›</button>
+            <span class="step-count" id="tkCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> count frequencies first, then you only care about the top k of them. Sorting by count is O(n log n) and fine for most interviews; the optimal O(n) version bucket-sorts by frequency instead of sorting.</div>
+        <div class="code-panel" data-problem="tk">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="product-except-self">
+        <h2>Product of Array Except Self</h2>
+        <p class="lead">Return an array where each element is the product of all other elements — without using division.</p>
+        <div class="stage">
+          <p class="row-label" id="pePhaseLabel">left pass — product of everything before i</p>
+          <div class="cells" id="peArray"></div>
+          <p class="row-label">running product</p>
+          <div class="kv-table" id="peAccum"></div>
+          <p class="status-line" id="peStatus"></p>
+          <div class="controls">
+            <button id="peReset">⟲ Reset</button>
+            <button id="pePrev">‹ Prev</button>
+            <button id="pePlay">▶ Play</button>
+            <button id="peNext">Next ›</button>
+            <span class="step-count" id="peCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> the product-except-self at index i is (everything to its left) × (everything to its right). Compute left-products in one pass, then multiply in right-products in a second pass over the same array — no division needed.</div>
+        <div class="code-panel" data-problem="pe">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="day-3" class="day-view" style="display:none;">
+      <div class="day-header">
+        <p class="kicker">Day 3 of 14</p>
+        <h1>Two Pointers</h1>
+        <p class="intro">Two indices moving toward each other (or in lockstep) over sorted or symmetric data — trading a nested loop for a single pass.</p>
+      </div>
+
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> currently examining</span>
+        <span class="item"><i class="dot teal"></i> match / resolved</span>
+        <span class="item"><i class="dot rose"></i> seen / checked</span>
+      </div>
+
+      <section class="block" id="valid-palindrome">
+        <h2>Valid Palindrome</h2>
+        <p class="lead">Given a string, return true if it reads the same forwards and backwards, ignoring case and non-alphanumeric characters.</p>
+        <div class="stage">
+          <p class="row-label">s</p>
+          <div class="cells" id="vpChars"></div>
+          <p class="status-line" id="vpStatus"></p>
+          <div class="controls">
+            <button id="vpReset">⟲ Reset</button>
+            <button id="vpPrev">‹ Prev</button>
+            <button id="vpPlay">▶ Play</button>
+            <button id="vpNext">Next ›</button>
+            <span class="step-count" id="vpCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> walk from both ends inward. Skip characters that aren't letters or digits. Compare the rest case-insensitively — one mismatch means it's not a palindrome; pointers crossing means it is.</div>
+        <div class="code-panel" data-problem="vp">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="two-sum-ii">
+        <h2>Two Sum II — Input Array Is Sorted</h2>
+        <p class="lead">Given a sorted array and a target, return the 1-indexed positions of the two numbers that add up to target.</p>
+        <div class="stage">
+          <p class="row-label">numbers (target = 6, sorted)</p>
+          <div class="cells" id="tsiiArray"></div>
+          <p class="status-line" id="tsiiStatus"></p>
+          <div class="controls">
+            <button id="tsiiReset">⟲ Reset</button>
+            <button id="tsiiPrev">‹ Prev</button>
+            <button id="tsiiPlay">▶ Play</button>
+            <button id="tsiiNext">Next ›</button>
+            <span class="step-count" id="tsiiCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> because it's sorted, a hashmap isn't even needed. Start pointers at both ends — if the sum is too big, the right pointer is carrying too much, move it left; if too small, move the left pointer right.</div>
+        <div class="code-panel" data-problem="tsii">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="three-sum">
+        <h2>3Sum</h2>
+        <p class="lead">Given an array, return all unique triplets that sum to zero.</p>
+        <div class="stage">
+          <p class="row-label">nums, sorted</p>
+          <div class="cells" id="tsumArray"></div>
+          <p class="status-line" id="tsumStatus"></p>
+          <div class="controls">
+            <button id="tsumReset">⟲ Reset</button>
+            <button id="tsumPrev">‹ Prev</button>
+            <button id="tsumPlay">▶ Play</button>
+            <button id="tsumNext">Next ›</button>
+            <span class="step-count" id="tsumCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> sort first. Fix one number (i), then run the Two Sum II two-pointer pattern on the rest of the array looking for a pair that cancels it out. Skip over duplicate values for i, and for left/right after a match, so you don't return the same triplet twice.</div>
+        <div class="code-panel" data-problem="tsum">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="day-4" class="day-view" style="display:none;">
+      <div class="day-header">
+        <p class="kicker">Day 4 of 14</p>
+        <h1>Sliding Window</h1>
+        <p class="intro">A window of indices that grows and shrinks over an array or string — instead of re-scanning from scratch every time.</p>
+      </div>
+
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> currently examining</span>
+        <span class="item"><i class="dot teal"></i> match / resolved</span>
+        <span class="item"><i class="dot rose"></i> seen / checked</span>
+      </div>
+
+      <section class="block" id="buy-sell-stock">
+        <h2>Best Time to Buy and Sell Stock</h2>
+        <p class="lead">Given daily prices, return the maximum profit from buying on one day and selling on a later day.</p>
+        <div class="stage">
+          <p class="row-label">prices</p>
+          <div class="cells" id="bsArray"></div>
+          <p class="row-label">tracking</p>
+          <div class="kv-table" id="bsTrack"></div>
+          <p class="status-line" id="bsStatus"></p>
+          <div class="controls">
+            <button id="bsReset">⟲ Reset</button>
+            <button id="bsPrev">‹ Prev</button>
+            <button id="bsPlay">▶ Play</button>
+            <button id="bsNext">Next ›</button>
+            <span class="step-count" id="bsCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> this is a one-sided window — you only ever buy before you sell. Track the lowest price seen so far as you scan once; at each day, check the profit if you sold today.</div>
+        <div class="code-panel" data-problem="bs">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="longest-substring">
+        <h2>Longest Substring Without Repeating Characters</h2>
+        <p class="lead">Given a string, return the length of the longest substring without repeating characters.</p>
+        <div class="stage">
+          <p class="row-label">s — window highlighted</p>
+          <div class="cells" id="lsChars"></div>
+          <p class="status-line" id="lsStatus"></p>
+          <div class="controls">
+            <button id="lsReset">⟲ Reset</button>
+            <button id="lsPrev">‹ Prev</button>
+            <button id="lsPlay">▶ Play</button>
+            <button id="lsNext">Next ›</button>
+            <span class="step-count" id="lsCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> grow the window by moving right one step at a time. The moment you see a character already inside the window, jump the left edge to just past its last occurrence — the window only ever moves forward.</div>
+        <div class="code-panel" data-problem="ls">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="char-replacement">
+        <h2>Longest Repeating Character Replacement</h2>
+        <p class="lead">Given a string and an integer k, you may replace up to k characters. Return the length of the longest substring of one repeating character achievable.</p>
+        <div class="stage">
+          <p class="row-label">s (k = 1) — window highlighted</p>
+          <div class="cells" id="crChars"></div>
+          <p class="status-line" id="crStatus"></p>
+          <div class="controls">
+            <button id="crReset">⟲ Reset</button>
+            <button id="crPrev">‹ Prev</button>
+            <button id="crPlay">▶ Play</button>
+            <button id="crNext">Next ›</button>
+            <span class="step-count" id="crCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> a window is valid as long as (window size − count of its most frequent character) ≤ k — that's how many characters you'd need to replace. Grow the window; when it stops being valid, shrink from the left instead of resetting.</div>
+        <div class="code-panel" data-problem="cr">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="day-5" class="day-view" style="display:none;">
+      <div class="day-header">
+        <p class="kicker">Day 5 of 14</p>
+        <h1>Stack</h1>
+        <p class="intro">Last in, first out. Whenever "the most recent unmatched thing" matters, a stack is almost always the answer.</p>
+      </div>
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> currently examining</span>
+        <span class="item"><i class="dot teal"></i> match / resolved</span>
+        <span class="item"><i class="dot rose"></i> seen / checked</span>
+      </div>
+
+      <section class="block" id="valid-parentheses">
+        <h2>Valid Parentheses</h2>
+        <p class="lead">Given a string of brackets, return true if every bracket is closed in the right order.</p>
+        <div class="stage">
+          <p class="row-label">s</p>
+          <div class="cells" id="vparChars"></div>
+          <p class="row-label">stack (top on the right)</p>
+          <div class="chips" id="vparStack"></div>
+          <p class="status-line" id="vparStatus"></p>
+          <div class="controls">
+            <button id="vparReset">⟲ Reset</button>
+            <button id="vparPrev">‹ Prev</button>
+            <button id="vparPlay">▶ Play</button>
+            <button id="vparNext">Next ›</button>
+            <span class="step-count" id="vparCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> push opening brackets. On a closing bracket, it must match whatever is currently on top of the stack — if it doesn't (or the stack's empty), it's invalid. Valid only if the stack is empty at the end.</div>
+        <div class="code-panel" data-problem="vpar">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="min-stack">
+        <h2>Min Stack</h2>
+        <p class="lead">Design a stack that supports push, pop, top, and getMin — all in O(1).</p>
+        <div class="stage">
+          <p class="row-label">operations</p>
+          <div class="chips" id="msOps"></div>
+          <p class="row-label">main stack (top on the right)</p>
+          <div class="chips" id="msMain"></div>
+          <p class="row-label">min-tracking stack — top is always the current minimum</p>
+          <div class="chips" id="msMin"></div>
+          <p class="status-line" id="msStatus"></p>
+          <div class="controls">
+            <button id="msReset">⟲ Reset</button>
+            <button id="msPrev">‹ Prev</button>
+            <button id="msPlay">▶ Play</button>
+            <button id="msNext">Next ›</button>
+            <span class="step-count" id="msCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> keep a second stack alongside the main one. Push onto it whenever the new value is ≤ its current top (a new minimum, or tying the old one); pop from it whenever you pop that same value off the main stack. Its top is always the current min in O(1).</div>
+        <div class="code-panel" data-problem="ms">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="daily-temperatures">
+        <h2>Daily Temperatures</h2>
+        <p class="lead">Given daily temperatures, return for each day how many days you'd wait for a warmer one.</p>
+        <div class="stage">
+          <p class="row-label">temperatures</p>
+          <div class="cells" id="dtArray"></div>
+          <p class="row-label">stack — indices waiting for a warmer day (top on the right)</p>
+          <div class="chips" id="dtStack"></div>
+          <p class="status-line" id="dtStatus"></p>
+          <div class="controls">
+            <button id="dtReset">⟲ Reset</button>
+            <button id="dtPrev">‹ Prev</button>
+            <button id="dtPlay">▶ Play</button>
+            <button id="dtNext">Next ›</button>
+            <span class="step-count" id="dtCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> keep a stack of indices whose answer you don't know yet. Whenever today's temperature beats the one on top of the stack, that day finally got its answer — pop it and record the gap. This is a monotonic (decreasing) stack.</div>
+        <div class="code-panel" data-problem="dt">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="day-6" class="day-view" style="display:none;">
+      <div class="day-header">
+        <p class="kicker">Day 6 of 14</p>
+        <h1>Binary Search</h1>
+        <p class="intro">Any time you can rule out half the remaining space with one check, you've got O(log n) instead of O(n) — even when the array isn't fully sorted.</p>
+      </div>
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> currently examining</span>
+        <span class="item"><i class="dot teal"></i> match / resolved</span>
+        <span class="item"><i class="dot rose"></i> seen / checked</span>
+      </div>
+
+      <section class="block" id="binary-search">
+        <h2>Binary Search</h2>
+        <p class="lead">Given a sorted array and a target, return its index, or -1 if it isn't there.</p>
+        <div class="stage">
+          <p class="row-label">nums (target = 9)</p>
+          <div class="cells" id="bsrcArray"></div>
+          <p class="status-line" id="bsrcStatus"></p>
+          <div class="controls">
+            <button id="bsrcReset">⟲ Reset</button>
+            <button id="bsrcPrev">‹ Prev</button>
+            <button id="bsrcPlay">▶ Play</button>
+            <button id="bsrcNext">Next ›</button>
+            <span class="step-count" id="bsrcCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> look at the middle element. If it's the target, done. If it's smaller, the target must be to the right — discard the left half. If bigger, discard the right half. Repeat.</div>
+        <div class="code-panel" data-problem="bsrc">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="search-rotated">
+        <h2>Search in Rotated Sorted Array</h2>
+        <p class="lead">A sorted array has been rotated at an unknown pivot. Find the target's index in O(log n).</p>
+        <div class="stage">
+          <p class="row-label">nums (target = 0)</p>
+          <div class="cells" id="srArray"></div>
+          <p class="status-line" id="srStatus"></p>
+          <div class="controls">
+            <button id="srReset">⟲ Reset</button>
+            <button id="srPrev">‹ Prev</button>
+            <button id="srPlay">▶ Play</button>
+            <button id="srNext">Next ›</button>
+            <span class="step-count" id="srCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> at least one half (left of mid, or right of mid) is always properly sorted, even after rotation. Figure out which half is sorted, check if the target falls in that half's range — if yes, search there; if no, search the other half.</div>
+        <div class="code-panel" data-problem="sr">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="find-min-rotated">
+        <h2>Find Minimum in Rotated Sorted Array</h2>
+        <p class="lead">Find the minimum element in a rotated sorted array, in O(log n).</p>
+        <div class="stage">
+          <p class="row-label">nums</p>
+          <div class="cells" id="fmArray"></div>
+          <p class="status-line" id="fmStatus"></p>
+          <div class="controls">
+            <button id="fmReset">⟲ Reset</button>
+            <button id="fmPrev">‹ Prev</button>
+            <button id="fmPlay">▶ Play</button>
+            <button id="fmNext">Next ›</button>
+            <span class="step-count" id="fmCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> compare nums[mid] to nums[hi]. If nums[mid] > nums[hi], the minimum must be to the right of mid (mid itself can't be it). Otherwise, the minimum is at mid or to its left. Narrow until lo == hi.</div>
+        <div class="code-panel" data-problem="fm">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="day-7" class="day-view" style="display:none;">
+      <div class="day-header">
+        <p class="kicker">Day 7 of 14</p>
+        <h1>Linked List</h1>
+        <p class="intro">No random access — only "what's next." Most linked list tricks come down to a small number of pointers you move carefully, in the right order.</p>
+      </div>
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> currently examining</span>
+        <span class="item"><i class="dot teal"></i> match / resolved</span>
+        <span class="item"><i class="dot rose"></i> seen / checked</span>
+      </div>
+
+      <section class="block" id="reverse-list">
+        <h2>Reverse Linked List</h2>
+        <p class="lead">Reverse a singly linked list in place.</p>
+        <div class="stage">
+          <span class="chain-label">remaining (original order)</span>
+          <div class="cells" id="rlRemaining"></div>
+          <span class="chain-label">reversed so far</span>
+          <div class="cells" id="rlReversed"></div>
+          <p class="status-line" id="rlStatus"></p>
+          <div class="controls">
+            <button id="rlReset">⟲ Reset</button>
+            <button id="rlPrev">‹ Prev</button>
+            <button id="rlPlay">▶ Play</button>
+            <button id="rlNext">Next ›</button>
+            <span class="step-count" id="rlCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> keep three pointers — prev, curr, next. Save curr.next before you overwrite it, point curr back at prev, then slide all three pointers forward one node.</div>
+        <div class="code-panel" data-problem="rl">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="merge-lists">
+        <h2>Merge Two Sorted Lists</h2>
+        <p class="lead">Merge two sorted linked lists into one sorted list.</p>
+        <div class="stage">
+          <span class="chain-label">list 1</span>
+          <div class="cells" id="mlList1"></div>
+          <span class="chain-label">list 2</span>
+          <div class="cells" id="mlList2"></div>
+          <span class="chain-label">merged result</span>
+          <div class="cells" id="mlMerged"></div>
+          <p class="status-line" id="mlStatus"></p>
+          <div class="controls">
+            <button id="mlReset">⟲ Reset</button>
+            <button id="mlPrev">‹ Prev</button>
+            <button id="mlPlay">▶ Play</button>
+            <button id="mlNext">Next ›</button>
+            <span class="step-count" id="mlCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> walk both lists with a pointer each. At every step, attach whichever current node is smaller to the result and advance only that pointer. When one list runs out, attach the rest of the other.</div>
+        <div class="code-panel" data-problem="ml">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="cycle-detect">
+        <h2>Linked List Cycle</h2>
+        <p class="lead">Given a linked list, determine if it has a cycle — without using extra memory.</p>
+        <div class="stage">
+          <span class="chain-label">nodes (index 3's "next" wraps back to index 1 — that's the cycle)</span>
+          <div class="cells" id="clNodes"></div>
+          <p class="status-line" id="clStatus"></p>
+          <div class="controls">
+            <button id="clReset">⟲ Reset</button>
+            <button id="clPrev">‹ Prev</button>
+            <button id="clPlay">▶ Play</button>
+            <button id="clNext">Next ›</button>
+            <span class="step-count" id="clCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> two pointers, slow moves one step at a time, fast moves two. If there's no cycle, fast reaches the end first. If there IS a cycle, fast eventually laps slow and they land on the same node — that's Floyd's cycle detection, O(1) extra space.</div>
+        <div class="code-panel" data-problem="cl">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="reorder-list">
+        <h2>Reorder List</h2>
+        <p class="lead">Reorder L0→L1→…→Ln into L0→Ln→L1→Ln-1→… in place.</p>
+        <div class="stage">
+          <span class="chain-label">first half</span>
+          <div class="cells" id="roFirst"></div>
+          <span class="chain-label">second half, reversed</span>
+          <div class="cells" id="roSecond"></div>
+          <span class="chain-label">result — weaving the two together</span>
+          <div class="cells" id="roMerged"></div>
+          <p class="status-line" id="roStatus"></p>
+          <div class="controls">
+            <button id="roReset">⟲ Reset</button>
+            <button id="roPrev">‹ Prev</button>
+            <button id="roPlay">▶ Play</button>
+            <button id="roNext">Next ›</button>
+            <span class="step-count" id="roCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> three steps — find the middle (slow/fast pointers), reverse the second half, then merge the two halves by alternating nodes from each. Three problems you already know, chained together.</div>
+        <div class="code-panel" data-problem="ro">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="day-8" class="day-view" style="display:none;">
+      <div class="day-header">
+        <p class="kicker">Day 8 of 14</p>
+        <h1>Trees I</h1>
+        <p class="intro">Recursion is the native language of trees — most solutions are "handle this node, trust the recursion for its children."</p>
+      </div>
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> currently examining</span>
+        <span class="item"><i class="dot teal"></i> match / resolved</span>
+        <span class="item"><i class="dot rose"></i> seen / checked</span>
+      </div>
+
+      <section class="block" id="invert-tree">
+        <h2>Invert Binary Tree</h2>
+        <p class="lead">Flip a binary tree into its mirror image.</p>
+        <div class="stage">
+          <div class="tree-svg" id="itTree"></div>
+          <p class="status-line" id="itStatus"></p>
+          <div class="controls">
+            <button id="itReset">⟲ Reset</button>
+            <button id="itPrev">‹ Prev</button>
+            <button id="itPlay">▶ Play</button>
+            <button id="itNext">Next ›</button>
+            <span class="step-count" id="itCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> at every node, swap its left and right children, then recurse into both. Order doesn't matter — swap-then-recurse and recurse-then-swap both work, since every node gets visited exactly once either way.</div>
+        <div class="code-panel" data-problem="it">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="max-depth">
+        <h2>Maximum Depth of Binary Tree</h2>
+        <p class="lead">Return the number of nodes along the longest path from root to a leaf.</p>
+        <div class="stage">
+          <div class="tree-svg" id="mdTree"></div>
+          <p class="status-line" id="mdStatus"></p>
+          <div class="controls">
+            <button id="mdReset">⟲ Reset</button>
+            <button id="mdPrev">‹ Prev</button>
+            <button id="mdPlay">▶ Play</button>
+            <button id="mdNext">Next ›</button>
+            <span class="step-count" id="mdCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> a leaf's depth is 1. Every other node's depth is 1 + the deeper of its two children's depths. Compute children first (post-order), then combine — classic bottom-up recursion.</div>
+        <div class="code-panel" data-problem="md">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="same-tree">
+        <h2>Same Tree</h2>
+        <p class="lead">Given two binary trees, return true if they're structurally identical with the same node values.</p>
+        <div class="stage">
+          <div class="tree-pair">
+            <div class="tree-col"><span class="chain-label">tree p</span><div class="tree-svg" id="stTreeP"></div></div>
+            <div class="tree-col"><span class="chain-label">tree q</span><div class="tree-svg" id="stTreeQ"></div></div>
+          </div>
+          <p class="status-line" id="stStatus"></p>
+          <div class="controls">
+            <button id="stReset">⟲ Reset</button>
+            <button id="stPrev">‹ Prev</button>
+            <button id="stPlay">▶ Play</button>
+            <button id="stNext">Next ›</button>
+            <span class="step-count" id="stCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> walk both trees together, node by node. Two nodes match if both are null, or both exist with equal values and their left/right subtrees also match — recursively.</div>
+        <div class="code-panel" data-problem="st">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="subtree">
+        <h2>Subtree of Another Tree</h2>
+        <p class="lead">Given two trees, return true if subRoot appears as an exact subtree anywhere inside root.</p>
+        <div class="stage">
+          <div class="tree-pair">
+            <div class="tree-col"><span class="chain-label">root — candidate highlighted</span><div class="tree-svg" id="subRootTree"></div></div>
+            <div class="tree-col"><span class="chain-label">subRoot — looking for this shape</span><div class="tree-svg" id="subSubTree"></div></div>
+          </div>
+          <p class="status-line" id="subStatus"></p>
+          <div class="controls">
+            <button id="subReset">⟲ Reset</button>
+            <button id="subPrev">‹ Prev</button>
+            <button id="subPlay">▶ Play</button>
+            <button id="subNext">Next ›</button>
+            <span class="step-count" id="subCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> try every node in root as a candidate root. At each one, run the Same Tree check against subRoot. The first candidate where it matches means subRoot is in there.</div>
+        <div class="code-panel" data-problem="sub">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="day-9" class="day-view" style="display:none;">
+      <div class="day-header">
+        <p class="kicker">Day 9 of 14</p>
+        <h1>Trees II + Tries</h1>
+        <p class="intro">Breadth-first traversal, tree invariants, and tries — a tree shape specialized for prefixes.</p>
+      </div>
+      <div class="legend">
+        <span class="item"><i class="dot amber"></i> currently examining</span>
+        <span class="item"><i class="dot teal"></i> match / resolved</span>
+        <span class="item"><i class="dot rose"></i> seen / checked</span>
+      </div>
+
+      <section class="block" id="level-order">
+        <h2>Binary Tree Level Order Traversal</h2>
+        <p class="lead">Return the tree's node values level by level, left to right.</p>
+        <div class="stage">
+          <div class="tree-svg" id="loTree"></div>
+          <p class="row-label">queue</p>
+          <div class="chips" id="loQueue"></div>
+          <p class="row-label">levels collected so far</p>
+          <div class="chips" id="loLevels"></div>
+          <p class="status-line" id="loStatus"></p>
+          <div class="controls">
+            <button id="loReset">⟲ Reset</button>
+            <button id="loPrev">‹ Prev</button>
+            <button id="loPlay">▶ Play</button>
+            <button id="loNext">Next ›</button>
+            <span class="step-count" id="loCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> BFS with a queue. Process the queue one full level at a time — record its size first, pop exactly that many nodes, push their children for the next round.</div>
+        <div class="code-panel" data-problem="lo">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="validate-bst">
+        <h2>Validate Binary Search Tree</h2>
+        <p class="lead">Return true if the tree satisfies the BST property everywhere, not just at each parent-child pair.</p>
+        <div class="stage">
+          <div class="tree-svg" id="vbTree"></div>
+          <p class="status-line" id="vbStatus"></p>
+          <div class="controls">
+            <button id="vbReset">⟲ Reset</button>
+            <button id="vbPrev">‹ Prev</button>
+            <button id="vbPlay">▶ Play</button>
+            <button id="vbNext">Next ›</button>
+            <span class="step-count" id="vbCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> checking a node against just its immediate parent isn't enough — a node deep in the left subtree must be less than every ancestor above it, not just its direct parent. Carry a (low, high) valid range down through the recursion and narrow it at each step.</div>
+        <div class="code-panel" data-problem="vb">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="lca-bst">
+        <h2>Lowest Common Ancestor of a BST</h2>
+        <p class="lead">Given a BST and two nodes p and q, find their lowest common ancestor.</p>
+        <div class="stage">
+          <div class="tree-svg" id="lcaTree"></div>
+          <p class="status-line" id="lcaStatus"></p>
+          <div class="controls">
+            <button id="lcaReset">⟲ Reset</button>
+            <button id="lcaPrev">‹ Prev</button>
+            <button id="lcaPlay">▶ Play</button>
+            <button id="lcaNext">Next ›</button>
+            <span class="step-count" id="lcaCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> use the BST ordering instead of searching blindly. If both p and q are smaller than the current node, the answer is in the left subtree; if both are bigger, it's in the right. The moment they split (or one equals the current node), you've found the LCA.</div>
+        <div class="code-panel" data-problem="lca">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+
+      <section class="block" id="implement-trie">
+        <h2>Implement Trie (Prefix Tree)</h2>
+        <p class="lead">Build a data structure supporting insert, search (exact word), and startsWith (prefix) in O(word length).</p>
+        <div class="stage">
+          <p class="row-label">operations</p>
+          <div class="chips" id="trieOps"></div>
+          <p class="row-label">path walked this operation</p>
+          <div class="cells" id="trieChars"></div>
+          <p class="status-line" id="trieStatus"></p>
+          <div class="controls">
+            <button id="trieReset">⟲ Reset</button>
+            <button id="triePrev">‹ Prev</button>
+            <button id="triePlay">▶ Play</button>
+            <button id="trieNext">Next ›</button>
+            <span class="step-count" id="trieCount"></span>
+          </div>
+        </div>
+        <div class="trick"><b>The trick:</b> each node is a dictionary of child letters, plus an end-of-word flag. Insert walks/creates a node per character; search walks and requires the end flag on the last node; startsWith walks but doesn't care about the end flag.</div>
+        <div class="code-panel" data-problem="trie">
+          <div class="tabs">
+            <button class="tab-btn active" data-lang="python">Python</button>
+            <button class="tab-btn" data-lang="cpp">C++</button>
+            <button class="copy-btn">Copy</button>
+          </div>
+          <pre><code></code></pre>
+        </div>
+      </section>
+    </section>
+
+    <section id="placeholder" class="day-view placeholder" style="display:none;">
+      <p class="kicker" id="phKicker"></p>
+      <h1 id="phTitle"></h1>
+      <p>This day hasn't been built yet. Ask to continue the roadmap and it'll be added here next, in this same file.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+const dayTitles = [
+  "Arrays & Hashing I","Arrays & Hashing II","Two Pointers","Sliding Window","Stack",
+  "Binary Search","Linked List","Trees I","Trees II + Tries","Heap / Priority Queue",
+  "Backtracking","Graphs","1-D Dynamic Programming","Intervals + Greedy + Review"
+];
+const builtDays = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const daySubs = {
+  1: [
+    {id:"concept", label:"Concept: Hashing"},
+    {id:"contains-duplicate", label:"Contains Duplicate"},
+    {id:"valid-anagram", label:"Valid Anagram"},
+    {id:"two-sum", label:"Two Sum"}
+  ],
+  2: [
+    {id:"group-anagrams", label:"Group Anagrams"},
+    {id:"top-k-frequent", label:"Top K Frequent Elements"},
+    {id:"product-except-self", label:"Product of Array Except Self"}
+  ],
+  3: [
+    {id:"valid-palindrome", label:"Valid Palindrome"},
+    {id:"two-sum-ii", label:"Two Sum II"},
+    {id:"three-sum", label:"3Sum"}
+  ],
+  4: [
+    {id:"buy-sell-stock", label:"Best Time to Buy/Sell Stock"},
+    {id:"longest-substring", label:"Longest Substring Without Repeating"},
+    {id:"char-replacement", label:"Longest Repeating Char Replacement"}
+  ],
+  5: [
+    {id:"valid-parentheses", label:"Valid Parentheses"},
+    {id:"min-stack", label:"Min Stack"},
+    {id:"daily-temperatures", label:"Daily Temperatures"}
+  ],
+  6: [
+    {id:"binary-search", label:"Binary Search"},
+    {id:"search-rotated", label:"Search in Rotated Sorted Array"},
+    {id:"find-min-rotated", label:"Find Minimum in Rotated Sorted Array"}
+  ],
+  7: [
+    {id:"reverse-list", label:"Reverse Linked List"},
+    {id:"merge-lists", label:"Merge Two Sorted Lists"},
+    {id:"cycle-detect", label:"Linked List Cycle"},
+    {id:"reorder-list", label:"Reorder List"}
+  ],
+  8: [
+    {id:"invert-tree", label:"Invert Binary Tree"},
+    {id:"max-depth", label:"Maximum Depth of Binary Tree"},
+    {id:"same-tree", label:"Same Tree"},
+    {id:"subtree", label:"Subtree of Another Tree"}
+  ],
+  9: [
+    {id:"level-order", label:"Level Order Traversal"},
+    {id:"validate-bst", label:"Validate Binary Search Tree"},
+    {id:"lca-bst", label:"Lowest Common Ancestor of a BST"},
+    {id:"implement-trie", label:"Implement Trie"}
+  ]
+};
+
+const code = {
+  cd: {
+    python: `def containsDuplicate(nums: list[int]) -> bool:
+    seen = set()
+    for n in nums:
+        if n in seen:
+            return True
+        seen.add(n)
+    return False`,
+    cpp: `bool containsDuplicate(vector<int>& nums) {
+    unordered_set<int> seen;
+    for (int n : nums) {
+        if (seen.count(n)) return true;
+        seen.insert(n);
+    }
+    return false;
+}`
+  },
+  va: {
+    python: `def isAnagram(s: str, t: str) -> bool:
+    if len(s) != len(t):
+        return False
+    count = {}
+    for c in s:
+        count[c] = count.get(c, 0) + 1
+    for c in t:
+        if c not in count:
+            return False
+        count[c] -= 1
+        if count[c] == 0:
+            del count[c]
+    return len(count) == 0`,
+    cpp: `bool isAnagram(string s, string t) {
+    if (s.size() != t.size()) return false;
+    unordered_map<char, int> count;
+    for (char c : s) count[c]++;
+    for (char c : t) {
+        if (--count[c] < 0) return false;
+    }
+    return true;
+}`
+  },
+  ts: {
+    python: `def twoSum(nums: list[int], target: int) -> list[int]:
+    seen = {}
+    for i, n in enumerate(nums):
+        complement = target - n
+        if complement in seen:
+            return [seen[complement], i]
+        seen[n] = i
+    return []`,
+    cpp: `vector<int> twoSum(vector<int>& nums, int target) {
+    unordered_map<int, int> seen;
+    for (int i = 0; i < (int)nums.size(); i++) {
+        int complement = target - nums[i];
+        if (seen.count(complement)) {
+            return {seen[complement], i};
+        }
+        seen[nums[i]] = i;
+    }
+    return {};
+}`
+  },
+  ga: {
+    python: `def groupAnagrams(strs: list[str]) -> list[list[str]]:
+    groups = {}
+    for s in strs:
+        key = "".join(sorted(s))
+        groups.setdefault(key, []).append(s)
+    return list(groups.values())`,
+    cpp: `vector<vector<string>> groupAnagrams(vector<string>& strs) {
+    unordered_map<string, vector<string>> groups;
+    for (string& s : strs) {
+        string key = s;
+        sort(key.begin(), key.end());
+        groups[key].push_back(s);
+    }
+    vector<vector<string>> result;
+    for (auto& entry : groups) result.push_back(entry.second);
+    return result;
+}`
+  },
+  tk: {
+    python: `def topKFrequent(nums: list[int], k: int) -> list[int]:
+    count = {}
+    for n in nums:
+        count[n] = count.get(n, 0) + 1
+    ranked = sorted(count.items(), key=lambda pair: -pair[1])
+    return [num for num, freq in ranked[:k]]`,
+    cpp: `vector<int> topKFrequent(vector<int>& nums, int k) {
+    unordered_map<int, int> count;
+    for (int n : nums) count[n]++;
+    vector<pair<int,int>> freq(count.begin(), count.end());
+    sort(freq.begin(), freq.end(), [](auto& a, auto& b) {
+        return a.second > b.second;
+    });
+    vector<int> result;
+    for (int i = 0; i < k; i++) result.push_back(freq[i].first);
+    return result;
+}`
+  },
+  pe: {
+    python: `def productExceptSelf(nums: list[int]) -> list[int]:
+    n = len(nums)
+    result = [1] * n
+    left = 1
+    for i in range(n):
+        result[i] = left
+        left *= nums[i]
+    right = 1
+    for i in range(n - 1, -1, -1):
+        result[i] *= right
+        right *= nums[i]
+    return result`,
+    cpp: `vector<int> productExceptSelf(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> result(n, 1);
+    int left = 1;
+    for (int i = 0; i < n; i++) {
+        result[i] = left;
+        left *= nums[i];
+    }
+    int right = 1;
+    for (int i = n - 1; i >= 0; i--) {
+        result[i] *= right;
+        right *= nums[i];
+    }
+    return result;
+}`
+  }
+};
+
+Object.assign(code, {
+  vp: {
+    python: `def isPalindrome(s: str) -> bool:
+    left, right = 0, len(s) - 1
+    while left < right:
+        if not s[left].isalnum():
+            left += 1
+        elif not s[right].isalnum():
+            right -= 1
+        elif s[left].lower() != s[right].lower():
+            return False
+        else:
+            left += 1
+            right -= 1
+    return True`,
+    cpp: `bool isPalindrome(string s) {
+    int left = 0, right = s.size() - 1;
+    while (left < right) {
+        if (!isalnum(s[left])) { left++; }
+        else if (!isalnum(s[right])) { right--; }
+        else if (tolower(s[left]) != tolower(s[right])) { return false; }
+        else { left++; right--; }
+    }
+    return true;
+}`
+  },
+  tsii: {
+    python: `def twoSum(numbers: list[int], target: int) -> list[int]:
+    left, right = 0, len(numbers) - 1
+    while left < right:
+        total = numbers[left] + numbers[right]
+        if total == target:
+            return [left + 1, right + 1]
+        elif total < target:
+            left += 1
+        else:
+            right -= 1
+    return []`,
+    cpp: `vector<int> twoSum(vector<int>& numbers, int target) {
+    int left = 0, right = numbers.size() - 1;
+    while (left < right) {
+        int total = numbers[left] + numbers[right];
+        if (total == target) return {left + 1, right + 1};
+        else if (total < target) left++;
+        else right--;
+    }
+    return {};
+}`
+  },
+  tsum: {
+    python: `def threeSum(nums: list[int]) -> list[list[int]]:
+    nums.sort()
+    result = []
+    for i in range(len(nums) - 2):
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+        left, right = i + 1, len(nums) - 1
+        while left < right:
+            total = nums[i] + nums[left] + nums[right]
+            if total == 0:
+                result.append([nums[i], nums[left], nums[right]])
+                left += 1
+                right -= 1
+                while left < right and nums[left] == nums[left - 1]:
+                    left += 1
+                while left < right and nums[right] == nums[right + 1]:
+                    right -= 1
+            elif total < 0:
+                left += 1
+            else:
+                right -= 1
+    return result`,
+    cpp: `vector<vector<int>> threeSum(vector<int>& nums) {
+    sort(nums.begin(), nums.end());
+    vector<vector<int>> result;
+    for (int i = 0; i < (int)nums.size() - 2; i++) {
+        if (i > 0 && nums[i] == nums[i - 1]) continue;
+        int left = i + 1, right = nums.size() - 1;
+        while (left < right) {
+            int total = nums[i] + nums[left] + nums[right];
+            if (total == 0) {
+                result.push_back({nums[i], nums[left], nums[right]});
+                left++; right--;
+                while (left < right && nums[left] == nums[left - 1]) left++;
+                while (left < right && nums[right] == nums[right + 1]) right--;
+            } else if (total < 0) { left++; }
+            else { right--; }
+        }
+    }
+    return result;
+}`
+  }
+});
+
+Object.assign(code, {
+  bs: {
+    python: `def maxProfit(prices: list[int]) -> int:
+    min_price = float('inf')
+    max_profit = 0
+    for price in prices:
+        min_price = min(min_price, price)
+        max_profit = max(max_profit, price - min_price)
+    return max_profit`,
+    cpp: `int maxProfit(vector<int>& prices) {
+    int minPrice = INT_MAX, maxProfit = 0;
+    for (int price : prices) {
+        minPrice = min(minPrice, price);
+        maxProfit = max(maxProfit, price - minPrice);
+    }
+    return maxProfit;
+}`
+  },
+  ls: {
+    python: `def lengthOfLongestSubstring(s: str) -> int:
+    last_seen = {}
+    left = 0
+    max_len = 0
+    for right, ch in enumerate(s):
+        if ch in last_seen and last_seen[ch] >= left:
+            left = last_seen[ch] + 1
+        last_seen[ch] = right
+        max_len = max(max_len, right - left + 1)
+    return max_len`,
+    cpp: `int lengthOfLongestSubstring(string s) {
+    unordered_map<char, int> lastSeen;
+    int left = 0, maxLen = 0;
+    for (int right = 0; right < (int)s.size(); right++) {
+        char ch = s[right];
+        if (lastSeen.count(ch) && lastSeen[ch] >= left) {
+            left = lastSeen[ch] + 1;
+        }
+        lastSeen[ch] = right;
+        maxLen = max(maxLen, right - left + 1);
+    }
+    return maxLen;
+}`
+  },
+  cr: {
+    python: `def characterReplacement(s: str, k: int) -> int:
+    counts = {}
+    left = 0
+    max_count = 0
+    max_len = 0
+    for right, ch in enumerate(s):
+        counts[ch] = counts.get(ch, 0) + 1
+        max_count = max(max_count, counts[ch])
+        while (right - left + 1) - max_count > k:
+            counts[s[left]] -= 1
+            left += 1
+        max_len = max(max_len, right - left + 1)
+    return max_len`,
+    cpp: `int characterReplacement(string s, int k) {
+    unordered_map<char, int> counts;
+    int left = 0, maxCount = 0, maxLen = 0;
+    for (int right = 0; right < (int)s.size(); right++) {
+        counts[s[right]]++;
+        maxCount = max(maxCount, counts[s[right]]);
+        while ((right - left + 1) - maxCount > k) {
+            counts[s[left]]--;
+            left++;
+        }
+        maxLen = max(maxLen, right - left + 1);
+    }
+    return maxLen;
+}`
+  }
+});
+
+Object.assign(code, {
+  vpar: {
+    python: `def isValid(s: str) -> bool:
+    stack = []
+    pairs = {')': '(', ']': '[', '}': '{'}
+    for ch in s:
+        if ch in '([{':
+            stack.append(ch)
+        else:
+            if not stack or stack.pop() != pairs[ch]:
+                return False
+    return len(stack) == 0`,
+    cpp: `bool isValid(string s) {
+    stack<char> st;
+    unordered_map<char, char> pairs = {{')','('},{']','['},{'}','{'}};
+    for (char ch : s) {
+        if (ch=='(' || ch=='[' || ch=='{') st.push(ch);
+        else {
+            if (st.empty() || st.top() != pairs[ch]) return false;
+            st.pop();
+        }
+    }
+    return st.empty();
+}`
+  },
+  ms: {
+    python: `class MinStack:
+    def __init__(self):
+        self.stack = []
+        self.min_stack = []
+
+    def push(self, val: int) -> None:
+        self.stack.append(val)
+        if not self.min_stack or val <= self.min_stack[-1]:
+            self.min_stack.append(val)
+
+    def pop(self) -> None:
+        val = self.stack.pop()
+        if val == self.min_stack[-1]:
+            self.min_stack.pop()
+
+    def top(self) -> int:
+        return self.stack[-1]
+
+    def getMin(self) -> int:
+        return self.min_stack[-1]`,
+    cpp: `class MinStack {
+    stack<int> st, minSt;
+public:
+    void push(int val) {
+        st.push(val);
+        if (minSt.empty() || val <= minSt.top()) minSt.push(val);
+    }
+    void pop() {
+        if (st.top() == minSt.top()) minSt.pop();
+        st.pop();
+    }
+    int top() { return st.top(); }
+    int getMin() { return minSt.top(); }
+};`
+  },
+  dt: {
+    python: `def dailyTemperatures(temps: list[int]) -> list[int]:
+    result = [0] * len(temps)
+    stack = []
+    for i, t in enumerate(temps):
+        while stack and temps[stack[-1]] < t:
+            j = stack.pop()
+            result[j] = i - j
+        stack.append(i)
+    return result`,
+    cpp: `vector<int> dailyTemperatures(vector<int>& temps) {
+    vector<int> result(temps.size(), 0);
+    stack<int> st;
+    for (int i = 0; i < (int)temps.size(); i++) {
+        while (!st.empty() && temps[st.top()] < temps[i]) {
+            int j = st.top(); st.pop();
+            result[j] = i - j;
+        }
+        st.push(i);
+    }
+    return result;
+}`
+  },
+  bsrc: {
+    python: `def search(nums: list[int], target: int) -> int:
+    lo, hi = 0, len(nums) - 1
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return -1`,
+    cpp: `int search(vector<int>& nums, int target) {
+    int lo = 0, hi = nums.size() - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (nums[mid] == target) return mid;
+        else if (nums[mid] < target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return -1;
+}`
+  },
+  sr: {
+    python: `def search(nums: list[int], target: int) -> int:
+    lo, hi = 0, len(nums) - 1
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if nums[mid] == target:
+            return mid
+        if nums[lo] <= nums[mid]:
+            if nums[lo] <= target < nums[mid]:
+                hi = mid - 1
+            else:
+                lo = mid + 1
+        else:
+            if nums[mid] < target <= nums[hi]:
+                lo = mid + 1
+            else:
+                hi = mid - 1
+    return -1`,
+    cpp: `int search(vector<int>& nums, int target) {
+    int lo = 0, hi = nums.size() - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (nums[mid] == target) return mid;
+        if (nums[lo] <= nums[mid]) {
+            if (nums[lo] <= target && target < nums[mid]) hi = mid - 1;
+            else lo = mid + 1;
+        } else {
+            if (nums[mid] < target && target <= nums[hi]) lo = mid + 1;
+            else hi = mid - 1;
+        }
+    }
+    return -1;
+}`
+  },
+  fm: {
+    python: `def findMin(nums: list[int]) -> int:
+    lo, hi = 0, len(nums) - 1
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if nums[mid] > nums[hi]:
+            lo = mid + 1
+        else:
+            hi = mid
+    return nums[lo]`,
+    cpp: `int findMin(vector<int>& nums) {
+    int lo = 0, hi = nums.size() - 1;
+    while (lo < hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (nums[mid] > nums[hi]) lo = mid + 1;
+        else hi = mid;
+    }
+    return nums[lo];
+}`
+  },
+  rl: {
+    python: `def reverseList(head):
+    prev = None
+    curr = head
+    while curr:
+        next_node = curr.next
+        curr.next = prev
+        prev = curr
+        curr = next_node
+    return prev`,
+    cpp: `ListNode* reverseList(ListNode* head) {
+    ListNode* prev = nullptr;
+    ListNode* curr = head;
+    while (curr) {
+        ListNode* next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    return prev;
+}`
+  },
+  ml: {
+    python: `def mergeTwoLists(l1, l2):
+    dummy = ListNode()
+    tail = dummy
+    while l1 and l2:
+        if l1.val <= l2.val:
+            tail.next = l1
+            l1 = l1.next
+        else:
+            tail.next = l2
+            l2 = l2.next
+        tail = tail.next
+    tail.next = l1 if l1 else l2
+    return dummy.next`,
+    cpp: `ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+    ListNode dummy;
+    ListNode* tail = &dummy;
+    while (l1 && l2) {
+        if (l1->val <= l2->val) { tail->next = l1; l1 = l1->next; }
+        else { tail->next = l2; l2 = l2->next; }
+        tail = tail->next;
+    }
+    tail->next = l1 ? l1 : l2;
+    return dummy.next;
+}`
+  },
+  cl: {
+    python: `def hasCycle(head) -> bool:
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            return True
+    return False`,
+    cpp: `bool hasCycle(ListNode *head) {
+    ListNode* slow = head;
+    ListNode* fast = head;
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast) return true;
+    }
+    return false;
+}`
+  },
+  ro: {
+    python: `def reorderList(head) -> None:
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    second = slow.next
+    slow.next = None
+    prev = None
+    while second:
+        nxt = second.next
+        second.next = prev
+        prev = second
+        second = nxt
+    first, second = head, prev
+    while second:
+        first.next, first = second, first.next
+        second.next, second = first, second.next`,
+    cpp: `void reorderList(ListNode* head) {
+    ListNode *slow = head, *fast = head;
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    ListNode* second = slow->next;
+    slow->next = nullptr;
+    ListNode* prev = nullptr;
+    while (second) {
+        ListNode* nxt = second->next;
+        second->next = prev;
+        prev = second;
+        second = nxt;
+    }
+    ListNode* first = head;
+    second = prev;
+    while (second) {
+        ListNode* tmp1 = first->next;
+        first->next = second;
+        first = tmp1;
+        ListNode* tmp2 = second->next;
+        second->next = first;
+        second = tmp2;
+    }
+}`
+  }
+});
+
+Object.assign(code, {
+  it: {
+    python: `def invertTree(root):
+    if not root:
+        return None
+    root.left, root.right = invertTree(root.right), invertTree(root.left)
+    return root`,
+    cpp: `TreeNode* invertTree(TreeNode* root) {
+    if (!root) return nullptr;
+    TreeNode* left = invertTree(root->left);
+    TreeNode* right = invertTree(root->right);
+    root->left = right;
+    root->right = left;
+    return root;
+}`
+  },
+  md: {
+    python: `def maxDepth(root) -> int:
+    if not root:
+        return 0
+    return 1 + max(maxDepth(root.left), maxDepth(root.right))`,
+    cpp: `int maxDepth(TreeNode* root) {
+    if (!root) return 0;
+    return 1 + max(maxDepth(root->left), maxDepth(root->right));
+}`
+  },
+  st: {
+    python: `def isSameTree(p, q) -> bool:
+    if not p and not q:
+        return True
+    if not p or not q or p.val != q.val:
+        return False
+    return isSameTree(p.left, q.left) and isSameTree(p.right, q.right)`,
+    cpp: `bool isSameTree(TreeNode* p, TreeNode* q) {
+    if (!p && !q) return true;
+    if (!p || !q || p->val != q->val) return false;
+    return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+}`
+  },
+  sub: {
+    python: `def isSameTree(p, q) -> bool:
+    if not p and not q:
+        return True
+    if not p or not q or p.val != q.val:
+        return False
+    return isSameTree(p.left, q.left) and isSameTree(p.right, q.right)
+
+def isSubtree(root, subRoot) -> bool:
+    if not root:
+        return False
+    if isSameTree(root, subRoot):
+        return True
+    return isSubtree(root.left, subRoot) or isSubtree(root.right, subRoot)`,
+    cpp: `bool isSameTree(TreeNode* p, TreeNode* q) {
+    if (!p && !q) return true;
+    if (!p || !q || p->val != q->val) return false;
+    return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+}
+
+bool isSubtree(TreeNode* root, TreeNode* subRoot) {
+    if (!root) return false;
+    if (isSameTree(root, subRoot)) return true;
+    return isSubtree(root->left, subRoot) || isSubtree(root->right, subRoot);
+}`
+  },
+  lo: {
+    python: `from collections import deque
+
+def levelOrder(root) -> list[list[int]]:
+    if not root:
+        return []
+    result = []
+    queue = deque([root])
+    while queue:
+        level = []
+        for _ in range(len(queue)):
+            node = queue.popleft()
+            level.append(node.val)
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        result.append(level)
+    return result`,
+    cpp: `vector<vector<int>> levelOrder(TreeNode* root) {
+    vector<vector<int>> result;
+    if (!root) return result;
+    queue<TreeNode*> q;
+    q.push(root);
+    while (!q.empty()) {
+        int size = q.size();
+        vector<int> level;
+        for (int i = 0; i < size; i++) {
+            TreeNode* node = q.front(); q.pop();
+            level.push_back(node->val);
+            if (node->left) q.push(node->left);
+            if (node->right) q.push(node->right);
+        }
+        result.push_back(level);
+    }
+    return result;
+}`
+  },
+  vb: {
+    python: `def isValidBST(root, low=None, high=None) -> bool:
+    if not root:
+        return True
+    if (low is not None and root.val <= low) or (high is not None and root.val >= high):
+        return False
+    return isValidBST(root.left, low, root.val) and isValidBST(root.right, root.val, high)`,
+    cpp: `bool isValidBST(TreeNode* root, TreeNode* low=nullptr, TreeNode* high=nullptr) {
+    if (!root) return true;
+    if ((low && root->val <= low->val) || (high && root->val >= high->val)) return false;
+    return isValidBST(root->left, low, root) && isValidBST(root->right, root, high);
+}`
+  },
+  lca: {
+    python: `def lowestCommonAncestor(root, p, q):
+    curr = root
+    while curr:
+        if p.val < curr.val and q.val < curr.val:
+            curr = curr.left
+        elif p.val > curr.val and q.val > curr.val:
+            curr = curr.right
+        else:
+            return curr`,
+    cpp: `TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    TreeNode* curr = root;
+    while (curr) {
+        if (p->val < curr->val && q->val < curr->val) curr = curr->left;
+        else if (p->val > curr->val && q->val > curr->val) curr = curr->right;
+        else return curr;
+    }
+    return nullptr;
+}`
+  },
+  trie: {
+    python: `class Trie:
+    def __init__(self):
+        self.children = {}
+        self.end = False
+
+    def insert(self, word: str) -> None:
+        node = self
+        for ch in word:
+            if ch not in node.children:
+                node.children[ch] = Trie()
+            node = node.children[ch]
+        node.end = True
+
+    def search(self, word: str) -> bool:
+        node = self
+        for ch in word:
+            if ch not in node.children:
+                return False
+            node = node.children[ch]
+        return node.end
+
+    def startsWith(self, prefix: str) -> bool:
+        node = self
+        for ch in prefix:
+            if ch not in node.children:
+                return False
+            node = node.children[ch]
+        return True`,
+    cpp: `class Trie {
+    unordered_map<char, Trie*> children;
+    bool end = false;
+public:
+    void insert(string word) {
+        Trie* node = this;
+        for (char ch : word) {
+            if (!node->children.count(ch)) node->children[ch] = new Trie();
+            node = node->children[ch];
+        }
+        node->end = true;
+    }
+    bool search(string word) {
+        Trie* node = this;
+        for (char ch : word) {
+            if (!node->children.count(ch)) return false;
+            node = node->children[ch];
+        }
+        return node->end;
+    }
+    bool startsWith(string prefix) {
+        Trie* node = this;
+        for (char ch : prefix) {
+            if (!node->children.count(ch)) return false;
+            node = node->children[ch];
+        }
+        return true;
+    }
+};`
+  }
+});
+function el(tag, cls, html){
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html !== undefined) e.innerHTML = html;
+  return e;
+}
+
+function renderChain(container, arr, highlightVal){
+  container.innerHTML = '';
+  if (arr.length === 0){ container.appendChild(el('span','arrow','(empty)')); return; }
+  arr.forEach((v,idx) => {
+    const c = el('div','cell', v);
+    if (v === highlightVal) c.classList.add('active');
+    container.appendChild(c);
+    if (idx < arr.length - 1) container.appendChild(el('span','arrow','→'));
+  });
+}
+
+function layoutTree(root){
+  const nodes = [], edges = [];
+  let counter = 0;
+  function walk(n, depth){
+    if (!n) return null;
+    const leftRec = walk(n.left, depth+1);
+    const x = counter++;
+    const rec = {val:n.val, x, y:depth};
+    nodes.push(rec);
+    if (leftRec) edges.push({from:rec, to:leftRec});
+    const rightRec = walk(n.right, depth+1);
+    if (rightRec) edges.push({from:rec, to:rightRec});
+    return rec;
+  }
+  walk(root, 0);
+  return {nodes, edges};
+}
+
+function svgTreeString(layout, stateForVal){
+  if (layout.nodes.length === 0) return '<svg viewBox="0 0 100 40" width="100%"></svg>';
+  const spacingX = 52, offsetX = 28, spacingY = 62, offsetY = 30;
+  const maxX = Math.max(...layout.nodes.map(n => n.x));
+  const maxY = Math.max(...layout.nodes.map(n => n.y));
+  const width = (maxX+1)*spacingX + offsetX;
+  const height = (maxY+1)*spacingY + offsetY + 16;
+  let svg = `<svg viewBox="0 0 ${width} ${height}" width="100%" style="max-width:${width}px">`;
+  layout.edges.forEach(e => {
+    const x1 = e.from.x*spacingX+offsetX, y1 = e.from.y*spacingY+offsetY;
+    const x2 = e.to.x*spacingX+offsetX, y2 = e.to.y*spacingY+offsetY;
+    svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:var(--border);stroke-width:2"/>`;
+  });
+  layout.nodes.forEach(n => {
+    const x = n.x*spacingX+offsetX, y = n.y*spacingY+offsetY;
+    const state = stateForVal ? stateForVal(n.val) : '';
+    let fill = 'var(--panel-2)', stroke = 'var(--border)';
+    if (state === 'active'){ fill = 'var(--amber-tint)'; stroke = 'var(--amber)'; }
+    else if (state === 'match'){ fill = 'var(--teal-tint)'; stroke = 'var(--teal)'; }
+    else if (state === 'seen'){ fill = 'var(--rose-tint)'; stroke = 'var(--rose)'; }
+    svg += `<circle cx="${x}" cy="${y}" r="18" style="fill:${fill};stroke:${stroke};stroke-width:2"/>`;
+    svg += `<text x="${x}" y="${y+5}" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-size:13px;fill:var(--text)">${n.val}</text>`;
+  });
+  svg += `</svg>`;
+  return svg;
+}
+
+function highlight(codeStr, lang){
+  const escaped = codeStr.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const kw = lang === 'cpp'
+    ? 'int|bool|void|string|vector|unordered_map|unordered_set|char|for|while|if|else|return|class|struct|public|private|const|auto|true|false|break|continue|size_t'
+    : 'def|return|if|elif|else|for|while|in|not|and|or|class|import|from|as|True|False|None|break|continue|pass';
+  const commentSrc = lang === 'cpp' ? '//.*' : '#.*';
+  const stringSrc = lang === 'cpp' ? '"[^"]*"' : "'[^']*'|\"[^\"]*\"";
+  const master = new RegExp(`(${commentSrc})|(${stringSrc})|\\b(${kw})\\b|\\b(\\d+)\\b`, 'g');
+  return escaped.replace(master, (m, cmt, str, kwd, num) => {
+    if (cmt) return `<span class="tok-cmt">${cmt}</span>`;
+    if (str) return `<span class="tok-str">${str}</span>`;
+    if (kwd) return `<span class="tok-kw">${kwd}</span>`;
+    if (num) return `<span class="tok-num">${num}</span>`;
+    return m;
+  });
+}
+
+class StepPlayer{
+  constructor({steps, render, els, interval=850}){
+    this.steps = steps; this.render = render; this.index = 0; this.playing = false; this.interval = interval;
+    this.els = els;
+    els.play.addEventListener('click', () => this.playing ? this.pause() : this.start());
+    els.next.addEventListener('click', () => this.go(this.index+1));
+    els.prev.addEventListener('click', () => this.go(this.index-1));
+    els.reset.addEventListener('click', () => { this.pause(); this.go(0); });
+    this.draw();
+  }
+  go(i){
+    if (i < 0) i = 0;
+    if (i >= this.steps.length){ this.pause(); return; }
+    this.index = i; this.draw();
+  }
+  draw(){
+    this.render(this.steps[this.index], this.index);
+    this.els.count.textContent = `Step ${this.index+1} / ${this.steps.length}`;
+  }
+  start(){
+    if (this.index >= this.steps.length-1) this.index = -1;
+    this.playing = true; this.els.play.textContent = '⏸ Pause';
+    this.timer = setInterval(() => {
+      if (this.index+1 >= this.steps.length){ this.pause(); return; }
+      this.go(this.index+1);
+    }, this.interval);
+  }
+  pause(){
+    this.playing = false; this.els.play.textContent = '▶ Play';
+    clearInterval(this.timer);
+  }
+}
+
+function wireCodePanel(container, problemKey){
+  const tabs = container.querySelectorAll('.tab-btn');
+  const codeEl = container.querySelector('pre code');
+  const copyBtn = container.querySelector('.copy-btn');
+  function setLang(lang){
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.lang === lang));
+    codeEl.innerHTML = highlight(code[problemKey][lang], lang);
+    codeEl.dataset.raw = code[problemKey][lang];
+  }
+  tabs.forEach(t => t.addEventListener('click', () => setLang(t.dataset.lang)));
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(codeEl.dataset.raw).then(() => {
+      copyBtn.textContent = 'Copied';
+      setTimeout(() => copyBtn.textContent = 'Copy', 1200);
+    });
+  });
+  setLang('python');
+}
+
+const dayList = document.getElementById('dayList');
+dayTitles.forEach((title, i) => {
+  const dayNum = i+1;
+  const li = el('li', 'day-item' + (dayNum===1 ? ' active' : ''));
+  const btn = el('button', 'day-toggle', `<span class="num">D${dayNum}</span><span>${title}</span>`);
+  li.appendChild(btn);
+  const subUl = el('ul', 'sub-list');
+  if (daySubs[dayNum]){
+    daySubs[dayNum].forEach(s => {
+      const subLi = el('li');
+      subLi.innerHTML = `<a href="#${s.id}">${s.label}</a>`;
+      subUl.appendChild(subLi);
+    });
+  }
+  li.appendChild(subUl);
+  dayList.appendChild(li);
+
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.day-item').forEach(x => x.classList.remove('active'));
+    li.classList.add('active');
+    document.querySelectorAll('.day-view').forEach(v => v.style.display = 'none');
+    if (builtDays.includes(dayNum)){
+      document.getElementById(`day-${dayNum}`).style.display = '';
+    } else {
+      document.getElementById('placeholder').style.display = '';
+      document.getElementById('phKicker').textContent = `Day ${dayNum} of 14`;
+      document.getElementById('phTitle').textContent = title;
+    }
+    if (window.innerWidth <= 820) document.getElementById('sidebar').classList.remove('open');
+  });
+});
+document.getElementById('menuBtn').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+const themeToggle = document.getElementById('themeToggle');
+function syncThemeIcon(){
+  themeToggle.textContent = document.documentElement.dataset.theme === 'light' ? '☾' : '☀';
+}
+themeToggle.addEventListener('click', () => {
+  const html = document.documentElement;
+  html.dataset.theme = html.dataset.theme === 'light' ? 'dark' : 'light';
+  syncThemeIcon();
+});
+syncThemeIcon();
+
+/* Concept: array scan vs hash lookup */
+(function(){
+  const arr = [12, 45, 7, 89, 3, 56, 42, 21];
+  const targetIndex = 6;
+  const arrayCells = document.getElementById('conceptArray');
+  const hashCells = document.getElementById('conceptHash');
+  arr.forEach((v,i) => arrayCells.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+  const hc = el('div','cell', arr[targetIndex]);
+  hashCells.appendChild(hc);
+
+  const steps = [];
+  for (let i = 0; i <= targetIndex; i++) steps.push({arrayIdx:i});
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(arrayCells.children).forEach((c,i) => {
+        c.classList.remove('active','match','seen');
+        if (i < step.arrayIdx) c.classList.add('seen');
+        if (i === step.arrayIdx) c.classList.add(step.arrayIdx===targetIndex ? 'match' : 'active');
+      });
+      hc.classList.add('match');
+      const found = step.arrayIdx === targetIndex;
+      document.getElementById('conceptStatus').textContent = found
+        ? `Array: found after ${step.arrayIdx+1} comparisons.  Hash map: found in 1 lookup.`
+        : `Array: comparison ${step.arrayIdx+1} of ${targetIndex+1} — still scanning.  Hash map: already resolved in 1 lookup.`;
+    },
+    els: {
+      play: document.getElementById('conceptPlay'),
+      next: document.getElementById('conceptNext'),
+      prev: document.getElementById('conceptPrev'),
+      reset: document.getElementById('conceptReset'),
+      count: document.getElementById('conceptCount')
+    }
+  });
+})();
+
+/* Contains Duplicate */
+(function(){
+  const nums = [1,2,3,1];
+  const cellsWrap = document.getElementById('cdArray');
+  const seenWrap = document.getElementById('cdSeen');
+  nums.forEach((v,i) => cellsWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+
+  const steps = [];
+  let seen = [];
+  nums.forEach((v,i) => {
+    const isDup = seen.includes(v);
+    steps.push({i, v, seenSnapshot:[...seen], dup:isDup});
+    if (!isDup) seen.push(v);
+  });
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(cellsWrap.children).forEach((c,i) => {
+        c.classList.remove('active','match','seen');
+        if (i < step.i) c.classList.add('seen');
+        if (i === step.i) c.classList.add(step.dup ? 'match' : 'active');
+      });
+      seenWrap.innerHTML = '';
+      step.seenSnapshot.forEach(v => seenWrap.appendChild(el('span','chip on', v)));
+      if (!step.dup) seenWrap.appendChild(el('span','chip on', step.v));
+      document.getElementById('cdStatus').textContent = step.dup
+        ? `nums[${step.i}] = ${step.v} is already in the seen set → duplicate found, return true.`
+        : `nums[${step.i}] = ${step.v} not seen before → add it and keep going.`;
+    },
+    els: {
+      play: document.getElementById('cdPlay'),
+      next: document.getElementById('cdNext'),
+      prev: document.getElementById('cdPrev'),
+      reset: document.getElementById('cdReset'),
+      count: document.getElementById('cdCount')
+    }
+  });
+})();
+
+/* Valid Anagram */
+(function(){
+  const s = "anagram", t = "nagaram";
+  const charsWrap = document.getElementById('vaChars');
+  const countsWrap = document.getElementById('vaCounts');
+  const phaseLabel = document.getElementById('vaPhaseLabel');
+
+  const steps = [];
+  let counts = {};
+  for (let i=0;i<s.length;i++){
+    counts[s[i]] = (counts[s[i]]||0)+1;
+    steps.push({phase:'build', i, char:s[i], counts:{...counts}});
+  }
+  for (let i=0;i<t.length;i++){
+    counts[t[i]] = (counts[t[i]]||0)-1;
+    steps.push({phase:'check', i, char:t[i], counts:{...counts}, negative: counts[t[i]]<0});
+  }
+  const allZero = Object.values(counts).every(v => v===0);
+  steps.push({phase:'done', result: allZero, counts:{...counts}});
+
+  function renderChars(str, activeIdx){
+    charsWrap.innerHTML = '';
+    for (let i=0;i<str.length;i++){
+      const c = el('div','cell', str[i]);
+      if (i === activeIdx) c.classList.add('active');
+      if (i < activeIdx) c.classList.add('seen');
+      charsWrap.appendChild(c);
+    }
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      if (step.phase === 'build'){ phaseLabel.textContent = `building counts from s = "${s}"`; renderChars(s, step.i); }
+      else if (step.phase === 'check'){ phaseLabel.textContent = `checking against t = "${t}"`; renderChars(t, step.i); }
+      else { phaseLabel.textContent = `result`; renderChars(t, t.length); }
+
+      countsWrap.innerHTML = '';
+      Object.entries(step.counts).forEach(([k,v]) => {
+        const kv = el('div','kv', `<div class="k">${k}</div><div class="v">${v}</div>`);
+        if (v===0) kv.classList.add('zero');
+        if (step.char===k) kv.classList.add('hot');
+        countsWrap.appendChild(kv);
+      });
+
+      const statusEl = document.getElementById('vaStatus');
+      if (step.phase==='build') statusEl.textContent = `Counted '${step.char}' from s.`;
+      else if (step.phase==='check') statusEl.textContent = step.negative
+        ? `'${step.char}' went negative → not an anagram.`
+        : `Matched '${step.char}' from t against the count.`;
+      else statusEl.textContent = step.result
+        ? `Every count came back to zero → these are anagrams.`
+        : `Counts didn't all reach zero → not anagrams.`;
+    },
+    els: {
+      play: document.getElementById('vaPlay'),
+      next: document.getElementById('vaNext'),
+      prev: document.getElementById('vaPrev'),
+      reset: document.getElementById('vaReset'),
+      count: document.getElementById('vaCount')
+    }
+  });
+})();
+
+/* Two Sum */
+(function(){
+  const nums = [2,7,11,15], target = 9;
+  const cellsWrap = document.getElementById('tsArray');
+  const seenWrap = document.getElementById('tsSeen');
+  nums.forEach((v,i) => cellsWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+
+  const steps = [];
+  let seenMap = {};
+  for (let i=0;i<nums.length;i++){
+    const complement = target - nums[i];
+    const found = complement in seenMap;
+    steps.push({i, v:nums[i], complement, found, matchIdx: found ? seenMap[complement] : null, seenSnapshot:{...seenMap}});
+    if (found) break;
+    seenMap[nums[i]] = i;
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(cellsWrap.children).forEach((c,i) => {
+        c.classList.remove('active','match','seen');
+        if (i === step.i) c.classList.add(step.found ? 'match' : 'active');
+        if (step.found && i === step.matchIdx) c.classList.add('match');
+      });
+      seenWrap.innerHTML = '';
+      Object.entries(step.seenSnapshot).forEach(([k,v]) => {
+        seenWrap.appendChild(el('div','kv', `<div class="k">${k}</div><div class="v">→${v}</div>`));
+      });
+      document.getElementById('tsStatus').textContent = step.found
+        ? `nums[${step.i}] = ${step.v}, complement ${step.complement} was already seen at index ${step.matchIdx} → return [${step.matchIdx}, ${step.i}].`
+        : `nums[${step.i}] = ${step.v}, need complement ${step.complement} — not seen yet, remember index ${step.i}.`;
+    },
+    els: {
+      play: document.getElementById('tsPlay'),
+      next: document.getElementById('tsNext'),
+      prev: document.getElementById('tsPrev'),
+      reset: document.getElementById('tsReset'),
+      count: document.getElementById('tsCount')
+    }
+  });
+})();
+
+/* Group Anagrams */
+(function(){
+  const strs = ["eat","tea","tan","ate","nat","bat"];
+  const wordsWrap = document.getElementById('gaWords');
+  const groupsWrap = document.getElementById('gaGroups');
+  strs.forEach(w => wordsWrap.appendChild(el('div','cell wide', w)));
+
+  function sortedKey(w){ return w.split('').sort().join(''); }
+
+  const steps = [];
+  let groups = {};
+  strs.forEach((w,i) => {
+    const key = sortedKey(w);
+    const isNew = !(key in groups);
+    if (isNew) groups[key] = [];
+    groups[key].push(w);
+    steps.push({i, w, key, isNew, groupsSnapshot: JSON.parse(JSON.stringify(groups))});
+  });
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(wordsWrap.children).forEach((c,i) => {
+        c.classList.remove('active','match','seen');
+        if (i < step.i) c.classList.add('seen');
+        if (i === step.i) c.classList.add(step.isNew ? 'active' : 'match');
+      });
+      groupsWrap.innerHTML = '';
+      Object.entries(step.groupsSnapshot).forEach(([key, words]) => {
+        const box = el('div', 'group-box');
+        if (key === step.key) box.classList.add(step.isNew ? 'hot' : 'match');
+        box.innerHTML = `<span class="gkey">key: ${key}</span>`;
+        const chipsRow = el('div','chips');
+        words.forEach(w => chipsRow.appendChild(el('span','chip on', w)));
+        box.appendChild(chipsRow);
+        groupsWrap.appendChild(box);
+      });
+      document.getElementById('gaStatus').textContent = step.isNew
+        ? `"${step.w}" → key "${step.key}" is new → start a new group.`
+        : `"${step.w}" → key "${step.key}" already exists → add it to that group.`;
+    },
+    els: {
+      play: document.getElementById('gaPlay'),
+      next: document.getElementById('gaNext'),
+      prev: document.getElementById('gaPrev'),
+      reset: document.getElementById('gaReset'),
+      count: document.getElementById('gaCount')
+    }
+  });
+})();
+
+/* Top K Frequent Elements */
+(function(){
+  const nums = [1,1,1,2,2,3], k = 2;
+  const arrWrap = document.getElementById('tkArray');
+  const countsWrap = document.getElementById('tkCounts');
+  const phaseLabel = document.getElementById('tkPhaseLabel');
+  nums.forEach((v,i) => arrWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+
+  const steps = [];
+  let counts = {};
+  nums.forEach((v,i) => {
+    counts[v] = (counts[v]||0)+1;
+    steps.push({phase:'count', i, v, counts:{...counts}});
+  });
+  const ranked = Object.entries(counts)
+    .map(([num,freq]) => ({num:Number(num), freq}))
+    .sort((a,b) => b.freq - a.freq);
+  steps.push({phase:'rank', ranked, k});
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      if (step.phase === 'count'){
+        phaseLabel.textContent = 'counting frequencies';
+        Array.from(arrWrap.children).forEach((c,i) => {
+          c.classList.remove('active','seen');
+          if (i < step.i) c.classList.add('seen');
+          if (i === step.i) c.classList.add('active');
+        });
+        countsWrap.innerHTML = '';
+        Object.entries(step.counts).forEach(([k2,v2]) => {
+          const kv = el('div','kv', `<div class="k">${k2}</div><div class="v">${v2}</div>`);
+          if (Number(k2) === step.v) kv.classList.add('hot');
+          countsWrap.appendChild(kv);
+        });
+        document.getElementById('tkStatus').textContent = `Saw ${step.v} → count is now ${step.counts[step.v]}.`;
+      } else {
+        phaseLabel.textContent = `ranked by frequency, top ${step.k} highlighted`;
+        Array.from(arrWrap.children).forEach(c => c.classList.remove('active'));
+        countsWrap.innerHTML = '';
+        step.ranked.forEach((entry, idx) => {
+          const kv = el('div','kv', `<div class="k">${entry.num}</div><div class="v">${entry.freq}</div>`);
+          if (idx < step.k) kv.classList.add('match');
+          countsWrap.appendChild(kv);
+        });
+        const top = step.ranked.slice(0, step.k).map(e => e.num).join(', ');
+        document.getElementById('tkStatus').textContent = `Sorted by frequency, descending → top ${step.k}: [${top}].`;
+      }
+    },
+    els: {
+      play: document.getElementById('tkPlay'),
+      next: document.getElementById('tkNext'),
+      prev: document.getElementById('tkPrev'),
+      reset: document.getElementById('tkReset'),
+      count: document.getElementById('tkCount')
+    }
+  });
+})();
+
+/* Product of Array Except Self */
+(function(){
+  const nums = [1,2,3,4];
+  const n = nums.length;
+  const arrWrap = document.getElementById('peArray');
+  const accumWrap = document.getElementById('peAccum');
+  const phaseLabel = document.getElementById('pePhaseLabel');
+  nums.forEach((v,i) => arrWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+
+  const steps = [];
+  let result = new Array(n).fill(1);
+  let left = 1;
+  for (let i=0;i<n;i++){
+    result[i] = left;
+    left *= nums[i];
+    steps.push({phase:'left', i, result:[...result], accum:left});
+  }
+  let right = 1;
+  for (let i=n-1;i>=0;i--){
+    result[i] *= right;
+    right *= nums[i];
+    steps.push({phase:'right', i, result:[...result], accum:right});
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      phaseLabel.textContent = step.phase === 'left'
+        ? 'left pass — product of everything before i'
+        : 'right pass — multiply in product of everything after i';
+      Array.from(arrWrap.children).forEach((c,i) => {
+        c.classList.remove('active','seen');
+        if (step.phase === 'left'){
+          if (i < step.i) c.classList.add('seen');
+          if (i === step.i) c.classList.add('active');
+        } else {
+          if (i > step.i) c.classList.add('seen');
+          if (i === step.i) c.classList.add('active');
+        }
+      });
+      accumWrap.innerHTML = '';
+      const label = step.phase === 'left' ? 'left product' : 'right product';
+      accumWrap.appendChild(el('div','kv hot', `<div class="k">${label}</div><div class="v">${step.accum}</div>`));
+      accumWrap.appendChild(el('div','kv', `<div class="k">result[${step.i}]</div><div class="v">${step.result[step.i]}</div>`));
+      document.getElementById('peStatus').textContent = step.phase === 'left'
+        ? `result[${step.i}] = product of everything to the left = ${step.result[step.i]}.`
+        : `result[${step.i}] × right product so far → ${step.result[step.i]}.`;
+    },
+    els: {
+      play: document.getElementById('pePlay'),
+      next: document.getElementById('peNext'),
+      prev: document.getElementById('pePrev'),
+      reset: document.getElementById('peReset'),
+      count: document.getElementById('peCount')
+    }
+  });
+})();
+
+/* Valid Palindrome */
+(function(){
+  function isAlnum(ch){ return /[a-z0-9]/i.test(ch); }
+  const raw = "Madam, I'm Adam";
+  const cellsWrap = document.getElementById('vpChars');
+  raw.split('').forEach(ch => cellsWrap.appendChild(el('div','cell', ch === ' ' ? '·' : ch)));
+
+  let left = 0, right = raw.length - 1;
+  const steps = [];
+  let matched = [], skipped = [];
+  let finished = false, result = true, mismatch = null;
+  while (left < right && !finished){
+    if (!isAlnum(raw[left])){
+      steps.push({type:'skip', idx:left, matched:[...matched], skipped:[...skipped]});
+      skipped.push(left); left++; continue;
+    }
+    if (!isAlnum(raw[right])){
+      steps.push({type:'skip', idx:right, matched:[...matched], skipped:[...skipped]});
+      skipped.push(right); right--; continue;
+    }
+    const match = raw[left].toLowerCase() === raw[right].toLowerCase();
+    steps.push({type:'compare', left, right, match, matched:[...matched], skipped:[...skipped]});
+    if (match){ matched.push(left, right); left++; right--; }
+    else { result = false; finished = true; mismatch = {left, right}; }
+  }
+  steps.push({type:'done', result, matched:[...matched], skipped:[...skipped], mismatch});
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(cellsWrap.children).forEach(c => c.classList.remove('active','match','seen'));
+      step.matched.forEach(i => cellsWrap.children[i].classList.add('match'));
+      step.skipped.forEach(i => cellsWrap.children[i].classList.add('seen'));
+      const statusEl = document.getElementById('vpStatus');
+      if (step.type === 'skip'){
+        cellsWrap.children[step.idx].classList.add('active');
+        statusEl.textContent = `'${raw[step.idx]}' isn't a letter or digit → skip it.`;
+      } else if (step.type === 'compare'){
+        cellsWrap.children[step.left].classList.add('active');
+        cellsWrap.children[step.right].classList.add('active');
+        statusEl.textContent = step.match
+          ? `'${raw[step.left]}' matches '${raw[step.right]}' (case-insensitive) → move both pointers inward.`
+          : `'${raw[step.left]}' doesn't match '${raw[step.right]}' → not a palindrome.`;
+      } else {
+        if (step.mismatch){ cellsWrap.children[step.mismatch.left].classList.add('active'); cellsWrap.children[step.mismatch.right].classList.add('active'); }
+        statusEl.textContent = step.result ? `Pointers met in the middle → this is a palindrome.` : `Mismatch found → not a palindrome.`;
+      }
+    },
+    els: {
+      play: document.getElementById('vpPlay'),
+      next: document.getElementById('vpNext'),
+      prev: document.getElementById('vpPrev'),
+      reset: document.getElementById('vpReset'),
+      count: document.getElementById('vpCount')
+    }
+  });
+})();
+
+/* Two Sum II */
+(function(){
+  const numbers = [1,2,3,4,6], target = 6;
+  const cellsWrap = document.getElementById('tsiiArray');
+  numbers.forEach((v,i) => cellsWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+
+  let left = 0, right = numbers.length - 1;
+  const steps = [];
+  while (left < right){
+    const total = numbers[left] + numbers[right];
+    const found = total === target;
+    steps.push({left, right, total, found});
+    if (found) break;
+    else if (total < target) left++;
+    else right--;
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(cellsWrap.children).forEach((c,i) => {
+        c.classList.remove('active','match','seen');
+        if (i === step.left || i === step.right) c.classList.add(step.found ? 'match' : 'active');
+      });
+      document.getElementById('tsiiStatus').textContent = step.found
+        ? `numbers[${step.left}] + numbers[${step.right}] = ${step.total} = target → return [${step.left+1}, ${step.right+1}] (1-indexed).`
+        : step.total < target
+          ? `Sum ${step.total} is too small → move left pointer right.`
+          : `Sum ${step.total} is too big → move right pointer left.`;
+    },
+    els: {
+      play: document.getElementById('tsiiPlay'),
+      next: document.getElementById('tsiiNext'),
+      prev: document.getElementById('tsiiPrev'),
+      reset: document.getElementById('tsiiReset'),
+      count: document.getElementById('tsiiCount')
+    }
+  });
+})();
+
+/* 3Sum */
+(function(){
+  const sorted = [-1,0,1,2,-1,-4].slice().sort((a,b) => a-b);
+  const cellsWrap = document.getElementById('tsumArray');
+  sorted.forEach((v,i) => cellsWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+
+  const n = sorted.length;
+  const steps = [];
+  const foundTriplets = [];
+  for (let i=0;i<n-2;i++){
+    if (i>0 && sorted[i]===sorted[i-1]){ steps.push({type:'skip-dup-i', i}); continue; }
+    let left = i+1, right = n-1;
+    steps.push({type:'fix-i', i});
+    while (left<right){
+      const sum = sorted[i]+sorted[left]+sorted[right];
+      steps.push({type:'compare', i, left, right, sum});
+      if (sum === 0){
+        foundTriplets.push([sorted[i],sorted[left],sorted[right]]);
+        steps.push({type:'found', i, left, right, triplets:[...foundTriplets]});
+        left++; right--;
+        while (left<right && sorted[left]===sorted[left-1]) left++;
+        while (left<right && sorted[right]===sorted[right+1]) right--;
+      } else if (sum<0) left++; else right--;
+    }
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(cellsWrap.children).forEach(c => c.classList.remove('active','match','seen'));
+      const statusEl = document.getElementById('tsumStatus');
+      if (step.type === 'skip-dup-i'){
+        cellsWrap.children[step.i].classList.add('seen');
+        statusEl.textContent = `nums[${step.i}] repeats the previous fixed value → skip to avoid a duplicate triplet.`;
+      } else if (step.type === 'fix-i'){
+        cellsWrap.children[step.i].classList.add('active');
+        statusEl.textContent = `Fix i = ${step.i} (value ${sorted[step.i]}) → look for two numbers after it that sum to ${-sorted[step.i]}.`;
+      } else if (step.type === 'compare'){
+        cellsWrap.children[step.i].classList.add('active');
+        cellsWrap.children[step.left].classList.add('active');
+        cellsWrap.children[step.right].classList.add('active');
+        statusEl.textContent = step.sum === 0
+          ? `${sorted[step.i]} + ${sorted[step.left]} + ${sorted[step.right]} = 0 → found a triplet.`
+          : step.sum < 0
+            ? `Sum ${step.sum} is too small → move left pointer right.`
+            : `Sum ${step.sum} is too big → move right pointer left.`;
+      } else {
+        cellsWrap.children[step.i].classList.add('match');
+        cellsWrap.children[step.left].classList.add('match');
+        cellsWrap.children[step.right].classList.add('match');
+        statusEl.textContent = `Triplet found: [${sorted[step.i]}, ${sorted[step.left]}, ${sorted[step.right]}] → move both pointers past duplicates.`;
+      }
+    },
+    els: {
+      play: document.getElementById('tsumPlay'),
+      next: document.getElementById('tsumNext'),
+      prev: document.getElementById('tsumPrev'),
+      reset: document.getElementById('tsumReset'),
+      count: document.getElementById('tsumCount')
+    }
+  });
+})();
+
+/* Best Time to Buy/Sell Stock */
+(function(){
+  const prices = [7,1,5,3,6,4];
+  const cellsWrap = document.getElementById('bsArray');
+  prices.forEach((v,i) => cellsWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+
+  let minPrice = Infinity, maxProfit = 0, minIdx = -1;
+  const steps = [];
+  prices.forEach((p,i) => {
+    if (p < minPrice){ minPrice = p; minIdx = i; }
+    const profit = p - minPrice;
+    if (profit > maxProfit) maxProfit = profit;
+    steps.push({i, p, minPrice, minIdx, profit, maxProfit});
+  });
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(cellsWrap.children).forEach((c,i) => {
+        c.classList.remove('active','match','seen');
+        if (i < step.i) c.classList.add('seen');
+        if (i === step.i) c.classList.add('active');
+        if (i === step.minIdx) c.classList.add('match');
+      });
+      const trackWrap = document.getElementById('bsTrack');
+      trackWrap.innerHTML = '';
+      trackWrap.appendChild(el('div','kv hot', `<div class="k">min so far</div><div class="v">${step.minPrice}</div>`));
+      trackWrap.appendChild(el('div','kv match', `<div class="k">best profit</div><div class="v">${step.maxProfit}</div>`));
+      document.getElementById('bsStatus').textContent =
+        `Day ${step.i}: price ${step.p}, lowest so far ${step.minPrice} → selling today profits ${step.profit}. Best so far: ${step.maxProfit}.`;
+    },
+    els: {
+      play: document.getElementById('bsPlay'),
+      next: document.getElementById('bsNext'),
+      prev: document.getElementById('bsPrev'),
+      reset: document.getElementById('bsReset'),
+      count: document.getElementById('bsCount')
+    }
+  });
+})();
+
+/* Longest Substring Without Repeating Characters */
+(function(){
+  const s = "abcabcbb";
+  const cellsWrap = document.getElementById('lsChars');
+  s.split('').forEach((ch,i) => cellsWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${ch}`)));
+
+  let left = 0, maxLen = 0, lastSeen = {};
+  const steps = [];
+  for (let right = 0; right < s.length; right++){
+    const ch = s[right];
+    let jumped = false;
+    if (lastSeen[ch] !== undefined && lastSeen[ch] >= left){ left = lastSeen[ch] + 1; jumped = true; }
+    lastSeen[ch] = right;
+    const len = right - left + 1;
+    if (len > maxLen) maxLen = len;
+    steps.push({right, ch, left, len, maxLen, jumped});
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(cellsWrap.children).forEach((c,i) => {
+        c.classList.remove('active','match','seen');
+        if (i >= step.left && i <= step.right) c.classList.add(i === step.right ? 'active' : 'match');
+        else if (i < step.left) c.classList.add('seen');
+      });
+      document.getElementById('lsStatus').textContent = step.jumped
+        ? `'${step.ch}' repeats inside the window → shrink left edge to index ${step.left}. Window length now ${step.len}, best ${step.maxLen}.`
+        : `Extend window to include '${step.ch}'. Window length ${step.len}, best so far ${step.maxLen}.`;
+    },
+    els: {
+      play: document.getElementById('lsPlay'),
+      next: document.getElementById('lsNext'),
+      prev: document.getElementById('lsPrev'),
+      reset: document.getElementById('lsReset'),
+      count: document.getElementById('lsCount')
+    }
+  });
+})();
+
+/* Longest Repeating Character Replacement */
+(function(){
+  const s = "AABABBA", k = 1;
+  const cellsWrap = document.getElementById('crChars');
+  s.split('').forEach((ch,i) => cellsWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${ch}`)));
+
+  let left = 0, maxCount = 0, maxLen = 0, counts = {};
+  const steps = [];
+  for (let right = 0; right < s.length; right++){
+    const ch = s[right];
+    counts[ch] = (counts[ch] || 0) + 1;
+    maxCount = Math.max(maxCount, counts[ch]);
+    let shrunk = false;
+    while ((right - left + 1) - maxCount > k){
+      counts[s[left]]--;
+      left++; shrunk = true;
+    }
+    maxLen = Math.max(maxLen, right - left + 1);
+    steps.push({right, ch, left, windowLen: right-left+1, maxCount, maxLen, shrunk});
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(cellsWrap.children).forEach((c,i) => {
+        c.classList.remove('active','match','seen');
+        if (i >= step.left && i <= step.right) c.classList.add(i === step.right ? 'active' : 'match');
+        else if (i < step.left) c.classList.add('seen');
+      });
+      document.getElementById('crStatus').textContent =
+        `Window [${step.left}, ${step.right}], most frequent char appears ${step.maxCount}× → ${step.windowLen - step.maxCount} replacement(s) needed (k=${k}). Best length so far: ${step.maxLen}.`;
+    },
+    els: {
+      play: document.getElementById('crPlay'),
+      next: document.getElementById('crNext'),
+      prev: document.getElementById('crPrev'),
+      reset: document.getElementById('crReset'),
+      count: document.getElementById('crCount')
+    }
+  });
+})();
+
+/* Valid Parentheses */
+(function(){
+  const s = "([{}])";
+  const charsWrap = document.getElementById('vparChars');
+  s.split('').forEach((ch,i) => charsWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${ch}`)));
+
+  const pairs = {')':'(', ']':'[', '}':'{'};
+  const steps = [];
+  let stack = [];
+  let broke = false;
+  for (let i=0;i<s.length;i++){
+    const ch = s[i];
+    if ('([{'.includes(ch)){
+      stack.push(ch);
+      steps.push({i, ch, action:'push', ok:true, stackSnapshot:[...stack]});
+    } else if (stack.length===0 || stack[stack.length-1] !== pairs[ch]){
+      steps.push({i, ch, action:'pop', ok:false, stackSnapshot:[...stack]});
+      broke = true; break;
+    } else {
+      stack.pop();
+      steps.push({i, ch, action:'pop', ok:true, stackSnapshot:[...stack]});
+    }
+  }
+  if (!broke) steps.push({action:'done', ok: stack.length===0, stackSnapshot:[...stack]});
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(charsWrap.children).forEach((c,i) => {
+        c.classList.remove('active','match','seen');
+        if (step.action !== 'done'){
+          if (i < step.i) c.classList.add('seen');
+          if (i === step.i) c.classList.add(step.action==='push' ? 'active' : (step.ok ? 'match' : 'seen'));
+        } else {
+          c.classList.add(step.ok ? 'match' : 'seen');
+        }
+      });
+      const stackWrap = document.getElementById('vparStack');
+      stackWrap.innerHTML = '';
+      step.stackSnapshot.forEach(ch => stackWrap.appendChild(el('span','chip on', ch)));
+      const statusEl = document.getElementById('vparStatus');
+      if (step.action === 'push') statusEl.textContent = `'${step.ch}' is an opener → push onto the stack.`;
+      else if (step.action === 'pop') statusEl.textContent = step.ok
+        ? `'${step.ch}' closes the top of the stack → pop it, they match.`
+        : `'${step.ch}' doesn't match the top of the stack → invalid.`;
+      else statusEl.textContent = step.ok ? `Stack is empty at the end → valid.` : `Stack isn't empty at the end → invalid.`;
+    },
+    els: {
+      play: document.getElementById('vparPlay'),
+      next: document.getElementById('vparNext'),
+      prev: document.getElementById('vparPrev'),
+      reset: document.getElementById('vparReset'),
+      count: document.getElementById('vparCount')
+    }
+  });
+})();
+
+/* Min Stack */
+(function(){
+  const ops = [
+    {type:'push', val:-2}, {type:'push', val:0}, {type:'push', val:-3},
+    {type:'getMin'}, {type:'pop'}, {type:'top'}, {type:'getMin'}
+  ];
+  let main = [], minSt = [];
+  const steps = [];
+  ops.forEach(op => {
+    let resultVal = null, pushedToMin = false, poppedFromMin = false;
+    if (op.type==='push'){
+      main.push(op.val);
+      if (minSt.length===0 || op.val <= minSt[minSt.length-1]){ minSt.push(op.val); pushedToMin = true; }
+    } else if (op.type==='pop'){
+      const v = main.pop();
+      if (v === minSt[minSt.length-1]){ minSt.pop(); poppedFromMin = true; }
+      resultVal = v;
+    } else if (op.type==='top'){
+      resultVal = main[main.length-1];
+    } else {
+      resultVal = minSt[minSt.length-1];
+    }
+    steps.push({op, resultVal, pushedToMin, poppedFromMin, mainSnapshot:[...main], minSnapshot:[...minSt]});
+  });
+
+  new StepPlayer({
+    steps,
+    render: (step, idx) => {
+      const opsWrap = document.getElementById('msOps');
+      opsWrap.innerHTML = '';
+      steps.forEach((s,i) => {
+        const chip = el('span','chip', s.op.type + (s.op.val!==undefined ? `(${s.op.val})` : '()'));
+        if (i === idx) chip.classList.add('on');
+        opsWrap.appendChild(chip);
+      });
+      const mainWrap = document.getElementById('msMain');
+      mainWrap.innerHTML = '';
+      step.mainSnapshot.forEach(v => mainWrap.appendChild(el('span','chip on', v)));
+      const minWrap = document.getElementById('msMin');
+      minWrap.innerHTML = '';
+      step.minSnapshot.forEach(v => minWrap.appendChild(el('span','chip on', v)));
+      const statusEl = document.getElementById('msStatus');
+      if (step.op.type==='push') statusEl.textContent = `push(${step.op.val}) → main stack.` +
+        (step.pushedToMin ? ` ${step.op.val} ≤ current min → also push onto the min stack.` : ` Bigger than the current min → min stack unchanged.`);
+      else if (step.op.type==='pop') statusEl.textContent = `pop() → removes ${step.resultVal}.` +
+        (step.poppedFromMin ? ` That was the current min → pop it off the min stack too.` : ` Min stack unchanged.`);
+      else if (step.op.type==='top') statusEl.textContent = `top() → ${step.resultVal}.`;
+      else statusEl.textContent = `getMin() → ${step.resultVal}, straight off the min stack's top.`;
+    },
+    els: {
+      play: document.getElementById('msPlay'),
+      next: document.getElementById('msNext'),
+      prev: document.getElementById('msPrev'),
+      reset: document.getElementById('msReset'),
+      count: document.getElementById('msCount')
+    }
+  });
+})();
+
+/* Daily Temperatures */
+(function(){
+  const temps = [73,74,75,71,69,72,76,73];
+  const cellsWrap = document.getElementById('dtArray');
+  temps.forEach((v,i) => cellsWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+
+  let stack = [];
+  const steps = [];
+  for (let i=0;i<temps.length;i++){
+    let poppedIdxs = [];
+    while (stack.length && temps[stack[stack.length-1]] < temps[i]){
+      poppedIdxs.push(stack.pop());
+    }
+    stack.push(i);
+    steps.push({i, poppedIdxs, stackSnapshot:[...stack]});
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(cellsWrap.children).forEach((c,i) => {
+        c.classList.remove('active','match','seen');
+        if (step.stackSnapshot.includes(i) && i !== step.i) c.classList.add('seen');
+        if (step.poppedIdxs.includes(i)) c.classList.add('match');
+        if (i === step.i) c.classList.add('active');
+      });
+      const stackWrap = document.getElementById('dtStack');
+      stackWrap.innerHTML = '';
+      step.stackSnapshot.forEach(idx => stackWrap.appendChild(el('span','chip on', `${idx}:${temps[idx]}°`)));
+      document.getElementById('dtStatus').textContent = step.poppedIdxs.length
+        ? `Day ${step.i} (${temps[step.i]}°) is warmer than day(s) ${step.poppedIdxs.join(', ')} → they waited ${step.poppedIdxs.map(j=>step.i-j).join(', ')} day(s). Push day ${step.i}.`
+        : `Day ${step.i} (${temps[step.i]}°) isn't warmer than the top of the stack → push it, still waiting.`;
+    },
+    els: {
+      play: document.getElementById('dtPlay'),
+      next: document.getElementById('dtNext'),
+      prev: document.getElementById('dtPrev'),
+      reset: document.getElementById('dtReset'),
+      count: document.getElementById('dtCount')
+    }
+  });
+})();
+
+/* Binary Search */
+(function(){
+  const nums = [-1,0,3,5,9,12], target = 9;
+  const cellsWrap = document.getElementById('bsrcArray');
+  nums.forEach((v,i) => cellsWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+
+  let lo = 0, hi = nums.length - 1;
+  const steps = [];
+  while (lo <= hi){
+    const mid = Math.floor((lo+hi)/2);
+    const found = nums[mid] === target;
+    steps.push({lo, hi, mid, val:nums[mid], found});
+    if (found) break;
+    else if (nums[mid] < target) lo = mid+1;
+    else hi = mid-1;
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(cellsWrap.children).forEach((c,i) => {
+        c.classList.remove('active','match','seen');
+        if (i < step.lo || i > step.hi) c.classList.add('seen');
+        if (i === step.mid) c.classList.add(step.found ? 'match' : 'active');
+      });
+      document.getElementById('bsrcStatus').textContent = step.found
+        ? `nums[${step.mid}] = ${step.val} = target → found at index ${step.mid}.`
+        : step.val < target
+          ? `nums[${step.mid}] = ${step.val} < target → search the right half.`
+          : `nums[${step.mid}] = ${step.val} > target → search the left half.`;
+    },
+    els: {
+      play: document.getElementById('bsrcPlay'),
+      next: document.getElementById('bsrcNext'),
+      prev: document.getElementById('bsrcPrev'),
+      reset: document.getElementById('bsrcReset'),
+      count: document.getElementById('bsrcCount')
+    }
+  });
+})();
+
+/* Search in Rotated Sorted Array */
+(function(){
+  const nums = [4,5,6,7,0,1,2], target = 0;
+  const cellsWrap = document.getElementById('srArray');
+  nums.forEach((v,i) => cellsWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+
+  let lo = 0, hi = nums.length - 1;
+  const steps = [];
+  while (lo <= hi){
+    const mid = Math.floor((lo+hi)/2);
+    const found = nums[mid] === target;
+    const leftSorted = nums[lo] <= nums[mid];
+    if (found){ steps.push({lo, hi, mid, leftSorted, found:true}); break; }
+    let action;
+    if (leftSorted){
+      action = (nums[lo] <= target && target < nums[mid]) ? 'searchLeft' : 'searchRight';
+    } else {
+      action = (nums[mid] < target && target <= nums[hi]) ? 'searchRight' : 'searchLeft';
+    }
+    steps.push({lo, hi, mid, leftSorted, action, found:false});
+    if (action==='searchLeft') hi = mid-1; else lo = mid+1;
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(cellsWrap.children).forEach((c,i) => {
+        c.classList.remove('active','match','seen');
+        if (i < step.lo || i > step.hi) c.classList.add('seen');
+        if (i === step.mid) c.classList.add(step.found ? 'match' : 'active');
+      });
+      const statusEl = document.getElementById('srStatus');
+      if (step.found){ statusEl.textContent = `nums[${step.mid}] = target → found at index ${step.mid}.`; return; }
+      statusEl.textContent = step.leftSorted
+        ? (step.action==='searchLeft' ? `Left half [${step.lo}..${step.mid}] is sorted and target is in range → search left.` : `Left half [${step.lo}..${step.mid}] is sorted but target isn't in range → search right.`)
+        : (step.action==='searchRight' ? `Right half [${step.mid}..${step.hi}] is sorted and target is in range → search right.` : `Right half [${step.mid}..${step.hi}] is sorted but target isn't in range → search left.`);
+    },
+    els: {
+      play: document.getElementById('srPlay'),
+      next: document.getElementById('srNext'),
+      prev: document.getElementById('srPrev'),
+      reset: document.getElementById('srReset'),
+      count: document.getElementById('srCount')
+    }
+  });
+})();
+
+/* Find Minimum in Rotated Sorted Array */
+(function(){
+  const nums = [3,4,5,1,2];
+  const cellsWrap = document.getElementById('fmArray');
+  nums.forEach((v,i) => cellsWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+
+  let lo = 0, hi = nums.length - 1;
+  const steps = [];
+  while (lo < hi){
+    const mid = Math.floor((lo+hi)/2);
+    const goRight = nums[mid] > nums[hi];
+    steps.push({lo, hi, mid, goRight, done:false});
+    if (goRight) lo = mid+1; else hi = mid;
+  }
+  steps.push({lo, hi, mid:lo, done:true});
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(cellsWrap.children).forEach((c,i) => {
+        c.classList.remove('active','match','seen');
+        if (i < step.lo || i > step.hi) c.classList.add('seen');
+        if (i === step.mid) c.classList.add(step.done ? 'match' : 'active');
+      });
+      document.getElementById('fmStatus').textContent = step.done
+        ? `lo == hi → minimum is nums[${step.lo}] = ${nums[step.lo]}.`
+        : step.goRight
+          ? `nums[${step.mid}] = ${nums[step.mid]} > nums[${step.hi}] = ${nums[step.hi]} → minimum is to the right → lo = mid+1.`
+          : `nums[${step.mid}] = ${nums[step.mid]} ≤ nums[${step.hi}] = ${nums[step.hi]} → minimum is at mid or to the left → hi = mid.`;
+    },
+    els: {
+      play: document.getElementById('fmPlay'),
+      next: document.getElementById('fmNext'),
+      prev: document.getElementById('fmPrev'),
+      reset: document.getElementById('fmReset'),
+      count: document.getElementById('fmCount')
+    }
+  });
+})();
+
+/* Reverse Linked List */
+(function(){
+  const listVals = [1,2,3,4,5];
+  const remainWrap = document.getElementById('rlRemaining');
+  const revWrap = document.getElementById('rlReversed');
+
+  let remaining = [...listVals], reversed = [];
+  const steps = [];
+  for (let i=0;i<listVals.length;i++){
+    const val = remaining.shift();
+    reversed.unshift(val);
+    steps.push({val, remaining:[...remaining], reversed:[...reversed]});
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      renderChain(remainWrap, step.remaining);
+      renderChain(revWrap, step.reversed, step.val);
+      document.getElementById('rlStatus').textContent = `Take node ${step.val} off the front → point it at the head of the reversed list.`;
+    },
+    els: {
+      play: document.getElementById('rlPlay'),
+      next: document.getElementById('rlNext'),
+      prev: document.getElementById('rlPrev'),
+      reset: document.getElementById('rlReset'),
+      count: document.getElementById('rlCount')
+    }
+  });
+})();
+
+/* Merge Two Sorted Lists */
+(function(){
+  const l1vals = [1,2,4], l2vals = [1,3,4];
+  let i=0, j=0, merged=[];
+  const steps = [];
+  while (i<l1vals.length && j<l2vals.length){
+    let picked, from;
+    if (l1vals[i] <= l2vals[j]){ picked = l1vals[i]; from = 'l1'; i++; }
+    else { picked = l2vals[j]; from = 'l2'; j++; }
+    merged.push(picked);
+    steps.push({i, j, picked, from, merged:[...merged]});
+  }
+  while (i<l1vals.length){ merged.push(l1vals[i]); i++; steps.push({i, j, picked:l1vals[i-1], from:'l1', merged:[...merged]}); }
+  while (j<l2vals.length){ merged.push(l2vals[j]); j++; steps.push({i, j, picked:l2vals[j-1], from:'l2', merged:[...merged]}); }
+
+  function renderSource(container, vals, consumedCount, highlightIdx){
+    container.innerHTML = '';
+    vals.forEach((v,idx) => {
+      const c = el('div','cell', v);
+      if (idx < consumedCount - 1) c.classList.add('seen');
+      if (idx === highlightIdx) c.classList.add('active');
+      container.appendChild(c);
+      if (idx < vals.length-1) container.appendChild(el('span','arrow','→'));
+    });
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      const l1HighlightIdx = step.from==='l1' ? step.i-1 : null;
+      const l2HighlightIdx = step.from==='l2' ? step.j-1 : null;
+      renderSource(document.getElementById('mlList1'), l1vals, step.i, l1HighlightIdx);
+      renderSource(document.getElementById('mlList2'), l2vals, step.j, l2HighlightIdx);
+      renderChain(document.getElementById('mlMerged'), step.merged, step.picked);
+      document.getElementById('mlStatus').textContent = `Pick ${step.picked} from ${step.from==='l1' ? 'list 1' : 'list 2'} → append to the merged result.`;
+    },
+    els: {
+      play: document.getElementById('mlPlay'),
+      next: document.getElementById('mlNext'),
+      prev: document.getElementById('mlPrev'),
+      reset: document.getElementById('mlReset'),
+      count: document.getElementById('mlCount')
+    }
+  });
+})();
+
+/* Linked List Cycle */
+(function(){
+  const nodeVals = [3,2,0,-4];
+  const nextArr = [1,2,3,1];
+  const nodesWrap = document.getElementById('clNodes');
+  nodeVals.forEach((v,i) => nodesWrap.appendChild(el('div','cell', `<span class="idx">${i}</span>${v}`)));
+
+  let slow = 0, fast = 0;
+  const steps = [];
+  for (let guard=0; guard<10; guard++){
+    const fastNext1 = nextArr[fast];
+    const fastNext2 = nextArr[fastNext1];
+    slow = nextArr[slow];
+    fast = fastNext2;
+    if (slow === fast){ steps.push({slow, fast, done:true}); break; }
+    steps.push({slow, fast, done:false});
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      Array.from(nodesWrap.children).forEach(c => c.classList.remove('active','match','seen'));
+      const cls = step.done ? 'match' : 'active';
+      nodesWrap.children[step.slow].classList.add(cls);
+      nodesWrap.children[step.fast].classList.add(cls);
+      document.getElementById('clStatus').textContent = step.done
+        ? `slow and fast both land on index ${step.slow} → they've met → this list has a cycle.`
+        : `slow moves to index ${step.slow} (value ${nodeVals[step.slow]}), fast moves to index ${step.fast} (value ${nodeVals[step.fast]}).`;
+    },
+    els: {
+      play: document.getElementById('clPlay'),
+      next: document.getElementById('clNext'),
+      prev: document.getElementById('clPrev'),
+      reset: document.getElementById('clReset'),
+      count: document.getElementById('clCount')
+    }
+  });
+})();
+
+/* Reorder List */
+(function(){
+  const arr = [1,2,3,4,5];
+  const n = arr.length, mid = Math.floor(n/2);
+  const first = arr.slice(0, mid);
+  const second = arr.slice(mid).reverse();
+
+  const steps = [];
+  let merged = [];
+  const maxLen = Math.max(first.length, second.length);
+  for (let i=0;i<maxLen;i++){
+    if (i<first.length){ merged.push(first[i]); steps.push({from:'first', val:first[i], merged:[...merged]}); }
+    if (i<second.length){ merged.push(second[i]); steps.push({from:'second', val:second[i], merged:[...merged]}); }
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      renderChain(document.getElementById('roFirst'), first, step.from==='first' ? step.val : null);
+      renderChain(document.getElementById('roSecond'), second, step.from==='second' ? step.val : null);
+      renderChain(document.getElementById('roMerged'), step.merged, step.val);
+      document.getElementById('roStatus').textContent = `Take ${step.val} from the ${step.from==='first' ? 'front half' : 'reversed back half'} → append to the result.`;
+    },
+    els: {
+      play: document.getElementById('roPlay'),
+      next: document.getElementById('roNext'),
+      prev: document.getElementById('roPrev'),
+      reset: document.getElementById('roReset'),
+      count: document.getElementById('roCount')
+    }
+  });
+})();
+
+/* Invert Binary Tree */
+(function(){
+  function cloneTree(n){ if(!n) return null; return {val:n.val, left:cloneTree(n.left), right:cloneTree(n.right)}; }
+  const original = {val:4,left:{val:2,left:{val:1},right:{val:3}},right:{val:7,left:{val:6},right:{val:9}}};
+  const working = cloneTree(original);
+  function bfsNodes(rootNode){
+    const queue=[rootNode], list=[];
+    while(queue.length){ const n=queue.shift(); if(!n) continue; list.push(n); queue.push(n.left); queue.push(n.right); }
+    return list;
+  }
+  const order = bfsNodes(working);
+  const steps = [];
+  order.forEach(node => {
+    const tmp = node.left; node.left = node.right; node.right = tmp;
+    steps.push({val: node.val, snapshot: cloneTree(working)});
+  });
+
+  const treeWrap = document.getElementById('itTree');
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      const layout = layoutTree(step.snapshot);
+      treeWrap.innerHTML = svgTreeString(layout, v => v===step.val ? 'active' : '');
+      document.getElementById('itStatus').textContent = `Swap the left and right children of node ${step.val}.`;
+    },
+    els: {
+      play: document.getElementById('itPlay'),
+      next: document.getElementById('itNext'),
+      prev: document.getElementById('itPrev'),
+      reset: document.getElementById('itReset'),
+      count: document.getElementById('itCount')
+    }
+  });
+})();
+
+/* Maximum Depth of Binary Tree */
+(function(){
+  const tree = {val:3, left:{val:9}, right:{val:20,left:{val:15},right:{val:7}}};
+  const steps = [];
+  function dfs(node, depth){
+    if (!node) return 0;
+    const l = dfs(node.left, depth+1);
+    const r = dfs(node.right, depth+1);
+    const d = 1+Math.max(l,r);
+    steps.push({val:node.val, l, r, d});
+    return d;
+  }
+  dfs(tree, 1);
+
+  const treeWrap = document.getElementById('mdTree');
+  const layout = layoutTree(tree);
+  new StepPlayer({
+    steps,
+    render: (step, idx) => {
+      const processed = steps.slice(0, idx+1).map(s=>s.val);
+      treeWrap.innerHTML = svgTreeString(layout, v => v===step.val ? 'active' : (processed.includes(v) ? 'match' : ''));
+      document.getElementById('mdStatus').textContent =
+        `Node ${step.val}: left depth ${step.l}, right depth ${step.r} → depth = 1 + max(${step.l}, ${step.r}) = ${step.d}.`;
+    },
+    els: {
+      play: document.getElementById('mdPlay'),
+      next: document.getElementById('mdNext'),
+      prev: document.getElementById('mdPrev'),
+      reset: document.getElementById('mdReset'),
+      count: document.getElementById('mdCount')
+    }
+  });
+})();
+
+/* Same Tree */
+(function(){
+  const p = {val:1,left:{val:2},right:{val:3}};
+  const q = {val:1,left:{val:2},right:{val:3}};
+  const steps = [];
+  function dfs(a,b){
+    if (!a && !b) return true;
+    if (!a || !b || a.val!==b.val){ steps.push({aVal:a?a.val:null, bVal:b?b.val:null, match:false}); return false; }
+    steps.push({aVal:a.val, bVal:b.val, match:true});
+    if (!dfs(a.left,b.left)) return false;
+    return dfs(a.right,b.right);
+  }
+  dfs(p,q);
+
+  const wrapP = document.getElementById('stTreeP');
+  const wrapQ = document.getElementById('stTreeQ');
+  const layoutP = layoutTree(p), layoutQ = layoutTree(q);
+  new StepPlayer({
+    steps,
+    render: (step) => {
+      wrapP.innerHTML = svgTreeString(layoutP, v => v===step.aVal ? (step.match?'match':'seen') : '');
+      wrapQ.innerHTML = svgTreeString(layoutQ, v => v===step.bVal ? (step.match?'match':'seen') : '');
+      document.getElementById('stStatus').textContent = step.match
+        ? `${step.aVal} matches ${step.bVal} → keep comparing their children.`
+        : `${step.aVal===null?'null':step.aVal} vs ${step.bVal===null?'null':step.bVal} → mismatch, not the same tree.`;
+    },
+    els: {
+      play: document.getElementById('stPlay'),
+      next: document.getElementById('stNext'),
+      prev: document.getElementById('stPrev'),
+      reset: document.getElementById('stReset'),
+      count: document.getElementById('stCount')
+    }
+  });
+})();
+
+/* Subtree of Another Tree */
+(function(){
+  const root = {val:3, left:{val:4,left:{val:1},right:{val:2}}, right:{val:5}};
+  const subRoot = {val:4,left:{val:1},right:{val:2}};
+  function isSameTree(a,b){
+    if (!a && !b) return true;
+    if (!a || !b || a.val!==b.val) return false;
+    return isSameTree(a.left,b.left) && isSameTree(a.right,b.right);
+  }
+  function preorderList(n){ if (!n) return []; return [n, ...preorderList(n.left), ...preorderList(n.right)]; }
+  const candidates = preorderList(root);
+  const steps = [];
+  for (const cand of candidates){
+    const match = isSameTree(cand, subRoot);
+    steps.push({val:cand.val, match});
+    if (match) break;
+  }
+
+  const rootWrap = document.getElementById('subRootTree');
+  const subWrap = document.getElementById('subSubTree');
+  const layoutRoot = layoutTree(root), layoutSub = layoutTree(subRoot);
+  subWrap.innerHTML = svgTreeString(layoutSub);
+
+  new StepPlayer({
+    steps,
+    render: (step, idx) => {
+      const priorVals = steps.slice(0, idx).map(s=>s.val);
+      rootWrap.innerHTML = svgTreeString(layoutRoot, v => {
+        if (v===step.val) return step.match ? 'match' : 'active';
+        if (priorVals.includes(v)) return 'seen';
+        return '';
+      });
+      document.getElementById('subStatus').textContent = step.match
+        ? `The subtree rooted at ${step.val} matches subRoot exactly → found it.`
+        : `The subtree rooted at ${step.val} doesn't match subRoot → try the next candidate.`;
+    },
+    els: {
+      play: document.getElementById('subPlay'),
+      next: document.getElementById('subNext'),
+      prev: document.getElementById('subPrev'),
+      reset: document.getElementById('subReset'),
+      count: document.getElementById('subCount')
+    }
+  });
+})();
+
+/* Binary Tree Level Order Traversal */
+(function(){
+  const tree = {val:3, left:{val:9}, right:{val:20,left:{val:15},right:{val:7}}};
+  const treeWrap = document.getElementById('loTree');
+  const layout = layoutTree(tree);
+
+  const steps = [];
+  let queue = [tree];
+  const completedLevels = [];
+  while (queue.length){
+    const size = queue.length;
+    const currentLevelVals = [];
+    for (let k=0;k<size;k++){
+      const node = queue.shift();
+      currentLevelVals.push(node.val);
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+      steps.push({
+        val: node.val,
+        queueSnapshot: queue.map(n=>n.val),
+        completedLevels: completedLevels.map(l=>[...l]),
+        currentLevelSoFar: [...currentLevelVals]
+      });
+    }
+    completedLevels.push(currentLevelVals);
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step, idx) => {
+      const processedVals = steps.slice(0, idx+1).map(s=>s.val);
+      treeWrap.innerHTML = svgTreeString(layout, v => v===step.val ? 'active' : (processedVals.includes(v) ? 'match' : ''));
+      const queueWrap = document.getElementById('loQueue');
+      queueWrap.innerHTML = '';
+      step.queueSnapshot.forEach(v => queueWrap.appendChild(el('span','chip on', v)));
+      const levelsWrap = document.getElementById('loLevels');
+      levelsWrap.innerHTML = '';
+      step.completedLevels.forEach(level => levelsWrap.appendChild(el('span','chip on', `[${level.join(',')}]`)));
+      if (step.currentLevelSoFar.length) levelsWrap.appendChild(el('span','chip', `[${step.currentLevelSoFar.join(',')}…]`));
+      document.getElementById('loStatus').textContent = `Dequeue ${step.val}, record it in the current level, push its children for the next level.`;
+    },
+    els: {
+      play: document.getElementById('loPlay'),
+      next: document.getElementById('loNext'),
+      prev: document.getElementById('loPrev'),
+      reset: document.getElementById('loReset'),
+      count: document.getElementById('loCount')
+    }
+  });
+})();
+
+/* Validate Binary Search Tree */
+(function(){
+  const tree = {val:5,left:{val:1},right:{val:4,left:{val:3},right:{val:6}}};
+  const treeWrap = document.getElementById('vbTree');
+  const layout = layoutTree(tree);
+
+  const steps = [];
+  function dfs(node, lo, hi){
+    if (!node) return true;
+    const violates = (lo!==null && node.val<=lo) || (hi!==null && node.val>=hi);
+    steps.push({val:node.val, lo, hi, violates});
+    if (violates) return false;
+    if (!dfs(node.left, lo, node.val)) return false;
+    return dfs(node.right, node.val, hi);
+  }
+  dfs(tree, null, null);
+
+  new StepPlayer({
+    steps,
+    render: (step, idx) => {
+      const processed = steps.slice(0, idx).map(s=>s.val);
+      treeWrap.innerHTML = svgTreeString(layout, v => {
+        if (v===step.val) return step.violates ? 'seen' : 'active';
+        if (processed.includes(v)) return 'match';
+        return '';
+      });
+      const range = `(${step.lo===null?'-∞':step.lo}, ${step.hi===null?'∞':step.hi})`;
+      document.getElementById('vbStatus').textContent = step.violates
+        ? `Node ${step.val} must fall in range ${range} but doesn't → not a valid BST.`
+        : `Node ${step.val} is within its allowed range ${range} → recurse into its children with a narrowed range.`;
+    },
+    els: {
+      play: document.getElementById('vbPlay'),
+      next: document.getElementById('vbNext'),
+      prev: document.getElementById('vbPrev'),
+      reset: document.getElementById('vbReset'),
+      count: document.getElementById('vbCount')
+    }
+  });
+})();
+
+/* Lowest Common Ancestor of a BST */
+(function(){
+  const tree = {val:6,left:{val:2,left:{val:0},right:{val:4,left:{val:3},right:{val:5}}},right:{val:8,left:{val:7},right:{val:9}}};
+  const p = 2, q = 4;
+  const treeWrap = document.getElementById('lcaTree');
+  const layout = layoutTree(tree);
+
+  let curr = tree;
+  const steps = [];
+  while (curr){
+    if (p<curr.val && q<curr.val){ steps.push({val:curr.val, dir:'left'}); curr=curr.left; }
+    else if (p>curr.val && q>curr.val){ steps.push({val:curr.val, dir:'right'}); curr=curr.right; }
+    else { steps.push({val:curr.val, dir:'found'}); break; }
+  }
+
+  new StepPlayer({
+    steps,
+    render: (step, idx) => {
+      const processed = steps.slice(0, idx).map(s=>s.val);
+      treeWrap.innerHTML = svgTreeString(layout, v => {
+        if (v===step.val) return step.dir==='found' ? 'match' : 'active';
+        if (processed.includes(v)) return 'seen';
+        return '';
+      });
+      document.getElementById('lcaStatus').textContent = step.dir==='found'
+        ? `p=${p} and q=${q} split here (or one equals ${step.val}) → node ${step.val} is the LCA.`
+        : `Both p=${p} and q=${q} are ${step.dir==='left' ? 'less' : 'greater'} than ${step.val} → go ${step.dir}.`;
+    },
+    els: {
+      play: document.getElementById('lcaPlay'),
+      next: document.getElementById('lcaNext'),
+      prev: document.getElementById('lcaPrev'),
+      reset: document.getElementById('lcaReset'),
+      count: document.getElementById('lcaCount')
+    }
+  });
+})();
+
+/* Implement Trie */
+(function(){
+  function TrieNode(){ this.children={}; this.end=false; }
+  const root = new TrieNode();
+  const ops = [
+    {type:'insert', word:'apple'},
+    {type:'search', word:'apple'},
+    {type:'search', word:'app'},
+    {type:'startsWith', word:'app'},
+    {type:'insert', word:'app'},
+    {type:'search', word:'app'}
+  ];
+  const steps = [];
+  ops.forEach(op => {
+    let node = root;
+    let path = [];
+    let result, failed = false;
+    for (const ch of op.word){
+      if (op.type==='insert'){
+        if (!node.children[ch]) node.children[ch] = new TrieNode();
+        node = node.children[ch];
+        path.push(ch);
+      } else {
+        if (!node.children[ch]){ failed = true; break; }
+        node = node.children[ch];
+        path.push(ch);
+      }
+    }
+    if (op.type==='insert'){ node.end = true; result = 'done'; }
+    else if (op.type==='search'){ result = failed ? false : node.end; }
+    else { result = !failed; }
+    steps.push({op, path, result});
+  });
+
+  new StepPlayer({
+    steps,
+    render: (step, idx) => {
+      const opsWrap = document.getElementById('trieOps');
+      opsWrap.innerHTML = '';
+      steps.forEach((s,i) => {
+        const chip = el('span','chip', `${s.op.type}("${s.op.word}")`);
+        if (i===idx) chip.classList.add('on');
+        opsWrap.appendChild(chip);
+      });
+      renderChain(document.getElementById('trieChars'), step.path.length ? step.path : ['(root)']);
+      const statusEl = document.getElementById('trieStatus');
+      statusEl.textContent = step.op.type==='insert'
+        ? `insert("${step.op.word}") → walk/create a node per letter, mark the last one as end-of-word.`
+        : `${step.op.type}("${step.op.word}") → ${step.result}`;
+    },
+    els: {
+      play: document.getElementById('triePlay'),
+      next: document.getElementById('trieNext'),
+      prev: document.getElementById('triePrev'),
+      reset: document.getElementById('trieReset'),
+      count: document.getElementById('trieCount')
+    }
+  });
+})();
+
+document.querySelectorAll('.code-panel').forEach(cp => wireCodePanel(cp, cp.dataset.problem));
+</script>
+</body>
+</html>
